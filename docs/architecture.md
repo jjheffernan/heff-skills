@@ -15,16 +15,18 @@ High-level shape of the AFK overnight skill. Runtime detail lives in `skills/aft
    readiness              todo-md              feature-build
    compatibility          feature-spec         research-only
    guardrails             wayfinder-afk
-   state-schema
-   morning-brief
+   state-schema           github-tickets
+   morning-brief          (+ fixtures/)
    tick-and-runners
 ```
 
 | Concern | Where |
 |---------|--------|
 | Install / uninstall | Root `INSTALL.md`, `scripts/install.sh` |
+| First overnight | `docs/first-night.md` |
+| Night / Sources templates | `skills/after-hours-loop/templates/` (`Sources.example.txt`, `night-Sources.*.txt`) |
 | Generated install tree | `drop-in/` via `scripts/sync-drop-in.sh` |
-| Drift CI | `scripts/check-drop-in-sync.sh` + `.github/workflows/drop-in-sync.yml` |
+| Drift CI | `scripts/check-drop-in-sync.sh` + `.github/workflows/ci.yml` |
 | State validation | `scripts/validate-state.py` (also skill-local `scripts/`) |
 | Matt / peer composition | `docs/composition.md`, `references/compatibility.md` |
 
