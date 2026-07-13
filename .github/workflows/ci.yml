@@ -1,0 +1,26 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  drop-in-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify drop-in matches skills/
+        run: ./scripts/check-drop-in-sync.sh
+
+  validate-state-fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Valid fixture must pass
+        run: python3 scripts/validate-state.py skills/after-hours-loop/fixtures/sample-state.valid.json
+      - name: Invalid fixture must fail
+        run: |
+          if python3 scripts/validate-state.py skills/after-hours-loop/fixtures/sample-state.invalid-prs.json; then
+            echo "expected non-zero exit" >&2
+            exit 1
+          fi
