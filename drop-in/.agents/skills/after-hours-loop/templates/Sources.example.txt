@@ -1,8 +1,13 @@
+# Canonical Sources kickoff — copy into chat or Automation Instructions.
+# Night presets: night-Sources.github.txt · night-Sources.mixed.txt
+
 /after-hours 45m
 Sources:
   - github-issues: label ready-for-agent limit 5
   - todo-md: section "Now"
+  # optional: - feature-spec: docs/plans/example-plan.md phase 1
   # opt-in: - wayfinder-afk: label wayfinder:map limit 5
   # opt-in: - wayfinder-afk: map 88 include-task
+  # opt-in: - github-tickets: label ready-for-agent limit 5
 maxPrs: 3
 priority: github-first

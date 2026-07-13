@@ -1,0 +1,12 @@
+# Overnight Sources — GitHub-first
+# Paste into `/after-hours` chat or Cursor Automation Instructions.
+# Drain only labeled agent-ready issues (prefer Agent Brief over raw body).
+# Do not enable wayfinder-afk here — use night-Sources.mixed.txt for that.
+
+/after-hours 45m
+Sources:
+  - github-issues: label ready-for-agent limit 5
+  # Optional: further labels / smaller batch
+  # - github-issues: label ready-for-agent limit 3
+maxPrs: 3
+priority: github-first
