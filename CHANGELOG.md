@@ -7,47 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0-alpha.1] — 2026-07-13
+
+First **alpha** packaging of **heff-skills** / **after-hours-loop**. Not a release — dogfood before tagging `v0.1.0`.
+
 ### Changed
 
-- Positioning: after-hours is workflow-agnostic AFK (any tracker → A→Z); Matt skills are optional peers, not a parent grill→ticket flow ([plan.md](./plan.md) Phase 5, [docs/composition.md](./docs/composition.md))
+- Mark skill + docs as **alpha** (`VERSION` = `0.1.0-alpha.1`)
+- Positioning: workflow-agnostic AFK (any tracker → A→Z); Matt skills are optional peers ([plan.md](./plan.md) Phase 5, [docs/composition.md](./docs/composition.md))
 
 ### Added
 
 - CI smoke: valid/invalid `validate-state` fixtures (`.github/workflows/ci.yml`)
+- Mature root `.gitignore`; target [`templates/gitignore.snippet`](./skills/after-hours-loop/templates/gitignore.snippet)
+- [docs/first-night-scorecard.md](./docs/first-night-scorecard.md) for continuous improvement
+- [docs/automation.md](./docs/automation.md) + [`automation-instructions.office-hours.close.txt`](./skills/after-hours-loop/templates/automation-instructions.office-hours.close.txt) for Cursor Automations after office hours
+- Cloud Automation persistence / idempotency notes in tick-and-runners + state-schema
 
-## [0.1.0] — 2026-07-13
+### Packaging (phases 1–4 carried in)
 
-First packaged release of **heff-skills** with **after-hours-loop** as the headline skill.
+- Cursor-first layout: `skills/after-hours-loop/`, generated `drop-in/`, install scripts
+- References, sources (incl. opt-in wayfinder-afk / github-tickets), executors, validate-state, first-night guides
 
-### Packaging (Phase 1)
+[Unreleased]: https://github.com/jjheffernan/heff-skills/compare/HEAD...HEAD
+[0.1.0-alpha.1]: https://github.com/jjheffernan/heff-skills/blob/main/VERSION
 
-- Cursor-first repo layout: canonical skill under `skills/after-hours-loop/`, generated `drop-in/`
-- Root `LICENSE` (MIT), `README.md`, `INSTALL.md`, `SECURITY.md`, `docs/portability.md`
-- `scripts/install.sh` (copy + optional gitignore) and `scripts/sync-drop-in.sh`
-- Portable `templates/config.example.json`; stripped absolute paths and mandatory peer-skill reads
-- Frontmatter: `disable-model-invocation: true`; primary slash `/after-hours`
-
-### Compatibility & startup (Phase 2)
-
-- `references/` for readiness, compatibility (Matt / wayfinder / grill), bootstrap, guardrails, state schema, morning brief
-- Preflight + dry-run (`/after-hours --dry-run`); morning brief always written on stop
-- Soft deps; `sources/wayfinder-afk.md`, `executors/research-only.md`
-- `docs/composition.md`; drop-in sync CI (`check-drop-in-sync.sh`)
-
-### AFK loop completeness (Phase 3)
-
-- Stop policy: consecutive-blocked, dirty-tree, CI-red cascade; post-open draft (`isDraft`) verification
-- Self-contained executor safety checklists; resume mid-queue docs
-- `scripts/validate-state.py` (schema v1; also skill-local copy)
-- Runner notes for Automation vs `/loop` in `tick-and-runners.md`
-
-### Polish & distribute (Phase 4)
-
-- `docs/first-night.md`, night Sources templates, `docs/architecture.md`
-- Opt-in `sources/github-tickets.md`; optional Cursor rule template (`cursor-rule.after-hours-loop.mdc.example`)
-- Validate-state fixtures under `skills/after-hours-loop/fixtures/`
-- Primary install documented as `npx skills add jjheffernan/heff-skills -a cursor`; `VERSION` / `CHANGELOG` for `0.1.0`
-- Git tag `v0.1.0` cut at publish time (not auto-created in-repo)
-
-[Unreleased]: https://github.com/jjheffernan/heff-skills/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/jjheffernan/heff-skills/releases/tag/v0.1.0
+<!-- No git tag for alpha.1 by default — tag only if you want a callable marker; stable release remains future `v0.1.0`. -->

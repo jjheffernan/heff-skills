@@ -2,7 +2,7 @@
 
 Living plan for **after-hours-loop**: a drop-in, **workflow-agnostic AFK orchestrator** — install once, point at any agent-ready tracker, walk away. Shape **heff-skills** like mature public skill repos (structure/UX only; do not copy their skill text).
 
-**Status:** Phase 4 sealed on `main` (tag `v0.1.0` deferred); Phase 5 = abstraction + beyond-code  
+**Status:** **Alpha** (`0.1.0-alpha.1`) — Phase 4 packaging shipped; dogfood before `v0.1.0`. Phase 5 = abstraction + beyond-code + durable Automation  
 **Last updated:** 2026-07-13  
 **Target:** https://github.com/jjheffernan/heff-skills
 
@@ -268,6 +268,8 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 | 2026-07-13 | Ship `github-tickets` + `wayfinder-afk` in 0.1 (opt-in Sources) | Matt frontier + AFK research coverage without default noise |
 | 2026-07-13 | Defer git tag `v0.1.0` until Phase 4 commit + push | Avoid tagging an incomplete tree |
 | 2026-07-13 | Reposition: workflow-agnostic AFK; Matt is optional peer, not parent | Avoid locking growth to grill→ticket; enable non-code executors |
+| 2026-07-13 | Ship as **alpha** (`0.1.0-alpha.1`); defer `v0.1.0` tag | Multiple real runs before release |
+| 2026-07-13 | Treat Cursor Automation as first-class (cron after office hours) | AFK when IDE is closed; document cloud state gap |
 
 ### Still open (non-blocking)
 
@@ -323,9 +325,13 @@ Phases 1–4 shipped the portable AFK coding loop. Next:
 
 ### 7.4 Hardening / release
 
-- [ ] Tag `v0.1.0` when packaging + smoke CI are green on remote.
+- [ ] Tag `v0.1.0` only after multiple alpha dogfood nights (IDE + Automation) score well.
 - [ ] Expand fixtures (parse / priority / write-back).
 - [ ] Optional companion micro-skills for stop/handoff if references stay too long.
+- [ ] Ingest first solo night via [docs/first-night-scorecard.md](./docs/first-night-scorecard.md); promote every 0/1 into Phase 5 tickets.
+- [x] Cursor Automation office-hours guide + Instructions template ([docs/automation.md](./docs/automation.md))
+- [ ] Durable cloud ledger (tracked file or issue labels) so Automation fires share memory without relying on gitignored state
+- [ ] Optional Slack “fire started / morning summary” action on the Automation
 
 ---
 

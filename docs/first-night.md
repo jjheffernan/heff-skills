@@ -1,6 +1,12 @@
 # First overnight checklist
 
-Ship one unattended run with agent-ready work already labeled. Alignment (grill / wayfinder / tickets) happens while you are present — not overnight.
+Ship one unattended run with agent-ready work already queued. Daytime alignment (whatever workflow you use) happens while you are present — not overnight.
+
+**Alpha:** expect rough edges; score every run.
+
+After the run, score it with **[first-night-scorecard.md](./first-night-scorecard.md)** and feed every partial/fail into [plan.md](../plan.md).
+
+For unattended **office-hours-close** scheduling (no IDE open), use **[automation.md](./automation.md)** instead of (or in addition to) arming `/after-hours` manually.
 
 ## 1. Install
 
@@ -61,3 +67,7 @@ Any of:
 - `stop after-hours`
 - `stop loop`
 - `/after-hours stop`
+
+## 7. Score + improve
+
+Fill [first-night-scorecard.md](./first-night-scorecard.md) in the morning. Minimal win: install → dry-run → one A→Z outcome → useful brief → clean stop.

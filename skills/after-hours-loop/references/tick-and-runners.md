@@ -31,7 +31,27 @@ done
 
 ## Cursor Automation
 
-- Checkout `baseBranch`.
-- Sources from Instructions (same bootstrap syntax).
-- Prefer **1–2 ticks** per cron fire overnight unless Instructions raise `maxPrs` / multi-item.
-- Cloud: `github-issues` may refresh via `gh`; static sources stay bootstrap-only.
+Cursor Automations (cloud scheduled agents) are a **first-class** runner — same skill + Sources bootstrap as `/after-hours`. Prefer this when office hours close and the IDE is offline. Full guide: [docs/automation.md](https://github.com/jjheffernan/heff-skills/blob/main/docs/automation.md). Paste-ready Instructions: [templates/automation-instructions.office-hours.close.txt](../templates/automation-instructions.office-hours.close.txt).
+
+### Setup (minimal)
+
+1. Commit skill + `.cursor/after-hours-loop.config.json` on the **target** repo (config is required in cloud; gitignored local-only config will not load).
+2. Create Automation: **cron** weekdays after office close (example `0 18 * * 1-5` — confirm display time in the editor).
+3. Repo / branch = project `baseBranch`.
+4. Paste Instructions template; set Sources + `maxPrs` (prefer **1–2** per fire overnight).
+
+### Behavior
+
+- One cron fire = one agent session. No in-session `sleep` sentinel — the next fire is the next tick.
+- Checkout `baseBranch` before work. Prefer Sources that **re-query** (`github-issues`).
+- **Persistence:** gitignored `.cursor/after-hours-loop.state.json` is usually **missing** on the next cloud fire. Do not assume local state across nights. Idempotency: skip items that already have an open covering draft PR; record outcomes in the run’s morning-brief message (and PR links).
+- Cloud: `github-issues` may refresh via `gh`; static Sources stay bootstrap-only unless files are in the checkout.
+- Soft-detect peers; never grill / HITL overnight; fail closed on preflight / dirty tree / denylist.
+
+### In-session vs Automation
+
+| | `/after-hours` + sentinel | Automation cron |
+|--|---------------------------|-----------------|
+| Tick advance | Local shell `AGENT_LOOP_TICK_AFTERHOURS` | Next scheduled fire |
+| State file | Durable for that machine night | Not durable across fires if gitignored |
+| Best for | Watching / tuning in IDE | Unattended after office hours |

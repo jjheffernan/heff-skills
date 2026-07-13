@@ -1,21 +1,21 @@
 ---
 name: after-hours
 description: >
-  AFK overnight / late-session coding loop: pluggable work sources (GitHub
-  issues, TODO.md, feature specs, opt-in wayfinder-afk / github-tickets) and
-  executors → draft PRs. Trigger when the user runs /after-hours,
-  /after-hours-loop, /loop with after-hours instructions, Cursor Automation
-  overnight, or asks to drain ready-for-agent / AFK / overnight work into PRs
-  while unattended.
+  ALPHA — AFK overnight / late-session loop (not a release). Pluggable work
+  sources (GitHub issues, TODO.md, feature specs, opt-in wayfinder-afk /
+  github-tickets) and executors → draft PRs. Trigger when the user runs
+  /after-hours, /after-hours-loop, /loop with after-hours instructions, a
+  Cursor Automation (e.g. cron after office hours), or asks to drain
+  ready-for-agent / AFK / overnight work while unattended.
 disable-model-invocation: true
 license: MIT
 ---
 
-# after-hours (orchestrator)
+# after-hours (orchestrator) — **alpha**
 
-Bootstrap **sources** → **work items** → **executors** → **draft PRs** on `baseBranch`.
+**Status:** `0.1.0-alpha` — collect real runs before a release tag. After dogfood nights, score with the heff-skills repo scorecard (`docs/first-night-scorecard.md`).
 
-## Load map
+Bootstrap **sources** → **work items** → **executors** → outcomes (draft PRs for code executors) on `baseBranch`.## Load map
 
 | Doc | When |
 |-----|------|
@@ -37,7 +37,7 @@ Config: `.cursor/after-hours-loop.config.json` ← [templates/config.example.jso
 |---------|----------|
 | **`/after-hours`** | Primary. `/after-hours 45m`, `/after-hours --dry-run`. |
 | **`/loop`** + this skill | Equivalent when pointed here. |
-| **Cursor Automation** | Cron; same Sources in Instructions. |
+| **Cursor Automation** | Cron (e.g. office hours close); same Sources in Instructions. See skill [tick-and-runners](./references/tick-and-runners.md) + install-tree / heff-skills [docs/automation.md](https://github.com/jjheffernan/heff-skills/blob/main/docs/automation.md). |
 
 Flow: load skill → **preflight** → bootstrap → tick 0 (unless dry-run) → arm sentinel ([tick-and-runners](./references/tick-and-runners.md)).
 

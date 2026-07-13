@@ -1,6 +1,6 @@
 # Install — heff-skills
 
-Cursor-first install for **after-hours-loop**. Prefer the skills CLI once this repo is cloned or published; clone + `install.sh` remains the explicit alternative. Tag **`v0.1.0`** will mark the 0.1.0 release (create the tag when you cut the release — it is not created by packaging alone).
+Cursor-first install for **after-hours-loop** (**alpha** — `VERSION` `0.1.0-alpha.1`). Prefer the skills CLI once this repo is cloned or available via registry; clone + `install.sh` remains the explicit alternative. **Do not** treat alpha as a release: cut git tag `v0.1.0` only after dogfood runs.
 
 ## Path A — skills CLI (primary)
 
@@ -12,7 +12,7 @@ npx skills add jjheffernan/heff-skills -a cursor
 
 Installs into the current project’s Cursor agent skills location. After install, complete the [adapter checklist](#project-adapter-checklist) below.
 
-Use this once the package is available via the skills registry / GitHub (`jjheffernan/heff-skills`), including after tag `v0.1.0`.
+Use this once the package is available via the skills registry / GitHub (`jjheffernan/heff-skills`). Alpha builds install the same way; expect change until `v0.1.0`.
 
 ## Path B — clone + install script (alternative)
 
@@ -72,7 +72,7 @@ Do this once per target project:
    - `testCommand` — command the loop can run to verify
    - `packageManager` — e.g. `npm` / `pnpm` / `yarn` / `bun`
 
-3. **Gitignore session artifacts** (install script may hint these):
+3. **Gitignore session artifacts** (`--with-gitignore` or paste from [`templates/gitignore.snippet`](./skills/after-hours-loop/templates/gitignore.snippet)):
 
    ```gitignore
    .cursor/after-hours-loop.state.json
@@ -146,4 +146,6 @@ See [docs/portability.md](./docs/portability.md) for what hosts are supported in
 
 Edit **`skills/`** only (source of truth). Before commit, run `./scripts/sync-drop-in.sh` so `drop-in/` stays generated and in sync. CI runs `./scripts/check-drop-in-sync.sh` and fails on drift — do not hand-edit `drop-in/`.
 
-Version: see root [`VERSION`](./VERSION) and [`CHANGELOG.md`](./CHANGELOG.md). Release tag `v0.1.0` is cut separately when publishing.
+Version: see root [`VERSION`](./VERSION) and [`CHANGELOG.md`](./CHANGELOG.md). Current line is **alpha** (`0.1.0-alpha.1`); tag `v0.1.0` only when publishing a stable release.
+
+Automation (office hours close): [docs/automation.md](./docs/automation.md).

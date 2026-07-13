@@ -59,11 +59,11 @@ Umbrella parents finishing as terminal without a child `done` this streak still 
 
 ## Resume mid-queue
 
-1. On tick start, load state if present and `startedAt` matches this armed run (or Automation continuing same night with same Sources intent).
+1. On tick start, load state if present and `startedAt` matches this armed run (or same-night Automation continuation with same Sources intent).
 2. Prefer resume: finish `in-progress` item first, then next `open` by priority.
 3. Do not re-queue IDs already `done` / `blocked` / `skipped` this run unless Sources refresh proves the human re-opened agent-ready work **and** id was cleared — default: preserve outcomes.
 4. Umbrella `multi-slice` parent stays `open` until all children are terminal (`done` / `blocked` / `skipped`).
-
+5. **Cloud Automation:** if `statePath` is missing (typical when gitignored), treat as a **new bootstrap**. Skip items already covered by an open draft PR (title/body/branch references the item id). Do not invent prior queue status.
 ## Dry-run does not write state
 
 When `/after-hours --dry-run` or message `dryRun: true`:
