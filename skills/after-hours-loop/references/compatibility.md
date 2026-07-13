@@ -1,6 +1,6 @@
-# Matt skill composition
+# Peer skill compatibility (Matt and others)
 
-after-hours-loop is the **downstream AFK build** step. Upstream alignment (wayfinder → grill → to-spec → to-tickets / triage) stays human/agent-interactive. We **detect and consume** their artifacts; we do not re-run grilling overnight.
+after-hours-loop is a **workflow-agnostic AFK orchestrator**. Matt’s wayfinder → grill → to-spec → to-tickets chain is an **optional peer**, not a parent. When those artifacts exist, we **detect and consume** them; we never require that pipeline and we do not re-run grilling overnight.
 
 ## Soft vs hard deps (ADR-0001 style)
 
@@ -17,7 +17,7 @@ Run in order; later steps do not override earlier hard exclusions.
 
 1. **`docs/agents/issue-tracker.md`** — if present, follow its claim / label / comment ops instead of inventing a second dialect.
 2. **`ready-for-agent` + Agent Brief** — primary GitHub (or tracker) queue; prefer Brief over issue body.
-3. **to-tickets frontier** — only when Sources enable a tickets / frontier source; consume ready frontier items with blockers closed ([readiness.md](./readiness.md) gate d).
+3. **to-tickets frontier** — only when Sources include **`github-tickets`** (or another tickets / frontier source); consume ready frontier items with blockers closed ([readiness.md](./readiness.md) gate d).
 4. **`wayfinder:map`** — only if Sources include **`wayfinder-afk`**. Then: research / AFK-typed map work only. Never open product PRs from grilling or prototype HITL map nodes.
 5. **`CONTEXT.md` / `docs/adr/`** — soft-read; treat as constraints on implementable items.
 6. **Native Sources** — `todo-md`, `feature-spec`, labeled `github-issues` as configured.

@@ -1,8 +1,8 @@
 # heff-skills — improvement plan
 
-Living plan for making **after-hours-loop** a production-ready, drop-in AFK coding skill, while shaping **heff-skills** like mature public skill repos — structure and UX only; we do not copy their skill text.
+Living plan for **after-hours-loop**: a drop-in, **workflow-agnostic AFK orchestrator** — install once, point at any agent-ready tracker, walk away. Shape **heff-skills** like mature public skill repos (structure/UX only; do not copy their skill text).
 
-**Status:** Phase 3 sealed (validate-state committed); Phase 4 in progress  
+**Status:** Phase 4 sealed on `main` (tag `v0.1.0` deferred); Phase 5 = abstraction + beyond-code  
 **Last updated:** 2026-07-13  
 **Target:** https://github.com/jjheffernan/heff-skills
 
@@ -10,7 +10,8 @@ Living plan for making **after-hours-loop** a production-ready, drop-in AFK codi
 **Phase 1 structure audit:** [post-phase-1](5925cc8b-83e3-4ada-aed7-bf0c4f5d3273)  
 **Phase 2 structure audit:** [post-phase-2](ae706577-6cae-4366-8e66-3c111daee94c)  
 **Phase 3 structure audit:** [post-phase-3](73b45955-2172-4434-b4f2-b72d3d04242c)  
-**Cumulative P1–P3 audit:** [cumulative](4cb22da8-a496-4894-a193-6a750b1bcc22)
+**Cumulative P1–P3 audit:** [cumulative](4cb22da8-a496-4894-a193-6a750b1bcc22)  
+**Phase 4 structure audit:** [post-phase-4](bda1c157-e503-4961-8d80-f4222491c659)
 
 ---
 
@@ -18,13 +19,13 @@ Living plan for making **after-hours-loop** a production-ready, drop-in AFK codi
 
 Ship a skill pack where someone can:
 
-1. Install into any Cursor (Agent Skills–compatible) project in under a minute.
-2. Point at **agent-ready** work (issues / TODO / specs / grilled + ticketed artifacts).
-3. Walk away — the loop picks work, opens draft PRs, stops safely, leaves a morning brief.
+1. Install into any Cursor (Agent Skills–compatible) host in under a minute.
+2. Point after-hours at **any** trackable inbox of agent-ready work (issues, TODOs, specs, tickets, maps, future non-code queues).
+3. Walk away — the loop picks work, runs **A→Z** within the chosen executor, stops safely, leaves a morning brief.
 
-**Positioning:** after-hours-loop is the **downstream AFK build phase**. Alignment is upstream ([mattpocock/skills](https://github.com/mattpocock/skills): wayfinder → grill → to-spec → to-tickets / triage). We compose with those skills; we do not replace them.
+**Positioning:** after-hours is the **AFK loop itself**, not a leaf under grill → tickets. Workflows (Matt, Linear, custom Markdown, research packs, …) are **optional peers** that may produce ready work. We stay Matt-**compatible** (detect/consume their artifacts) without requiring that pipeline or living inside it.
 
-Compatibility with `wayfinder`, `grill-me`, and `grill-with-docs` is first-class: detect their artifacts when present, fall back gracefully when not.
+**Direction:** keep code/PR executors excellent for v1, then grow sources + executors beyond code-agent flows (research synthesis, docs, triage digests, ops checklists) while the orchestrator stays stable.
 
 ---
 
@@ -231,15 +232,20 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 - [x] Automation multi-item vs `/loop` interval *(tick-and-runners.md)*
 - [x] Post-phase-3 structure audit ([audit](73b45955-2172-4434-b4f2-b72d3d04242c)); fixed composition pack links, morning-brief `ci-red`, prs-object wording, research-only safety checklist
 
-### Phase 4 — Polish & distribute
+### Phase 4 — Polish & distribute ✅
 
 - [x] `docs/composition.md` *(shipped Phase 2; also skill-local copy)*
 - [x] `docs/portability.md` *(shipped Phase 1)*
-- [ ] Example kickoff prompts + night Sources template polish
-- [ ] Fixtures for parse / priority / write-back (stretch)
-- [ ] Tag v0.1; document `npx skills add jjheffernan/heff-skills`
-- [ ] Optional thin `.cursor/rules` pointer (not always-on)
-- [ ] Optional `sources/github-tickets.md` (to-tickets frontier stretch)
+- [x] `CHANGELOG.md` (Unreleased + 0.1.0 incl. Phase 4) + root `VERSION` (`0.1.0`)
+- [x] Document primary install: `npx skills add jjheffernan/heff-skills -a cursor`; clone + `./scripts/install.sh` as alternative; note release tag `v0.1.0`
+- [x] Minimal validate-state fixtures under `skills/after-hours-loop/fixtures/` (+ skill README pointer)
+- [x] Example kickoff prompts + night Sources templates + `docs/first-night.md`
+- [x] Optional thin Cursor rule template (`cursor-rule.after-hours-loop.mdc.example`)
+- [x] Opt-in `sources/github-tickets.md` (to-tickets frontier)
+- [x] Post-phase-4 structure audit ([audit](bda1c157-e503-4961-8d80-f4222491c659)); followed up: CHANGELOG/plan honesty, research-only `isDraft`, Sources/architecture/frontmatter consistency
+- [x] Smoke CI for validate-state fixtures (valid → 0, invalid → nonzero)
+- [ ] Create git tag `v0.1.0` *(cut at publish after push is green)*
+- [ ] Fixtures for parse / priority / write-back (stretch beyond validate-state samples)
 
 ---
 
@@ -259,11 +265,16 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 | 2026-07-13 | Draft PRs by default for overnight | Safer morning review |
 | 2026-07-13 | Primary slash **`/after-hours`** (`name: after-hours`); `/loop` still supported | User-requested trigger; install path stays `after-hours-loop/` |
 
+| 2026-07-13 | Ship `github-tickets` + `wayfinder-afk` in 0.1 (opt-in Sources) | Matt frontier + AFK research coverage without default noise |
+| 2026-07-13 | Defer git tag `v0.1.0` until Phase 4 commit + push | Avoid tagging an incomplete tree |
+| 2026-07-13 | Reposition: workflow-agnostic AFK; Matt is optional peer, not parent | Avoid locking growth to grill→ticket; enable non-code executors |
+
 ### Still open (non-blocking)
 
-1. Exact morning brief path: `.cursor/after-hours-morning-brief.md` vs sticky issue comment?
-2. Ship `github-tickets` / `wayfinder-afk` sources in v0.1 or v0.2?
-3. Companion micro-skills (`after-hours-stop`, `after-hours-handoff`) vs reference files only?
+1. Exact morning brief path sticky issue vs `.cursor/` file — currently config `morningBriefPath`
+2. Companion micro-skills (`after-hours-stop`, `after-hours-handoff`) vs reference files only
+3. Parse/priority/write-back fixture harness (stretch)
+4. First non-code executor + outcome shape (docs? research digest? ops report?)
 
 ---
 
@@ -279,7 +290,7 @@ Thin adapters + one behavior source; persistence/stop maturity; soft-fail; defer
 
 ### mattpocock/skills
 
-Composable gate-heavy startup ending at labeled, briefed, frontier tickets. AHL already sits at the right layer. Maturity = detect artifacts, prefer briefs/maps/tickets, AFK-type only, degrade to explicit Sources, never own grilling/HITL overnight. Adopt readiness vocabulary: frontier, claim, agent-ready, brief, blocked, handoff, fog.
+Composable gate-heavy startup ending at labeled, briefed, frontier tickets. Treat as **optional upstream**: detect artifacts, prefer briefs/maps/tickets when named in Sources, degrade to any other ready tracker — never require grill/HITL overnight, never sit as a fixed leaf under that chain. Adopt readiness vocabulary: frontier, claim, agent-ready, brief, blocked, handoff, fog.
 
 ### Local after-hours-loop
 
@@ -287,13 +298,34 @@ Keep sources × executors × state × dual runners. Fix: portable config, self-c
 
 ---
 
-## 7. Immediate next actions
+## 7. Immediate next actions → Phase 5
 
-When implementation starts (not this plan-only turn):
+Phases 1–4 shipped the portable AFK coding loop. Next:
 
-1. Phase 1 scaffolding: LICENSE, folder move to `skills/`, strip hardcodes, config template, install script.
-2. Phase 2: compatibility + morning brief + readiness gate.
-3. Smoke: install into a throwaway repo, dry-run queue, one draft PR tick.
+### 7.1 Abstraction (workflow-agnostic core)
+
+- [ ] Rewrite readiness / composition language everywhere so trackers are **inputs**, not a mandated upstream chain (Matt remains soft-compat docs + opt-in sources).
+- [ ] Normalize the queue item contract: `id`, `title`, `acceptance`, `blockerPolicy`, `executorHint`, `outcomeKind` — independent of GitHub/PR.
+- [ ] Separate **outcome adapters** from executors: `draft-pr` today; later `branch-only`, `doc-artifact`, `report-only`, `external-ticket-update`.
+- [ ] Keep Sources as the only night-time binding to a workflow; add adapters, don’t fork orchestration.
+
+### 7.2 Beyond code
+
+- [ ] Ship one non-code executor MVP (candidate: research/docs digest writing into a repo artifact + morning brief, no PR required).
+- [ ] Domain-agnostic stop reasons (`done` / `blocked` / `noop` / `budget`) with outcome-specific details in state.
+- [ ] Document “A→Z” as executor-defined completion, not “opened a PR”.
+
+### 7.3 Matt compatibility (without subordination)
+
+- [ ] Keep `wayfinder-afk` + `github-tickets` opt-in; never default them.
+- [ ] Smoke matrix: Matt artifacts present vs absent vs mixed Sources — same orchestrator path.
+- [ ] Refuse any design that requires grill/to-tickets before `/after-hours` can start.
+
+### 7.4 Hardening / release
+
+- [ ] Tag `v0.1.0` when packaging + smoke CI are green on remote.
+- [ ] Expand fixtures (parse / priority / write-back).
+- [ ] Optional companion micro-skills for stop/handoff if references stay too long.
 
 ---
 
@@ -301,5 +333,5 @@ When implementation starts (not this plan-only turn):
 
 - [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)
 - [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail)
-- [mattpocock/skills](https://github.com/mattpocock/skills) — wayfinder, grill-me, grill-with-docs, grilling, handoff, setup, triage, to-spec, to-tickets
+- [mattpocock/skills](https://github.com/mattpocock/skills) — optional peers: wayfinder, grill-me, grill-with-docs, grilling, handoff, setup, triage, to-spec, to-tickets
 - Optional peer pattern: [loop-factory](https://github.com/JuliusBrussee/skills/tree/main/skills/loop-factory)

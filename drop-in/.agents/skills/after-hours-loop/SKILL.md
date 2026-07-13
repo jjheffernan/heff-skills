@@ -2,10 +2,11 @@
 name: after-hours
 description: >
   AFK overnight / late-session coding loop: pluggable work sources (GitHub
-  issues, TODO.md, feature specs, opt-in wayfinder-afk) and executors → draft
-  PRs. Trigger when the user runs /after-hours, /after-hours-loop, /loop with
-  after-hours instructions, Cursor Automation overnight, or asks to drain
-  ready-for-agent / AFK / overnight work into PRs while unattended.
+  issues, TODO.md, feature specs, opt-in wayfinder-afk / github-tickets) and
+  executors → draft PRs. Trigger when the user runs /after-hours,
+  /after-hours-loop, /loop with after-hours instructions, Cursor Automation
+  overnight, or asks to drain ready-for-agent / AFK / overnight work into PRs
+  while unattended.
 disable-model-invocation: true
 license: MIT
 ---
@@ -46,7 +47,7 @@ Stop: `stop loop`, `stop after-hours`, `/after-hours stop`.
 
 | Layer | Path |
 |-------|------|
-| Sources | `sources/github-issues.md`, `todo-md.md`, `feature-spec.md`, `wayfinder-afk.md` (opt-in) |
+| Sources | `sources/github-issues.md`, `todo-md.md`, `feature-spec.md`, `wayfinder-afk.md` (opt-in), `github-tickets.md` (opt-in) |
 | Executors | `executors/pr-slice.md`, `feature-build.md`, `research-only.md` |
 
 Load only the active module. Do not paste their logic here.
@@ -74,8 +75,8 @@ Load only the active module. Do not paste their logic here.
 4. **Dry-run:** print queue; no state write; no code; stop.
 5. Else write state ([state-schema](./references/state-schema.md)); run tick 0; continue per [tick-and-runners](./references/tick-and-runners.md).
 
-**Hard dep:** agent-ready work or stop with morning note to grill/ticket while human is present.  
-**Soft deps:** CONTEXT / ADRs / issue-tracker / peer skills **if present** — [compatibility](./references/compatibility.md). Never rewrite CONTEXT/ADRs; never `/grill-me` or HITL wayfinder overnight.
+**Hard dep:** agent-ready work for the chosen Sources/executors, or stop with a morning note for daytime alignment.  
+**Soft deps:** CONTEXT / ADRs / issue-tracker / Matt or other peer skills **if present** — [compatibility](./references/compatibility.md). Never rewrite CONTEXT/ADRs; never `/grill-me` or HITL wayfinder overnight. Never require grill→tickets to start.
 
 ## Stop output
 
