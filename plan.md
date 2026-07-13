@@ -2,8 +2,8 @@
 
 Living plan for **after-hours-loop**: a drop-in, **workflow-agnostic AFK orchestrator** — install once, point at any agent-ready tracker, walk away. Shape **heff-skills** like mature public skill repos (structure/UX only; do not copy their skill text).
 
-**Status:** **Alpha** (`0.1.0-alpha.1`) — Phase 4 packaging shipped; dogfood before `v0.1.0`. Phase 5 = abstraction + beyond-code + durable Automation  
-**Last updated:** 2026-07-13  
+**Status:** **Alpha** (`0.1.0-alpha.2`) — Phase 5 done; Phase 6 companions + packaging hygiene; remaining: outcome depth / harness / audit
+**Last updated:** 2026-07-13
 **Target:** https://github.com/jjheffernan/heff-skills
 
 **Research swarms:** [caveman](3b485d0f-3fee-4e40-9cdc-f90cafb9b5a3) · [ponytail](9228fb73-db99-4e86-b15b-4992c3191231) · [mattpocock](d66efc9e-b3cd-4ee6-a36d-bc59d3e6ade1) · [local audit](a95719c0-80a1-43a1-b667-d6ffa0014977)  
@@ -12,7 +12,8 @@ Living plan for **after-hours-loop**: a drop-in, **workflow-agnostic AFK orchest
 **Phase 3 structure audit:** [post-phase-3](73b45955-2172-4434-b4f2-b72d3d04242c)  
 **Cumulative P1–P3 audit:** [cumulative](4cb22da8-a496-4894-a193-6a750b1bcc22)  
 **Phase 4 structure audit:** [post-phase-4](bda1c157-e503-4961-8d80-f4222491c659)  
-**Phase 5 structure audit:** [post-phase-5](bfb355b7-1919-494a-81cd-8cac70ba1b96) (PASS_WITH_FIXES → softs fixed; mega-PR followed)
+**Phase 5 structure audit:** [post-phase-5](bfb355b7-1919-494a-81cd-8cac70ba1b96) (PASS_WITH_FIXES → softs fixed; mega-PR followed)  
+**Phase 6 structure audit:** pending
 
 ---
 
@@ -200,7 +201,7 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 - [x] Research swarms (caveman, ponytail, mattpocock, local audit)
 - [x] Fold findings into this plan
 - [x] Lock layout: `skills/` SoT + generated `drop-in/`
-- [x] Lock positioning: downstream AFK of Matt chain; Cursor-first packaging
+- [x] Lock positioning: workflow-agnostic AFK + Cursor-first packaging
 
 ### Phase 1 — Repo hygiene & packaging ✅
 
@@ -279,9 +280,10 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 ### Still open (non-blocking)
 
 1. Exact morning brief path sticky issue vs `.cursor/` file — currently config `morningBriefPath`
-2. Companion micro-skills (`after-hours-stop`, `after-hours-handoff`) vs reference files only
-3. Parse/priority/write-back fixture harness (stretch)
-4. First non-code executor + outcome shape — **shipped alpha:** `docs-digest` + live `doc-artifact` (Phase 5.2)
+2. ~~Companion micro-skills~~ — **shipped** `after-hours-stop` / `after-hours-handoff` via `--with-companions`
+3. Parse/priority/write-back **runnable** fixture harness (docs stubs exist; priority enum deferred)
+4. First non-code executor + outcome shape — **shipped:** `docs-digest` + `ops-checklist` + live adapters
+5. Dogfood scorecard ingest → promote into next phase; Slack Automation; tag `v0.1.0`
 
 ---
 
@@ -333,12 +335,50 @@ Phases 1–4 shipped the portable AFK coding loop. Next:
 
 - [ ] Tag `v0.1.0` only after multiple alpha dogfood nights (IDE + Automation) score well.
 - [ ] Expand fixtures (parse / priority / write-back). *(schema fixtures expanded; parse harness still open)*
-- [ ] Optional companion micro-skills for stop/handoff if references stay too long.
+- [x] Optional companion micro-skills for stop/handoff if references stay too long. → Phase 6 §8.3 (`after-hours-stop` / `after-hours-handoff`)
 - [ ] Ingest first solo night via [docs/first-night-scorecard.md](./docs/first-night-scorecard.md); promote every 0/1 into Phase 5 tickets.
 - [x] Cursor Automation office-hours guide + Instructions template ([docs/automation.md](./docs/automation.md))
 - [x] Durable cloud ledger (tracked file) so Automation fires share memory without relying on gitignored state — [references/cloud-ledger.md](./skills/after-hours-loop/references/cloud-ledger.md), config `cloudLedgerPath` (default `null`)
 - [ ] Optional Slack “fire started / morning summary” action on the Automation *(deferred)*
 - [x] Mega-PR mode ([references/mega-pr.md](./skills/after-hours-loop/references/mega-pr.md)) — dual-token every arm; never config-sticky
+
+---
+
+## 8. Phase 6 — Outcomes depth + harness + companions
+
+Phase 5 sealed abstraction. Phase 6 hardens the adapter surface and operator UX without waiting on dogfood or `v0.1.0`.
+
+### 8.1 Live remaining outcome adapters
+
+- [x] Promote `branch-only` from stub → live in `outcomes.md` + executor notes (push `after-hours/…`, no PR; record branch in `notes` / ledger)
+- [x] Promote `report-only` → live (morning-brief + chat findings only; no git publish unless human asks)
+- [x] Promote `external-ticket-update` → live MVP (`gh issue comment` / tracker comment; no PR required)
+- [x] Wire Sources / bootstrap examples for `outcomeKind:` overrides; keep defaults safe (`draft-pr` / `doc-artifact`)
+
+### 8.2 Fixture & parse harness
+
+- [x] Add fixtures (and CI) for: invalid `stopReason`, `megaPr` non-bool, priority enum if validated
+- [x] Document parse / priority / write-back expectations in `fixtures/README.md` (harness stubs OK if not runnable yet)
+- [x] Keep root ↔ skill ↔ drop-in `validate-state.py` identical
+
+### 8.3 Companion micro-skills (thin)
+
+- [x] Add opt-in companion skills under `skills/`: `after-hours-stop` (kill sentinel / stop phrases / write brief) and `after-hours-handoff` (morning-brief focused) — thin SKILL.md pointing at existing references; **not** always-on
+- [x] Document in INSTALL / AGENTS.md / plan; sync drop-in only for `after-hours-loop` (companions install as siblings)
+- [x] Update `scripts/sync-drop-in.sh` / install notes if companions should install together (prefer document copy paths; keep sync loop-skill-only unless install.sh already copies all of `skills/`) — companions via `install.sh --with-companions`; **out of drop-in**
+
+### 8.4 Ops / triage beyond-code MVP
+
+- [x] Add `executors/ops-checklist.md` (or `triage-digest.md`): process a checklist / open issues digest → `report-only` or `doc-artifact`; no code PR by default
+- [x] Glossary + SKILL modules table + architecture diagram
+
+### 8.5 Packaging hygiene
+
+- [x] Bump `VERSION` → `0.1.0-alpha.2` + CHANGELOG section
+- [x] Fix Phase 0 historical checkbox (“downstream AFK of Matt”) → workflow-agnostic wording
+- [x] Post-phase-6 structure audit ([audit](6cdf3904-7594-4c14-b79d-ebfbcf4c4491)); janitor soft-fixes; commit + push (no `v0.1.0` tag)
+
+**Deferred (not Phase 6):** dogfood scorecard ingest, Slack Automation action, git tag `v0.1.0`.
 
 ---
 

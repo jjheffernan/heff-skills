@@ -8,7 +8,7 @@ Load these when the orchestrator needs depth. Orchestrator stays thin: [SKILL.md
 | [compatibility.md](./compatibility.md) | Live — soft/hard deps, peer soft-detect, fallbacks |
 | [morning-brief.md](./morning-brief.md) | Live — template + write rules (every stop) |
 | [state-schema.md](./state-schema.md) | Live — v1 fields, portable queue contract, claim/resume, dry-run |
-| [outcomes.md](./outcomes.md) | Live — outcome adapters (`draft-pr`, `doc-artifact`; stubs); separate from executors |
+| [outcomes.md](./outcomes.md) | Live — outcome adapters (`draft-pr`, `doc-artifact`, `branch-only`, `report-only`, `external-ticket-update`); separate from executors |
 | [guardrails.md](./guardrails.md) | Live — skip / block / stop / escalate (+ coarse stopReason) |
 | [bootstrap.md](./bootstrap.md) | Live — preflight, Sources, dry-run |
 | [tick-and-runners.md](./tick-and-runners.md) | Live — sentinel, tick loop, Automation |

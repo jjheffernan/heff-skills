@@ -3,8 +3,9 @@ name: after-hours
 description: >
   ALPHA — AFK overnight / late-session loop (not a release). Pluggable work
   sources (GitHub issues, TODO.md, feature specs, opt-in wayfinder-afk /
-  github-tickets) and executors (incl. docs-digest) → outcome adapters
-  (draft-pr default for code; doc-artifact for digests). Trigger when the
+  github-tickets) and executors (incl. docs-digest, ops-checklist) →
+  outcome adapters (draft-pr default for code; doc-artifact for digests;
+  report-only for ops-checklist). Trigger when the
   user runs /after-hours, /after-hours-loop, /loop with after-hours
   instructions, a Cursor Automation (e.g. cron after office hours), or asks
   to drain ready-for-agent / AFK / overnight work while unattended.
@@ -16,7 +17,7 @@ license: MIT
 
 **Status:** `0.1.0-alpha` — collect real runs before a release tag. After dogfood nights, score with the heff-skills repo scorecard (`docs/first-night-scorecard.md`).
 
-Bootstrap **sources** → **work items** → **executors** → **outcome adapters** (default `draft-pr` for code; `doc-artifact` for `docs-digest`) on `baseBranch`.
+Bootstrap **sources** → **work items** → **executors** → **outcome adapters** (default `draft-pr` for code; `doc-artifact` for `docs-digest`; `report-only` for `ops-checklist`) on `baseBranch`.
 
 **A→Z** means executor-defined completion for the item plus its outcome adapter — not solely “opened a PR” ([outcomes](./references/outcomes.md), [glossary](./docs/glossary.md)).
 
@@ -31,7 +32,7 @@ Bootstrap **sources** → **work items** → **executors** → **outcome adapter
 | [references/compatibility.md](./references/compatibility.md) | Peer / Matt soft-detect (opt-in) |
 | [references/guardrails.md](./references/guardrails.md) | Skip / block / stop / escalate |
 | [references/state-schema.md](./references/state-schema.md) | state.json, queue contract, resume |
-| [references/outcomes.md](./references/outcomes.md) | Outcome adapters (`draft-pr`, `doc-artifact`, stubs) |
+| [references/outcomes.md](./references/outcomes.md) | Outcome adapters (`draft-pr`, `doc-artifact`, `branch-only`, `report-only`, `external-ticket-update`) |
 | [references/morning-brief.md](./references/morning-brief.md) | Every stop |
 | [references/tick-and-runners.md](./references/tick-and-runners.md) | Sentinel, tick loop, Automation |
 | [references/cloud-ledger.md](./references/cloud-ledger.md) | Optional durable Automation ledger (`cloudLedgerPath`) |
@@ -58,7 +59,7 @@ Stop: `stop loop`, `stop after-hours`, `/after-hours stop`.
 | Layer | Path |
 |-------|------|
 | Sources | `sources/github-issues.md`, `todo-md.md`, `feature-spec.md`, `wayfinder-afk.md` (opt-in), `github-tickets.md` (opt-in) |
-| Executors | `executors/pr-slice.md`, `feature-build.md`, `research-only.md`, `docs-digest.md` |
+| Executors | `executors/pr-slice.md`, `feature-build.md`, `research-only.md`, `docs-digest.md`, `ops-checklist.md` |
 | Outcomes | [references/outcomes.md](./references/outcomes.md) — adapters after completion |
 
 Load only the active module. Do not paste their logic here.

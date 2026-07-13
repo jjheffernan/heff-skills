@@ -97,7 +97,7 @@ If item or parent linked `todo-md`, run check-off per [todo-md.md](../sources/to
 
 ## Outcome
 
-Completion signal + [outcome adapter](../references/outcomes.md) (`outcomeKind`, default **`draft-pr`**). A→Z means executor-defined completion for the slice, then the requested adapter — not “must open a PR” in the abstract.
+Completion signal + [outcome adapter](../references/outcomes.md) (`outcomeKind`, default **`draft-pr`**). A→Z means executor-defined completion for the slice, then the requested adapter — not “must open a PR” in the abstract. Prefer **`branch-only`** for slice commits without opening a PR; **`report-only`** only when the slice is intentionally findings-only (unusual for this executor).
 
 | Result | Item status |
 |--------|-------------|

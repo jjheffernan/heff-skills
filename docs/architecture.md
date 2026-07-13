@@ -15,7 +15,7 @@ High-level shape of the AFK overnight skill. Runtime detail lives in `skills/aft
    readiness              todo-md              feature-build
    compatibility          feature-spec         research-only
    guardrails             wayfinder-afk        docs-digest
-   state-schema           github-tickets
+   state-schema           github-tickets       ops-checklist
    morning-brief          (+ fixtures/)
    tick-and-runners
    outcomes / cloud-ledger

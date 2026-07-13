@@ -1,6 +1,6 @@
 # Install — heff-skills
 
-Cursor-first install for **after-hours-loop** (**alpha** — `VERSION` `0.1.0-alpha.1`). Prefer the skills CLI once this repo is cloned or available via registry; clone + `install.sh` remains the explicit alternative. **Do not** treat alpha as a release: cut git tag `v0.1.0` only after dogfood runs.
+Cursor-first install for **after-hours-loop** (**alpha** — `VERSION` `0.1.0-alpha.2`). Prefer the skills CLI once this repo is cloned or available via registry; clone + `install.sh` remains the explicit alternative. **Do not** treat alpha as a release: cut git tag `v0.1.0` only after dogfood runs.
 
 ## Path A — skills CLI (primary)
 
@@ -19,12 +19,13 @@ Use this once the package is available via the skills registry / GitHub (`jjheff
 From a clone of this repo:
 
 ```bash
-./scripts/install.sh [--dry-run] [--with-gitignore] TARGET_REPO
+./scripts/install.sh [--dry-run] [--with-gitignore] [--with-companions] TARGET_REPO
 ```
 
 - Copies the skill into `TARGET_REPO/.agents/skills/after-hours-loop/`
 - Seeds `.cursor/after-hours-loop.config.json` from the example if missing
 - `--with-gitignore` appends ignore entries for loop state and morning brief
+- `--with-companions` also copies opt-in siblings `after-hours-stop` + `after-hours-handoff` into `.agents/skills/` (not always-on; **not** in drop-in sync)
 - `--dry-run` prints what would change without writing
 
 Example:
@@ -32,7 +33,17 @@ Example:
 ```bash
 ./scripts/install.sh --dry-run ~/code/my-app
 ./scripts/install.sh --with-gitignore ~/code/my-app
+./scripts/install.sh --with-companions --with-gitignore ~/code/my-app
 ```
+
+### Companion micro-skills (opt-in)
+
+| Skill | Role |
+|-------|------|
+| [`after-hours-stop`](./skills/after-hours-stop/) | Kill sentinel / stop phrases / ensure morning brief |
+| [`after-hours-handoff`](./skills/after-hours-handoff/) | Morning-brief focused handoff after a stop |
+
+Default `install.sh` and `sync-drop-in.sh` stay **loop-only**. Companions ship under `skills/` and install only with `--with-companions` (or a manual `cp -R`). They use `disable-model-invocation: true` — never always-on overnight hooks.
 
 ## Path C — manual copy
 
@@ -49,7 +60,7 @@ After `scripts/sync-drop-in.sh` has generated `drop-in/` from `skills/` (do not 
 cp -R drop-in/. TARGET_REPO/
 ```
 
-This mirrors the same skill tree under `.agents/skills/` (and any documented companion paths the generator emits).
+This mirrors **after-hours-loop** under `.agents/skills/` only. Companion stop/handoff skills are **not** generated into `drop-in/` — use Path B with `--with-companions` or copy from `skills/` manually.
 
 ---
 
@@ -92,6 +103,8 @@ Do this once per target project:
 
    ```bash
    rm -rf TARGET_REPO/.agents/skills/after-hours-loop
+   rm -rf TARGET_REPO/.agents/skills/after-hours-stop
+   rm -rf TARGET_REPO/.agents/skills/after-hours-handoff
    ```
 
 3. Optionally delete local state and config:
@@ -146,6 +159,6 @@ See [docs/portability.md](./docs/portability.md) for what hosts are supported in
 
 Edit **`skills/`** only (source of truth). Before commit, run `./scripts/sync-drop-in.sh` so `drop-in/` stays generated and in sync. CI runs `./scripts/check-drop-in-sync.sh` and fails on drift — do not hand-edit `drop-in/`.
 
-Version: see root [`VERSION`](./VERSION) and [`CHANGELOG.md`](./CHANGELOG.md). Current line is **alpha** (`0.1.0-alpha.1`); tag `v0.1.0` only when publishing a stable release.
+Version: see root [`VERSION`](./VERSION) and [`CHANGELOG.md`](./CHANGELOG.md). Current line is **alpha** (`0.1.0-alpha.2`); tag `v0.1.0` only when publishing a stable release.
 
 Automation (office hours close): [docs/automation.md](./docs/automation.md).

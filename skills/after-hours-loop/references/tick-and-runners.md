@@ -25,7 +25,7 @@ done
 2. Refresh sources that support it.
 3. Pick next `open` agent-ready item; claim ([readiness.md](./readiness.md), [state-schema.md](./state-schema.md)).
 4. Run executor module (denylist before commit/push/publish).
-5. Run [outcome adapter](./outcomes.md) for `outcomeKind` (if `megaPr`, use bundled draft-pr path in [mega-pr.md](./mega-pr.md)); record status; append to `prs` if `draft-pr` ([state-schema.md](./state-schema.md)). Update `consecutiveBlocked` (increment on blocked/skipped; reset on `done`).
+5. Run [outcome adapter](./outcomes.md) for `outcomeKind` (if `megaPr`, use bundled draft-pr path in [mega-pr.md](./mega-pr.md) — only for `draft-pr`; leave `branch-only` / `report-only` / `doc-artifact` / `external-ticket-update` on their own adapters); record status; append to `prs` if `draft-pr`; else record in item `notes` ([state-schema.md](./state-schema.md)). Update `consecutiveBlocked` (increment on blocked/skipped; reset on `done`).
 6. End of tick: if `babysitCi: true` and a PR opened, poll `gh pr checks` once ([guardrails.md](./guardrails.md) CI babysit). On red → block item; if `stopOnCiRed` → stop loop.
 7. Stop if `consecutiveBlocked >= maxConsecutiveBlocked` or other [guardrails](./guardrails.md); persist coarse `stopReason` + `stopDetail`; on stop write [morning-brief.md](./morning-brief.md).
 

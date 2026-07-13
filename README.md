@@ -2,7 +2,7 @@
 
 Portable Cursor agent skills. Headline skill: **after-hours-loop** (**alpha**) — a **workflow-agnostic AFK loop**. Point it at any agent-ready tracker, walk away (IDE slash or **Cursor Automation** after office hours); it runs A→Z work, stops safely, and leaves a morning brief.
 
-**Version:** [`VERSION`](./VERSION) = `0.1.0-alpha.1`. No release tag yet — dogfood several runs first.
+**Version:** [`VERSION`](./VERSION) = `0.1.0-alpha.2`. No release tag yet — dogfood several runs first.
 
 ## 30-second install
 
@@ -23,6 +23,8 @@ Details: **[INSTALL.md](./INSTALL.md)** · [`CHANGELOG.md`](./CHANGELOG.md).
 | Skill | Path | What it does |
 |-------|------|--------------|
 | **after-hours-loop** (alpha) | [`skills/after-hours-loop/`](./skills/after-hours-loop/) | AFK orchestrator: any Sources → queue → executors → outcomes + morning brief |
+| **after-hours-stop** (opt-in) | [`skills/after-hours-stop/`](./skills/after-hours-stop/) | Kill sentinel / stop phrases / ensure morning brief — install via `--with-companions` |
+| **after-hours-handoff** (opt-in) | [`skills/after-hours-handoff/`](./skills/after-hours-handoff/) | Morning-brief handoff after a stop — install via `--with-companions` |
 
 ## Kickoff
 
@@ -48,7 +50,7 @@ Night Sources presets: [`night-Sources.github.txt`](./skills/after-hours-loop/te
 
 ## Next improvements
 
-See **[plan.md](./plan.md)** (Phase 5). Short list: workflow-agnostic core · Matt as optional peer · beyond code · durable Automation ledger · release `v0.1.0` after alpha dogfood.
+See **[plan.md](./plan.md)** (Phase 6). Short list: outcome adapter depth · fixture harness · companion stop/handoff · release `v0.1.0` after alpha dogfood.
 
 ## Docs
 

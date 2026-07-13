@@ -80,7 +80,7 @@ If item `source` is `todo-md`, follow [todo-md.md](../sources/todo-md.md) auto c
 
 ## Outcome
 
-Executor emits a **completion signal**; publish via [outcome adapter](../references/outcomes.md) (`outcomeKind`, default **`draft-pr`**). Do not treat “opened a PR” as the only definition of done — that is today’s default adapter for this executor.
+Executor emits a **completion signal**; publish via [outcome adapter](../references/outcomes.md) (`outcomeKind`, default **`draft-pr`**). Do not treat “opened a PR” as the only definition of done — that is today’s default adapter for this executor. Choose **`branch-only`** when Sources want commits without a PR; **`report-only`** when findings should stay in the morning brief only.
 
 | Result | Item status |
 |--------|-------------|

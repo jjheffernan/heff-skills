@@ -42,7 +42,7 @@ Still required: readiness, denylist, draft-only (`draftPrs: true` unless human o
 1. First mega item: create branch from `baseBranch`, open **one** draft PR titled e.g. `after-hours mega: <date> (explicit opt-in)`.
 2. Later items: checkout same branch; commit; push; **update** the same PR body with a checklist of item ids.
 3. Record a single `prs[]` entry; list item ids in `notes` / PR body. Do not open per-item PRs while mega is active.
-4. `docs-digest` / `doc-artifact` items stay path-based unless `outcomeKind: draft-pr` — mega applies to **PR bundling**, not forcing digests into the PR (optional append if human’s Sources say so).
+4. `docs-digest` / `doc-artifact` / `ops-checklist` items stay path- or brief-based unless `outcomeKind: draft-pr` — mega applies to **PR bundling**, not forcing digests/ops into the PR (optional append if human’s Sources say so). Same for `branch-only`, `report-only`, and `external-ticket-update` — do **not** invent a mega PR for those adapters.
 
 ## Morning brief
 

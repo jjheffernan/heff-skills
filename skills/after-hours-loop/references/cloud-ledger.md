@@ -22,8 +22,8 @@ Leave `"cloudLedgerPath": null` in [config.example.json](../templates/config.exa
 
 | `cloudLedgerPath` | Behavior |
 |-------------------|----------|
-| `null` / unset | **PR idempotency only** — skip items already covered by an open after-hours draft PR (branch / title / body references `itemId`). No ledger I/O. |
-| set to a path | After each durable outcome (`done`, `blocked`, `skipped` with lasting effect), **upsert** an entry and commit the ledger file on the working branch (or include it in the draft-PR branch) so the next Automation checkout can read it. |
+| `null` / unset | **Idempotency via artifacts** — skip items already covered by an open after-hours draft PR (branch / title / body references `itemId`), or by a known prior adapter artifact when discoverable. No ledger I/O. |
+| set to a path | After each durable outcome (`done`, `blocked`, `skipped` with lasting effect), **upsert** an entry and commit the ledger file on the working branch (or include it in the draft-PR / `branch-only` branch) so the next Automation checkout can read it. |
 
 Session `statePath` remains gitignored local memory. Ledger is cross-fire memory for Automations.
 
@@ -52,6 +52,8 @@ Root object:
 | `itemId` | yes | Same id as queue / Sources (`github:N`, …) |
 | `status` | yes | `done` \| `blocked` \| `skipped` \| `in-progress` |
 | `prUrl` | no | When a draft PR exists |
+| `branch` | no | When `branch-only` (or other branch publish) — e.g. `after-hours/fix-widget` |
+| `artifact` | no | Non-PR locator: doc path, comment URL/id, or short `report-only` summary |
 | `at` | yes | ISO-8601 timestamp of last write for this item |
 
 Upsert by `itemId` (replace prior entry). Do not delete history unless the human clears the file.

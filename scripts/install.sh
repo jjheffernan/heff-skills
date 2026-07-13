@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Install after-hours-loop into a target Cursor / Agent Skills repo.
+# Optionally install companion micro-skills with --with-companions.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -7,19 +8,45 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 SOT="${ROOT_DIR}/skills/after-hours-loop"
 CONFIG_EXAMPLE="${SOT}/templates/config.example.json"
+COMPANIONS=(after-hours-stop after-hours-handoff)
 
 DRY_RUN=0
 WITH_GITIGNORE=0
+WITH_COMPANIONS=0
 TARGET_REPO="."
 
 usage() {
   cat <<'EOF'
-Usage: ./scripts/install.sh [--dry-run] [--with-gitignore] [TARGET_REPO]
+Usage: ./scripts/install.sh [--dry-run] [--with-gitignore] [--with-companions] [TARGET_REPO]
 
-  TARGET_REPO       Destination repo root (default: .)
-  --dry-run         Print actions only; do not write files
-  --with-gitignore  Append ignore entries for loop state + morning brief if missing
+  TARGET_REPO         Destination repo root (default: .)
+  --dry-run           Print actions only; do not write files
+  --with-gitignore    Append ignore entries for loop state + morning brief if missing
+  --with-companions   Also copy after-hours-stop + after-hours-handoff into .agents/skills/
+                      (opt-in; not part of drop-in sync)
 EOF
+}
+
+install_skill_dir() {
+  local name="$1"
+  local src="${ROOT_DIR}/skills/${name}"
+  local dest="${TARGET_REPO}/.agents/skills/${name}"
+
+  if [[ ! -d "${src}" ]]; then
+    echo "error: companion source missing: ${src}" >&2
+    exit 1
+  fi
+
+  if [[ "${DRY_RUN}" -eq 1 ]]; then
+    echo "dry-run: mkdir -p $(dirname "${dest}")"
+    echo "dry-run: rm -rf ${dest}"
+    echo "dry-run: cp -R ${src} ${dest}"
+  else
+    mkdir -p "$(dirname "${dest}")"
+    rm -rf "${dest}"
+    cp -R "${src}" "${dest}"
+    echo "Copied skill → ${dest}"
+  fi
 }
 
 while [[ $# -gt 0 ]]; do
@@ -30,6 +57,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --with-gitignore)
       WITH_GITIGNORE=1
+      shift
+      ;;
+    --with-companions)
+      WITH_COMPANIONS=1
       shift
       ;;
     -h|--help)
@@ -80,6 +111,12 @@ else
   echo "Copied skill → ${DEST_SKILL}"
 fi
 
+if [[ "${WITH_COMPANIONS}" -eq 1 ]]; then
+  for companion in "${COMPANIONS[@]}"; do
+    install_skill_dir "${companion}"
+  done
+fi
+
 if [[ -f "${CONFIG_EXAMPLE}" ]]; then
   if [[ -f "${DEST_CONFIG}" ]]; then
     echo "skip config: already present at ${DEST_CONFIG}"
@@ -128,3 +165,10 @@ Next steps:
   2. Run /after-hours with a Sources block.
      See ${DEST_SKILL}/templates/Sources.example.txt
 EOF
+
+if [[ "${WITH_COMPANIONS}" -eq 1 ]]; then
+  cat <<EOF
+  3. Companions installed: after-hours-stop, after-hours-handoff
+     (opt-in stop / morning-brief handoff — not always-on).
+EOF
+fi

@@ -15,9 +15,12 @@
 - <title> — <url> (draft)
 - … or _None_
 
-## Doc artifacts
+## Doc / non-PR outcomes
 
-- `<id>` — <path> (`doc-artifact`)
+- `<id>` — `doc-artifact:` <path>
+- `<id>` — `branch-only:` `after-hours/…`
+- `<id>` — `report-only:` <one-line findings>
+- `<id>` — `external-ticket-update:` <comment url or id>
 - … or _None_
 
 ## Done

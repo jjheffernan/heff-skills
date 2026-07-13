@@ -17,7 +17,7 @@ Use when `executor` / `executorHint` is `docs-digest`, or Sources name this exec
    - Else default: `docs/after-hours/<safe-id>-digest.md` where `<safe-id>` is the item `id` with `:` → `-` (e.g. `github-52-digest.md`).
 2. Write a short digest: source refs, findings, open questions, explicit “not decided overnight” list. Match acceptance; do not invent product decisions.
 3. Publish via [outcome adapter](../references/outcomes.md) **`doc-artifact`** (default): record the path in item `notes`; do **not** open a PR.
-4. Only run `draft-pr` if Sources / queue set `outcomeKind: draft-pr` (or bootstrap explicitly requests a PR). Then follow [outcomes.md](../references/outcomes.md) `draft-pr` after the digest exists.
+4. Only run `draft-pr` if Sources / queue set `outcomeKind: draft-pr` (or bootstrap explicitly requests a PR). Then follow [outcomes.md](../references/outcomes.md) `draft-pr` after the digest exists. Use **`report-only`** when the night should summarize without writing a durable path; **`branch-only`** when the digest should land on a pushed branch without a PR.
 
 A→Z for this executor = digest written at the resolved path + `doc-artifact` recorded — **not** “opened a PR.”
 

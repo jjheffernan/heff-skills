@@ -12,12 +12,12 @@ Use when the work item’s `executor` is `research-only` (typically from [wayfin
 
 ## Deliverable (prefer `draft-pr` outcome)
 
-Produce research writeup; publish via [outcome adapter](../references/outcomes.md) — default **`draft-pr`**. Executor completes when the writeup exists; adapter publishes it. A→Z here is research notes + adapter — not “must open a product PR.”
+Produce research writeup; publish via [outcome adapter](../references/outcomes.md) — default **`draft-pr`**. Executor completes when the writeup exists; adapter publishes it. A→Z here is research notes + adapter — not “must open a product PR.” Sources may override to `external-ticket-update`, `branch-only`, or `report-only`.
 
-1. Branch from configured `baseBranch` (default `main`), e.g. `after-hours/research-<slug>`.
-2. Write findings to a linked path from the ticket Notes, or a sensible docs path such as `docs/research/<slug>.md` / `.scratch/research/<slug>.md` if the ticket does not specify.
+1. Branch from configured `baseBranch` (default `main`), e.g. `after-hours/research-<slug>` (skip when `report-only` / comment-only publish).
+2. Write findings to a linked path from the ticket Notes, or a sensible docs path such as `docs/research/<slug>.md` / `.scratch/research/<slug>.md` if the ticket does not specify (skip durable path when `report-only`).
 3. Prefer **`draft-pr`**: draft PR whose diff is the research markdown (and only incidental index links if needed).
-4. Fallback (until `external-ticket-update` is live): if a coding harness / draft PR is unavailable, **`gh issue comment`** on the ticket with the research notes (or attach a gist link). Prefer draft PR when `gh` + git work. For no-PR digest nights, Sources should bind `docs-digest` instead.
+4. Prefer **`external-ticket-update`** when Sources set that `outcomeKind`, or when a draft PR / coding harness is unavailable — comment the research notes on the ticket ([outcomes.md](../references/outcomes.md)). Prefer draft PR when `gh` + git work and no override. For no-PR digest nights, Sources should bind `docs-digest` (`doc-artifact`) or `report-only` / `branch-only` instead.
 
 PR / comment must make clear: research only — no product feature shipped.
 
@@ -64,11 +64,11 @@ No product test suite required. If docs tooling / link check exists and is cheap
 
 ## Outcome
 
-Completion signal + outcome adapter ([outcomes.md](../references/outcomes.md)). Default `outcomeKind: draft-pr`.
+Completion signal + outcome adapter ([outcomes.md](../references/outcomes.md)). Default `outcomeKind: draft-pr`. Override to `external-ticket-update`, `branch-only`, or `report-only` when Sources say so.
 
 | Result | Item status |
 |--------|-------------|
-| Research writeup published (draft PR) or comment fallback attached | `done` |
+| Research writeup published (draft PR / branch / report / ticket comment) | `done` |
 | Missing acceptance; needs human product / HITL; cannot place writeup | `blocked` |
 | User skip | `skipped` |
 

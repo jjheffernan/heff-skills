@@ -74,7 +74,7 @@ Keep `alwaysApply: false` — the rule is a thin pointer at `.agents/skills/afte
 | `SKILL.md` | Thin orchestrator |
 | `references/` | Bootstrap, readiness, compatibility, guardrails, state, outcomes, morning brief |
 | `sources/` | Work source modules (incl. opt-in `wayfinder-afk`, `github-tickets`) |
-| `executors/` | `pr-slice`, `feature-build`, `research-only`, `docs-digest` (completion → outcome adapter) |
+| `executors/` | `pr-slice`, `feature-build`, `research-only`, `docs-digest`, `ops-checklist` (completion → outcome adapter) |
 | `templates/` | Config, Sources, night presets, Automation Instructions, morning-brief, drop-in pointer, optional Cursor rule, gitignore snippet |
 | `fixtures/` | Sample state JSON for `validate-state.py` |
 

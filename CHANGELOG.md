@@ -7,21 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Phase 5 + mega-PR after `0.1.0-alpha.1` packaging.
+## [0.1.0-alpha.2] — 2026-07-13
+
+Phase 5 abstraction + Phase 6 outcomes depth / harness / companions.
 
 ### Added
 
-- [`references/outcomes.md`](./skills/after-hours-loop/references/outcomes.md) — outcome adapters (`draft-pr` default; live `doc-artifact`; stubs for `branch-only` / `report-only` / `external-ticket-update`)
-- [`executors/docs-digest.md`](./skills/after-hours-loop/executors/docs-digest.md) — non-code digest executor wired to `doc-artifact`
+- [`references/outcomes.md`](./skills/after-hours-loop/references/outcomes.md) — outcome adapters: live `draft-pr`, `doc-artifact`, `branch-only`, `report-only`, `external-ticket-update`
+- [`executors/docs-digest.md`](./skills/after-hours-loop/executors/docs-digest.md) — non-code digest → `doc-artifact`
+- [`executors/ops-checklist.md`](./skills/after-hours-loop/executors/ops-checklist.md) — triage/ops beyond-code → default `report-only`
 - Domain-agnostic `stopReason` / `stopDetail` on state (plus morning-brief stop line)
 - [`references/cloud-ledger.md`](./skills/after-hours-loop/references/cloud-ledger.md) — optional durable Automation ledger (`cloudLedgerPath`)
 - [`docs/smoke-matrix.md`](./docs/smoke-matrix.md) — Matt present / absent / mixed Sources smoke rows
-- Fixture [`sample-state.invalid-status.json`](./skills/after-hours-loop/fixtures/sample-state.invalid-status.json) for validate-state CI (bad `queue[].status`)
-- [`references/mega-pr.md`](./skills/after-hours-loop/references/mega-pr.md) — **unsafe** bundled mega-PR; requires `megaPr: true` **and** `CONFIRM_MEGA_PR: I_ACCEPT_BUNDLED_PRS` on **every** arm (never sticky via config)
+- Validate-state fixtures: invalid `status`, `stopReason`, `megaPr` (+ CI coverage)
+- [`references/mega-pr.md`](./skills/after-hours-loop/references/mega-pr.md) — **unsafe** bundled mega-PR; dual-token every arm (never sticky via config)
+- Opt-in companions: [`after-hours-stop`](./skills/after-hours-stop/), [`after-hours-handoff`](./skills/after-hours-handoff/) — `./scripts/install.sh --with-companions` (out of drop-in)
 
 ### Changed
 
 - Architecture / automation docs aligned with outcome adapters (not PR-only A→Z)
+- `install.sh` accepts `--with-companions` for sibling stop/handoff skills
+- `VERSION` → `0.1.0-alpha.2`
 
 ## [0.1.0-alpha.1] — 2026-07-13
 
@@ -46,6 +52,7 @@ First **alpha** packaging of **heff-skills** / **after-hours-loop**. Not a relea
 - References, sources (incl. opt-in wayfinder-afk / github-tickets), executors, validate-state, first-night guides
 
 [Unreleased]: https://github.com/jjheffernan/heff-skills/compare/HEAD...HEAD
+[0.1.0-alpha.2]: https://github.com/jjheffernan/heff-skills/blob/main/VERSION
 [0.1.0-alpha.1]: https://github.com/jjheffernan/heff-skills/blob/main/VERSION
 
-<!-- No git tag for alpha.1 by default — tag only if you want a callable marker; stable release remains future `v0.1.0`. -->
+<!-- No git tag for alpha by default — tag only if you want a callable marker; stable release remains future `v0.1.0`. -->

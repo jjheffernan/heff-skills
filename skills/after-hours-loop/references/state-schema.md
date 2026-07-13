@@ -34,8 +34,8 @@ Every work item is a **tracker-agnostic** unit. Portable fields (use these names
 | `title` | string | yes | Short label |
 | `acceptance` | string | preferred | Testable criteria / Brief excerpt; empty → likely `blocked` at readiness |
 | `blockerPolicy` | string | no | How to treat incomplete work: `block` (default) \| `skip` \| `defer`. Maps onto overnight skip/block choices in [guardrails.md](./guardrails.md). |
-| `executorHint` | string | no | Preferred executor id (`pr-slice`, `feature-build`, `research-only`, `docs-digest`, …). If omitted, derive from `executor` or Sources defaults. |
-| `outcomeKind` | string | no | Outcome adapter to run after completion signal — see [outcomes.md](./outcomes.md). Default for code executors: `draft-pr`; for `docs-digest`: `doc-artifact`. |
+| `executorHint` | string | no | Preferred executor id (`pr-slice`, `feature-build`, `research-only`, `docs-digest`, `ops-checklist`, …). If omitted, derive from `executor` or Sources defaults. |
+| `outcomeKind` | string | no | Outcome adapter after completion — [outcomes.md](./outcomes.md). Defaults: code executors → `draft-pr`; `docs-digest` → `doc-artifact`; `ops-checklist` → `report-only`. Overrides: `branch-only`, `report-only`, `external-ticket-update`, … |
 
 These fields are **independent of GitHub/PR**. Sources may fill them from issues, TODOs, specs, maps, or future non-code queues.
 
@@ -56,7 +56,7 @@ These fields are **independent of GitHub/PR**. Sources may fill them from issues
 | `status` | string | `open` \| `in-progress` \| `done` \| `blocked` \| `skipped` |
 | `blockReason` | string | optional: `needs-info`, `needs-grill`, `tests`, `hitl`, … — detail when `status` is `blocked`/`skipped` |
 | `parentId` | string | optional: umbrella parent for child slices |
-| `notes` | string | optional: short residual note |
+| `notes` | string | optional: short residual note **and** non-PR outcome records (`doc-artifact: <path>`, `branch-only: after-hours/…`, `report-only: …`, `external-ticket-update: <comment url|id>`) |
 
 ### Field name map (old ↔ portable)
 
@@ -68,7 +68,7 @@ These fields are **independent of GitHub/PR**. Sources may fill them from issues
 | `blockerPolicy` | `blockReason` + guardrail choice | Policy = how to treat unreadiness; `blockReason` = why after the fact |
 | `source`, `ref`, `status`, `granularity`, `parentId`, `notes` | same | Keep; tracker-specific, not PR-specific |
 
-Backward-compatible: existing state JSON without `outcomeKind` / `blockerPolicy` / `executorHint` remains valid. Infer `outcomeKind: draft-pr` for `pr-slice` / `feature-build` / `research-only`; `docs-digest` → `doc-artifact`.
+Backward-compatible: existing state JSON without `outcomeKind` / `blockerPolicy` / `executorHint` remains valid. Infer `outcomeKind: draft-pr` for `pr-slice` / `feature-build` / `research-only`; `docs-digest` → `doc-artifact`; `ops-checklist` → `report-only`.
 
 ## Stop reasons (coarse + detail)
 
@@ -98,7 +98,7 @@ Umbrella parents finishing as terminal without a child `done` this streak still 
 
 1. Claim = set `status` to `in-progress` and **write state** before side effects.
 2. Only one non-child item `in-progress` at a time (children: one active child).
-3. On success: `done`; run [outcome adapter](./outcomes.md) for `outcomeKind`; append to `prs` when adapter is `draft-pr`; clear claim; **reset `consecutiveBlocked` to `0`**.
+3. On success: `done`; run [outcome adapter](./outcomes.md) for `outcomeKind`; append to `prs` when adapter is `draft-pr`; for non-PR adapters record path / branch / comment / findings in item `notes` (and [cloud ledger](./cloud-ledger.md) when enabled); clear claim; **reset `consecutiveBlocked` to `0`**.
 4. On fail soft: `blocked` or `skipped` with `blockReason`; clear claim; **increment `consecutiveBlocked`** (then check stop threshold).
 5. Never leave the working tree dirty *and* forget to persist status.
 
@@ -127,5 +127,6 @@ When materializing / claiming an item:
 
 1. If `executorHint` or `executor` is set → bind that module (`executors/<id>.md`).
 2. `docs-digest` when hint/name is `docs-digest` (or Sources line names it); default `outcomeKind: doc-artifact`.
-3. `research-only` stays the research-with-optional-PR path — do not auto-replace with `docs-digest`.
-4. Else derive from source defaults (`pr-slice`, `feature-build`, …).
+3. `ops-checklist` when hint/name is `ops-checklist`; default `outcomeKind: report-only` (`doc-artifact` when Sources ask for a durable file).
+4. `research-only` stays the research-with-optional-PR path — do not auto-replace with `docs-digest` / `ops-checklist`.
+5. Else derive from source defaults (`pr-slice`, `feature-build`, …).

@@ -12,7 +12,7 @@ Modular overnight / late-session agent work. Orchestrator: `.agents/skills/after
 | **Work source** | Adapter that materializes or refreshes work items from a tracker **input** |
 | **Executor** | Strategy that completes one work item (or one slice) and emits a completion signal |
 | **A→Z** | Executor-defined completion for an item (acceptance satisfied) plus a successful outcome adapter — **not** solely “opened a PR” |
-| **Outcome adapter** | How completion is published (`draft-pr`, `doc-artifact`, later `branch-only`, …) — separate from executors |
+| **Outcome adapter** | How completion is published (`draft-pr`, `doc-artifact`, `branch-only`, `report-only`, `external-ticket-update`) — separate from executors |
 | **Outcome** | Item `status` after tick: `done`, `blocked`, or `skipped` |
 | **Slice** | Smallest shippable unit for an executor (often one draft PR or one doc artifact) |
 | **Agent-ready** | Work with clear acceptance (e.g. `ready-for-agent` + brief); AFK must not invent scope |
@@ -23,8 +23,8 @@ Modular overnight / late-session agent work. Orchestrator: `.agents/skills/after
 | Layer | Modules (v1) |
 |-------|----------------|
 | Work source | `github-issues`, `todo-md`, `feature-spec`, `wayfinder-afk` (opt-in), `github-tickets` (opt-in) |
-| Executor | `pr-slice`, `feature-build`, `research-only`, `docs-digest` |
-| Outcome adapter | `draft-pr`, `doc-artifact` (live); stubs in [outcomes.md](../references/outcomes.md) |
+| Executor | `pr-slice`, `feature-build`, `research-only`, `docs-digest`, `ops-checklist` |
+| Outcome adapter | `draft-pr`, `doc-artifact`, `branch-only`, `report-only`, `external-ticket-update` — [outcomes.md](../references/outcomes.md) |
 | Orchestrator | `after-hours` skill + `/after-hours`, `/loop`, or Cursor Automation |
 | References | readiness, compatibility, bootstrap, guardrails, state, outcomes, morning-brief, cloud-ledger |
 
@@ -104,4 +104,4 @@ Checkout configured **`baseBranch`**.
 - Guardrail / preflight / blocked streak / CI stop → `blocked` + matching `stopDetail`
 - User: **stop after-hours** / **stop loop** → `done` / `user-stop` (kill sentinel PID)
 
-On stop, write the morning brief (pointers to PRs, doc artifacts, and blocked items). Coarse stop enum: [state-schema.md](../references/state-schema.md).
+On stop, write the morning brief (pointers to PRs, non-PR outcomes, and blocked items). Coarse stop enum: [state-schema.md](../references/state-schema.md).

@@ -56,9 +56,9 @@ CONFIRM_MEGA_PR: I_ACCEPT_BUNDLED_PRS
 2. Merge; sort by `priority` (`github-first` default).
 3. Apply readiness; non-ready → queue as `blocked` or omit (prefer materialize + `blocked` with reason so the brief can list them).
 4. Write state (unless dry-run) — see [state-schema.md](./state-schema.md). Including `megaPr` boolean for this run when gated on.
-Optional overrides: `feature:example-phase1 executor:feature-build`, `github:52 executor:docs-digest`, or queue `executorHint: docs-digest`.
+Optional overrides: `feature:example-phase1 executor:feature-build`, `github:52 executor:docs-digest`, `github:52 executor:ops-checklist`, `github:52 outcomeKind:branch-only`, or queue fields `executorHint` / `outcomeKind`.
 
-When binding: prefer `executorHint` / explicit `executor` over source defaults. `docs-digest` → load `executors/docs-digest.md` and default `outcomeKind: doc-artifact`. Leave `research-only` unchanged when that hint is set.
+When binding: prefer `executorHint` / explicit `executor` over source defaults. `docs-digest` → load `executors/docs-digest.md` and default `outcomeKind: doc-artifact`. `ops-checklist` → load `executors/ops-checklist.md` and default `outcomeKind: report-only` (or `doc-artifact` when Sources ask for a durable file). Leave `research-only` unchanged when that hint is set. Defaults stay **`draft-pr`** (code) / **`doc-artifact`** (`docs-digest`) / **`report-only`** (`ops-checklist`) unless Sources or queue set `outcomeKind:` (`branch-only`, `report-only`, `external-ticket-update`, …) — see [outcomes.md](./outcomes.md).
 
 ## Dry-run mode
 
