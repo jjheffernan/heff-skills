@@ -23,6 +23,8 @@ git checkout -b after-hours/<slug>
 
 Slug from work item title (kebab-case, max ~40 chars).
 
+**Mega-PR:** if state `megaPr: true`, follow [mega-pr.md](../references/mega-pr.md) / [outcomes.md](../references/outcomes.md) shared branch instead — do **not** open a per-item PR.
+
 ## Implement
 
 1. Soft-read **ponytail** (or similar minimal-diff skill) **if installed** — smallest working change. Else: change only what acceptance requires; **no drive-by files** (no opportunistic refactors, formatting sweeps, or unrelated cleanup).
@@ -78,12 +80,14 @@ If item `source` is `todo-md`, follow [todo-md.md](../sources/todo-md.md) auto c
 
 ## Outcome
 
+Executor emits a **completion signal**; publish via [outcome adapter](../references/outcomes.md) (`outcomeKind`, default **`draft-pr`**). Do not treat “opened a PR” as the only definition of done — that is today’s default adapter for this executor.
+
 | Result | Item status |
 |--------|-------------|
-| PR opened + tests pass (or skip allowed) | `done` |
-| Cannot scope / blocked guardrail | `blocked` |
+| Adapter succeeds + tests pass (or skip allowed) | `done` |
+| Cannot scope / blocked guardrail / adapter fail | `blocked` |
 | User skip | `skipped` |
 
-Append `{ "url": "...", "itemId": "...", "branch": "after-hours/...", "draft": true }` to state `prs`.
+For `draft-pr`: append `{ "url": "...", "itemId": "...", "branch": "after-hours/...", "draft": true }` to state `prs`.
 
-**After open:** if `draftPrs: true`, confirm draft with `gh pr view <url> --json isDraft -q .isDraft` (must be `true`). If not draft → convert to draft or **stop loop** (`stopReason: guardrail`) — never leave an overnight PR merge-ready by mistake.
+**After open:** if `draftPrs: true`, confirm draft with `gh pr view <url> --json isDraft -q .isDraft` (must be `true`). If not draft → convert to draft or **stop loop** (`stopReason: blocked`, `stopDetail: guardrail`) — never leave an overnight PR merge-ready by mistake.

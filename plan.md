@@ -11,9 +11,11 @@ Living plan for **after-hours-loop**: a drop-in, **workflow-agnostic AFK orchest
 **Phase 2 structure audit:** [post-phase-2](ae706577-6cae-4366-8e66-3c111daee94c)  
 **Phase 3 structure audit:** [post-phase-3](73b45955-2172-4434-b4f2-b72d3d04242c)  
 **Cumulative P1–P3 audit:** [cumulative](4cb22da8-a496-4894-a193-6a750b1bcc22)  
-**Phase 4 structure audit:** [post-phase-4](bda1c157-e503-4961-8d80-f4222491c659)
+**Phase 4 structure audit:** [post-phase-4](bda1c157-e503-4961-8d80-f4222491c659)  
+**Phase 5 structure audit:** [post-phase-5](bfb355b7-1919-494a-81cd-8cac70ba1b96) (PASS_WITH_FIXES → softs fixed; mega-PR followed)
 
 ---
+
 
 ## 1. North star
 
@@ -153,7 +155,8 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 | **1. Setup** | Yes once | Config: repo, baseBranch, testCommand, packageManager; soft-detect Matt setup / ponytail |
 | **2. Align** | Yes (optional) | Prefer existing grill-with-docs / wayfinder / to-tickets; else require pre-approved Sources |
 | **3. Arm / preflight** | Yes | Validate: `gh` auth, clean tree, base branch, sources non-empty or explicit allow, state writable; **dry-run** prints queue |
-| **4. Tick loop** | No | Refresh → pick agent-ready → execute → draft PR → persist; soft-read CONTEXT/ADRs |
+| **4. Tick loop** | No | Refresh → pick agent-ready → execute → outcome adapter → persist; soft-read CONTEXT/ADRs |
+
 | **5. Stop** | Auto | empty / maxPrs / consecutive-blocked / dirty-tree / hard safety / user stop |
 | **6. Morning** | Yes | Write `.cursor/after-hours-morning-brief.md` (PRs, blocked, residual risk, “grill tomorrow”); kill sentinel docs |
 
@@ -236,7 +239,8 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 
 - [x] `docs/composition.md` *(shipped Phase 2; also skill-local copy)*
 - [x] `docs/portability.md` *(shipped Phase 1)*
-- [x] `CHANGELOG.md` (Unreleased + 0.1.0 incl. Phase 4) + root `VERSION` (`0.1.0`)
+- [x] `CHANGELOG.md` (Unreleased + 0.1.0-alpha.1) + root `VERSION` (`0.1.0-alpha.1`)
+
 - [x] Document primary install: `npx skills add jjheffernan/heff-skills -a cursor`; clone + `./scripts/install.sh` as alternative; note release tag `v0.1.0`
 - [x] Minimal validate-state fixtures under `skills/after-hours-loop/fixtures/` (+ skill README pointer)
 - [x] Example kickoff prompts + night Sources templates + `docs/first-night.md`
@@ -270,13 +274,14 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 | 2026-07-13 | Reposition: workflow-agnostic AFK; Matt is optional peer, not parent | Avoid locking growth to grill→ticket; enable non-code executors |
 | 2026-07-13 | Ship as **alpha** (`0.1.0-alpha.1`); defer `v0.1.0` tag | Multiple real runs before release |
 | 2026-07-13 | Treat Cursor Automation as first-class (cron after office hours) | AFK when IDE is closed; document cloud state gap |
+| 2026-07-13 | Mega-PR is dual-token per arm only; never config-sticky | Throughput option without accidental PR bundling |
 
 ### Still open (non-blocking)
 
 1. Exact morning brief path sticky issue vs `.cursor/` file — currently config `morningBriefPath`
 2. Companion micro-skills (`after-hours-stop`, `after-hours-handoff`) vs reference files only
 3. Parse/priority/write-back fixture harness (stretch)
-4. First non-code executor + outcome shape (docs? research digest? ops report?)
+4. First non-code executor + outcome shape — **shipped alpha:** `docs-digest` + live `doc-artifact` (Phase 5.2)
 
 ---
 
@@ -292,7 +297,7 @@ Thin adapters + one behavior source; persistence/stop maturity; soft-fail; defer
 
 ### mattpocock/skills
 
-Composable gate-heavy startup ending at labeled, briefed, frontier tickets. Treat as **optional upstream**: detect artifacts, prefer briefs/maps/tickets when named in Sources, degrade to any other ready tracker — never require grill/HITL overnight, never sit as a fixed leaf under that chain. Adopt readiness vocabulary: frontier, claim, agent-ready, brief, blocked, handoff, fog.
+Composable gate-heavy startup ending at labeled, briefed, frontier tickets. Treat as **optional inputs**: detect artifacts, prefer briefs/maps/tickets when named in Sources, degrade to any other ready tracker — never require grill/HITL overnight, never sit as a fixed leaf under that chain. Adopt readiness vocabulary: frontier, claim, agent-ready, brief, blocked, handoff, fog.
 
 ### Local after-hours-loop
 
@@ -306,32 +311,34 @@ Phases 1–4 shipped the portable AFK coding loop. Next:
 
 ### 7.1 Abstraction (workflow-agnostic core)
 
-- [ ] Rewrite readiness / composition language everywhere so trackers are **inputs**, not a mandated upstream chain (Matt remains soft-compat docs + opt-in sources).
-- [ ] Normalize the queue item contract: `id`, `title`, `acceptance`, `blockerPolicy`, `executorHint`, `outcomeKind` — independent of GitHub/PR.
-- [ ] Separate **outcome adapters** from executors: `draft-pr` today; later `branch-only`, `doc-artifact`, `report-only`, `external-ticket-update`.
-- [ ] Keep Sources as the only night-time binding to a workflow; add adapters, don’t fork orchestration.
+- [x] Rewrite readiness / composition language everywhere so trackers are **inputs**, not a mandated upstream chain (Matt remains soft-compat docs + opt-in sources).
+- [x] Normalize the queue item contract: `id`, `title`, `acceptance`, `blockerPolicy`, `executorHint`, `outcomeKind` — independent of GitHub/PR.
+- [x] Separate **outcome adapters** from executors: `draft-pr` (code default) + live `doc-artifact` (`docs-digest`); stubs later: `branch-only`, `report-only`, `external-ticket-update`.
+
+- [x] Keep Sources as the only night-time binding to a workflow; add adapters, don’t fork orchestration.
 
 ### 7.2 Beyond code
 
-- [ ] Ship one non-code executor MVP (candidate: research/docs digest writing into a repo artifact + morning brief, no PR required).
-- [ ] Domain-agnostic stop reasons (`done` / `blocked` / `noop` / `budget`) with outcome-specific details in state.
-- [ ] Document “A→Z” as executor-defined completion, not “opened a PR”.
+- [x] Ship one non-code executor MVP (candidate: research/docs digest writing into a repo artifact + morning brief, no PR required).
+- [x] Domain-agnostic stop reasons (`done` / `blocked` / `noop` / `budget`) with outcome-specific details in state.
+- [x] Document “A→Z” as executor-defined completion, not “opened a PR”.
 
 ### 7.3 Matt compatibility (without subordination)
 
-- [ ] Keep `wayfinder-afk` + `github-tickets` opt-in; never default them.
-- [ ] Smoke matrix: Matt artifacts present vs absent vs mixed Sources — same orchestrator path.
-- [ ] Refuse any design that requires grill/to-tickets before `/after-hours` can start.
+- [x] Keep `wayfinder-afk` + `github-tickets` opt-in; never default them.
+- [x] Smoke matrix: Matt artifacts present vs absent vs mixed Sources — same orchestrator path ([docs/smoke-matrix.md](./docs/smoke-matrix.md)).
+- [x] Refuse any design that requires grill/to-tickets before `/after-hours` can start.
 
 ### 7.4 Hardening / release
 
 - [ ] Tag `v0.1.0` only after multiple alpha dogfood nights (IDE + Automation) score well.
-- [ ] Expand fixtures (parse / priority / write-back).
+- [ ] Expand fixtures (parse / priority / write-back). *(schema fixtures expanded; parse harness still open)*
 - [ ] Optional companion micro-skills for stop/handoff if references stay too long.
 - [ ] Ingest first solo night via [docs/first-night-scorecard.md](./docs/first-night-scorecard.md); promote every 0/1 into Phase 5 tickets.
 - [x] Cursor Automation office-hours guide + Instructions template ([docs/automation.md](./docs/automation.md))
-- [ ] Durable cloud ledger (tracked file or issue labels) so Automation fires share memory without relying on gitignored state
-- [ ] Optional Slack “fire started / morning summary” action on the Automation
+- [x] Durable cloud ledger (tracked file) so Automation fires share memory without relying on gitignored state — [references/cloud-ledger.md](./skills/after-hours-loop/references/cloud-ledger.md), config `cloudLedgerPath` (default `null`)
+- [ ] Optional Slack “fire started / morning summary” action on the Automation *(deferred)*
+- [x] Mega-PR mode ([references/mega-pr.md](./skills/after-hours-loop/references/mega-pr.md)) — dual-token every arm; never config-sticky
 
 ---
 

@@ -11,3 +11,8 @@ Sources:
   # opt-in: - github-tickets: label ready-for-agent limit 5
 maxPrs: 3
 priority: github-first
+
+# MEGA-PR (unsafe) — OFF by default. To enable THIS run only, uncomment BOTH lines:
+# megaPr: true
+# CONFIRM_MEGA_PR: I_ACCEPT_BUNDLED_PRS
+# config.json cannot enable mega-PR. See references/mega-pr.md

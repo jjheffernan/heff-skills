@@ -2,7 +2,7 @@
 
 Produce a **research writeup** for an AFK ticket — **do not** implement the product destination.
 
-Use when the work item’s `executor` is `research-only` (typically from [wayfinder-afk](../sources/wayfinder-afk.md)).
+Use when the work item’s `executor` is `research-only` (typically from [wayfinder-afk](../sources/wayfinder-afk.md)). For a digest **without** a PR, prefer [`docs-digest`](./docs-digest.md) (`outcomeKind: doc-artifact`) instead — do not auto-rewrite this executor mid-run.
 
 ## Soft tools
 
@@ -10,12 +10,14 @@ Use when the work item’s `executor` is `research-only` (typically from [wayfin
 - Soft-read `CONTEXT.md` / `docs/adr/*` if present — do not rewrite them overnight.
 - Soft-read [ponytail](https://github.com/DietrichGebert/ponytail) only if edits drift into code; default is docs/notes only.
 
-## Deliverable (prefer draft PR)
+## Deliverable (prefer `draft-pr` outcome)
+
+Produce research writeup; publish via [outcome adapter](../references/outcomes.md) — default **`draft-pr`**. Executor completes when the writeup exists; adapter publishes it. A→Z here is research notes + adapter — not “must open a product PR.”
 
 1. Branch from configured `baseBranch` (default `main`), e.g. `after-hours/research-<slug>`.
 2. Write findings to a linked path from the ticket Notes, or a sensible docs path such as `docs/research/<slug>.md` / `.scratch/research/<slug>.md` if the ticket does not specify.
-3. Prefer opening a **draft PR** whose diff is the research markdown (and only incidental index links if needed).
-4. Fallback: if a coding harness / draft PR is unavailable, **`gh issue comment`** on the ticket with the research notes (or attach a gist link). Prefer draft PR when `gh` + git work.
+3. Prefer **`draft-pr`**: draft PR whose diff is the research markdown (and only incidental index links if needed).
+4. Fallback (until `external-ticket-update` is live): if a coding harness / draft PR is unavailable, **`gh issue comment`** on the ticket with the research notes (or attach a gist link). Prefer draft PR when `gh` + git work. For no-PR digest nights, Sources should bind `docs-digest` instead.
 
 PR / comment must make clear: research only — no product feature shipped.
 
@@ -62,9 +64,11 @@ No product test suite required. If docs tooling / link check exists and is cheap
 
 ## Outcome
 
+Completion signal + outcome adapter ([outcomes.md](../references/outcomes.md)). Default `outcomeKind: draft-pr`.
+
 | Result | Item status |
 |--------|-------------|
-| Draft research PR opened, or research comment attached | `done` |
+| Research writeup published (draft PR) or comment fallback attached | `done` |
 | Missing acceptance; needs human product / HITL; cannot place writeup | `blocked` |
 | User skip | `skipped` |
 

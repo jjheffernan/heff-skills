@@ -3,10 +3,11 @@ name: after-hours
 description: >
   ALPHA — AFK overnight / late-session loop (not a release). Pluggable work
   sources (GitHub issues, TODO.md, feature specs, opt-in wayfinder-afk /
-  github-tickets) and executors → draft PRs. Trigger when the user runs
-  /after-hours, /after-hours-loop, /loop with after-hours instructions, a
-  Cursor Automation (e.g. cron after office hours), or asks to drain
-  ready-for-agent / AFK / overnight work while unattended.
+  github-tickets) and executors (incl. docs-digest) → outcome adapters
+  (draft-pr default for code; doc-artifact for digests). Trigger when the
+  user runs /after-hours, /after-hours-loop, /loop with after-hours
+  instructions, a Cursor Automation (e.g. cron after office hours), or asks
+  to drain ready-for-agent / AFK / overnight work while unattended.
 disable-model-invocation: true
 license: MIT
 ---
@@ -15,19 +16,28 @@ license: MIT
 
 **Status:** `0.1.0-alpha` — collect real runs before a release tag. After dogfood nights, score with the heff-skills repo scorecard (`docs/first-night-scorecard.md`).
 
-Bootstrap **sources** → **work items** → **executors** → outcomes (draft PRs for code executors) on `baseBranch`.## Load map
+Bootstrap **sources** → **work items** → **executors** → **outcome adapters** (default `draft-pr` for code; `doc-artifact` for `docs-digest`) on `baseBranch`.
+
+**A→Z** means executor-defined completion for the item plus its outcome adapter — not solely “opened a PR” ([outcomes](./references/outcomes.md), [glossary](./docs/glossary.md)).
+
+**Sources are the only night-time binding** to a workflow — one orchestrator path; add source/outcome adapters, don’t fork the loop. Trackers are inputs ([composition](./docs/composition.md)).
+
+## Load map
 
 | Doc | When |
 |-----|------|
 | [references/bootstrap.md](./references/bootstrap.md) | Preflight, dry-run, Sources |
 | [references/readiness.md](./references/readiness.md) | Before execute / claim |
-| [references/compatibility.md](./references/compatibility.md) | Peer / Matt detect order |
+| [references/compatibility.md](./references/compatibility.md) | Peer / Matt soft-detect (opt-in) |
 | [references/guardrails.md](./references/guardrails.md) | Skip / block / stop / escalate |
-| [references/state-schema.md](./references/state-schema.md) | state.json, resume |
+| [references/state-schema.md](./references/state-schema.md) | state.json, queue contract, resume |
+| [references/outcomes.md](./references/outcomes.md) | Outcome adapters (`draft-pr`, `doc-artifact`, stubs) |
 | [references/morning-brief.md](./references/morning-brief.md) | Every stop |
 | [references/tick-and-runners.md](./references/tick-and-runners.md) | Sentinel, tick loop, Automation |
+| [references/cloud-ledger.md](./references/cloud-ledger.md) | Optional durable Automation ledger (`cloudLedgerPath`) |
+| [references/mega-pr.md](./references/mega-pr.md) | Bundled mega-PR — **explicit every run** (unsafe) |
 | [docs/glossary.md](./docs/glossary.md) | Terms |
-| [docs/composition.md](./docs/composition.md) | Build-chain position |
+| [docs/composition.md](./docs/composition.md) | Orchestrator position; trackers as inputs |
 
 Config: `.cursor/after-hours-loop.config.json` ← [templates/config.example.json](./templates/config.example.json).
 
@@ -35,7 +45,7 @@ Config: `.cursor/after-hours-loop.config.json` ← [templates/config.example.jso
 
 | Trigger | Behavior |
 |---------|----------|
-| **`/after-hours`** | Primary. `/after-hours 45m`, `/after-hours --dry-run`. |
+| **`/after-hours`** | Primary. `/after-hours 45m`, `/after-hours --dry-run`. Mega-PR only with `--mega-pr` **and** confirm line — [mega-pr](./references/mega-pr.md). |
 | **`/loop`** + this skill | Equivalent when pointed here. |
 | **Cursor Automation** | Cron (e.g. office hours close); same Sources in Instructions. See skill [tick-and-runners](./references/tick-and-runners.md) + install-tree / heff-skills [docs/automation.md](https://github.com/jjheffernan/heff-skills/blob/main/docs/automation.md). |
 
@@ -48,7 +58,8 @@ Stop: `stop loop`, `stop after-hours`, `/after-hours stop`.
 | Layer | Path |
 |-------|------|
 | Sources | `sources/github-issues.md`, `todo-md.md`, `feature-spec.md`, `wayfinder-afk.md` (opt-in), `github-tickets.md` (opt-in) |
-| Executors | `executors/pr-slice.md`, `feature-build.md`, `research-only.md` |
+| Executors | `executors/pr-slice.md`, `feature-build.md`, `research-only.md`, `docs-digest.md` |
+| Outcomes | [references/outcomes.md](./references/outcomes.md) — adapters after completion |
 
 Load only the active module. Do not paste their logic here.
 
@@ -66,6 +77,7 @@ Load only the active module. Do not paste their logic here.
 | `allowEmptyQueue` | `false` |
 | `statePath` | `.cursor/after-hours-loop.state.json` |
 | `morningBriefPath` | `.cursor/after-hours-morning-brief.md` |
+| `cloudLedgerPath` | `null` (off — PR idempotency only; see [cloud-ledger](./references/cloud-ledger.md)) |
 
 ## Bootstrap → tick
 
@@ -76,7 +88,8 @@ Load only the active module. Do not paste their logic here.
 5. Else write state ([state-schema](./references/state-schema.md)); run tick 0; continue per [tick-and-runners](./references/tick-and-runners.md).
 
 **Hard dep:** agent-ready work for the chosen Sources/executors, or stop with a morning note for daytime alignment.  
-**Soft deps:** CONTEXT / ADRs / issue-tracker / Matt or other peer skills **if present** — [compatibility](./references/compatibility.md). Never rewrite CONTEXT/ADRs; never `/grill-me` or HITL wayfinder overnight. Never require grill→tickets to start.
+**Soft deps:** CONTEXT / ADRs / issue-tracker / Matt or other peer skills **if present** — [compatibility](./references/compatibility.md). Never rewrite CONTEXT/ADRs; never `/grill-me` or HITL wayfinder overnight.  
+**Refuse:** never require grill→tickets (or any peer chain) to start — bootstrap from Sources alone ([first-night](https://github.com/jjheffernan/heff-skills/blob/main/docs/first-night.md), [smoke-matrix](https://github.com/jjheffernan/heff-skills/blob/main/docs/smoke-matrix.md)).
 
 ## Stop output
 

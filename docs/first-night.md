@@ -2,6 +2,8 @@
 
 Ship one unattended run with agent-ready work already queued. Daytime alignment (whatever workflow you use) happens while you are present — not overnight.
 
+**Refuse:** you do **not** need Matt grill / to-tickets (or any peer chain) before `/after-hours` can start. Opt-in Sources `wayfinder-afk` / `github-tickets` stay off unless you uncomment them — see [smoke-matrix.md](./smoke-matrix.md).
+
 **Alpha:** expect rough edges; score every run.
 
 After the run, score it with **[first-night-scorecard.md](./first-night-scorecard.md)** and feed every partial/fail into [plan.md](../plan.md).

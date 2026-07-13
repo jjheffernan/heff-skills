@@ -2,6 +2,10 @@
 
 Once per loop run: load config → parse Sources → preflight → write state (unless dry-run) → tick 0 (unless dry-run) → arm sentinel when in-session.
 
+**Sources are the only night-time binding** to a workflow. Peer skills / trackers are optional inputs; **refuse** any gate that requires grill→tickets (or any chain) before bootstrap — the loop starts from Sources alone. See [composition.md](../docs/composition.md), [compatibility.md](./compatibility.md), [smoke-matrix](https://github.com/jjheffernan/heff-skills/blob/main/docs/smoke-matrix.md).
+
+Default night templates activate `github-issues` / `todo-md` only. **`wayfinder-afk` and `github-tickets` stay opt-in** (commented in examples); never enable them by soft-detect.
+
 ## Preflight checklist (fail-closed)
 
 All must pass unless noted:
@@ -33,12 +37,28 @@ priority: github-first
 
 Full copyable example: [templates/Sources.example.txt](../templates/Sources.example.txt).
 
-1. For each line, load matching `sources/*.md` and materialize items.
+### Mega-PR gate (optional, unsafe)
+
+Default remains **sliced** PRs. To enable bundled mega-PR for **this arm only**, the kickoff must include **both** tokens per [mega-pr.md](./mega-pr.md):
+
+```text
+megaPr: true
+CONFIRM_MEGA_PR: I_ACCEPT_BUNDLED_PRS
+```
+
+(or `/after-hours --mega-pr` plus the same `CONFIRM_MEGA_PR` line).
+
+- Exactly one of the two → **Stop** preflight (`blocked` / `preflight`); do not guess.
+- Config file / prior state / rules **cannot** enable mega-PR. If config contains `megaPr`, ignore it and note in the brief.
+- Persist `megaPr: true` on **this run’s** state only after both tokens validate; never copy into config; next arm must re-confirm.
+
+1. For each line, load matching `sources/*.md` and materialize items (portable queue fields: `id`, `title`, `acceptance`, `blockerPolicy`, `executorHint`, `outcomeKind` — [state-schema.md](./state-schema.md)).
 2. Merge; sort by `priority` (`github-first` default).
 3. Apply readiness; non-ready → queue as `blocked` or omit (prefer materialize + `blocked` with reason so the brief can list them).
-4. Write state (unless dry-run) — see [state-schema.md](./state-schema.md).
+4. Write state (unless dry-run) — see [state-schema.md](./state-schema.md). Including `megaPr` boolean for this run when gated on.
+Optional overrides: `feature:example-phase1 executor:feature-build`, `github:52 executor:docs-digest`, or queue `executorHint: docs-digest`.
 
-Optional overrides: `feature:example-phase1 executor:feature-build`.
+When binding: prefer `executorHint` / explicit `executor` over source defaults. `docs-digest` → load `executors/docs-digest.md` and default `outcomeKind: doc-artifact`. Leave `research-only` unchanged when that hint is set.
 
 ## Dry-run mode
 

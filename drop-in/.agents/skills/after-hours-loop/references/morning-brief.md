@@ -1,6 +1,6 @@
 # Morning brief
 
-Durable handoff for the human after a stop. Write **on every stop** (empty queue, maxPrs, guardrail, user stop).
+Durable handoff for the human after a stop. Write **on every stop** (`noop` / `budget` / `blocked` / `done` — any stop path).
 
 ## Path
 
@@ -18,15 +18,22 @@ Copyable body: [templates/morning-brief.md](../templates/morning-brief.md).
 
 **Run:** <startedAt ISO> → <stoppedAt ISO>
 **Repo:** <owner/name> · **Base:** <baseBranch>
-**Stop reason:** <empty-queue | maxPrs | guardrail | user-stop | consecutive-blocked | ci-red | preflight | dry-run>
+**Stop reason:** <done | blocked | noop | budget> · **Detail:** <empty-queue | maxPrs | guardrail | user-stop | consecutive-blocked | ci-red | preflight | dry-run | …>
 
 ## Summary
 
-<2–4 sentences: what ran, what shipped as drafts, what needs a human>
+<2–4 sentences: what ran, what shipped (drafts and/or doc artifacts), what needs a human>
+
+<!-- If state.megaPr: lead with: **MEGA-PR MODE** — human opted in this run via CONFIRM_MEGA_PR. Bundled draft — review carefully. -->
 
 ## PRs opened
 
 - <title> — <url> (draft)
+- … or _None_
+
+## Doc artifacts
+
+- `<id>` — <path> (`doc-artifact`)
 - … or _None_
 
 ## Done
@@ -53,7 +60,7 @@ Copyable body: [templates/morning-brief.md](../templates/morning-brief.md).
 
 - Grill / wayfinder: <what alignment to do tomorrow, if any>
 - Ready queue: <what to label / brief before next AFK>
-- Review: <which PR to look at first>
+- Review: <which PR or digest to look at first>
 
 ## Artifacts
 
@@ -65,7 +72,9 @@ Copyable body: [templates/morning-brief.md](../templates/morning-brief.md).
 
 1. **Pointers > dumps** — PR URLs, issue links, file paths, item IDs. No pasted secret material, `.env` bodies, tokens, or full logs.
 2. **Redact** — replace credentials with `<redacted>`; mention path only if relevant to residual risk.
-3. **Every stop** — overwrite or update the brief file even if no PRs opened (empty night still useful).
+3. **Every stop** — overwrite or update the brief file even if no PRs opened (empty night / doc-only night still useful).
 4. **Blocked must be actionable** — each blocked row needs *why* + *what the human must do*.
 5. **Suggested next** — prefer daytime: grill, wayfinder, Agent Brief, label `ready-for-agent`. Do not pretend AFK will fix fog.
 6. Keep Summary short; put detail in Done / Blocked / Residual risk.
+7. **Stop line** — show coarse `stopReason`; include `stopDetail` when set ([state-schema.md](./state-schema.md)).
+8. **Mega-PR** — if state `megaPr: true`, lead Summary with the MEGA-PR MODE banner ([mega-pr.md](./mega-pr.md)) and list every bundled item.

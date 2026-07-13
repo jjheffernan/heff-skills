@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Phase 5 + mega-PR after `0.1.0-alpha.1` packaging.
+
+### Added
+
+- [`references/outcomes.md`](./skills/after-hours-loop/references/outcomes.md) — outcome adapters (`draft-pr` default; live `doc-artifact`; stubs for `branch-only` / `report-only` / `external-ticket-update`)
+- [`executors/docs-digest.md`](./skills/after-hours-loop/executors/docs-digest.md) — non-code digest executor wired to `doc-artifact`
+- Domain-agnostic `stopReason` / `stopDetail` on state (plus morning-brief stop line)
+- [`references/cloud-ledger.md`](./skills/after-hours-loop/references/cloud-ledger.md) — optional durable Automation ledger (`cloudLedgerPath`)
+- [`docs/smoke-matrix.md`](./docs/smoke-matrix.md) — Matt present / absent / mixed Sources smoke rows
+- Fixture [`sample-state.invalid-status.json`](./skills/after-hours-loop/fixtures/sample-state.invalid-status.json) for validate-state CI (bad `queue[].status`)
+- [`references/mega-pr.md`](./skills/after-hours-loop/references/mega-pr.md) — **unsafe** bundled mega-PR; requires `megaPr: true` **and** `CONFIRM_MEGA_PR: I_ACCEPT_BUNDLED_PRS` on **every** arm (never sticky via config)
+
+### Changed
+
+- Architecture / automation docs aligned with outcome adapters (not PR-only A→Z)
+
 ## [0.1.0-alpha.1] — 2026-07-13
 
 First **alpha** packaging of **heff-skills** / **after-hours-loop**. Not a release — dogfood before tagging `v0.1.0`.

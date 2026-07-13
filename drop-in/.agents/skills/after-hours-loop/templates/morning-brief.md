@@ -2,15 +2,22 @@
 
 **Run:** <startedAt ISO> → <stoppedAt ISO>
 **Repo:** <owner/name> · **Base:** <baseBranch>
-**Stop reason:** <empty-queue | maxPrs | guardrail | user-stop | consecutive-blocked | ci-red | preflight | dry-run>
+**Stop reason:** <done | blocked | noop | budget> · **Detail:** <empty-queue | maxPrs | guardrail | user-stop | consecutive-blocked | ci-red | preflight | dry-run | …>
 
 ## Summary
 
-<2–4 sentences: what ran, what shipped as drafts, what needs a human>
+<!-- If megaPr: lead with MEGA-PR MODE banner — see references/mega-pr.md -->
+
+<2–4 sentences: what ran, what shipped (drafts and/or doc artifacts), what needs a human>
 
 ## PRs opened
 
 - <title> — <url> (draft)
+- … or _None_
+
+## Doc artifacts
+
+- `<id>` — <path> (`doc-artifact`)
 - … or _None_
 
 ## Done
@@ -37,7 +44,7 @@
 
 - Grill / wayfinder: <what alignment to do tomorrow, if any>
 - Ready queue: <what to label / brief before next AFK>
-- Review: <which PR to look at first>
+- Review: <which PR or digest to look at first>
 
 ## Artifacts
 

@@ -12,9 +12,10 @@ Follow `.agents/skills/after-hours-loop/SKILL.md` end-to-end:
 3. Apply readiness; skip or block HITL / vague / grill-style work.
 4. Execute at most `maxPrs` agent-ready items A→Z with the named executor.
 5. Open **draft** PRs only (`draftPrs: true`). Never merge. Never force-push. Respect denylist.
-6. Idempotency (cloud): if an open draft PR already covers an item (branch/title/body references the item id or issue), **skip** it — do not start a second implementation.
-7. Do not rely on `.cursor/after-hours-loop.state.json` from a previous run (usually absent in cloud). Prefer live Sources + existing PRs.
+6. Idempotency (cloud): if an open draft PR already covers an item (branch/title/body references the item id or issue), **skip** it — do not start a second implementation. If config `cloudLedgerPath` is set, also skip/update per `.agents/skills/after-hours-loop/references/cloud-ledger.md`.
+7. Do not rely on `.cursor/after-hours-loop.state.json` from a previous run (usually absent in cloud). Prefer live Sources + existing PRs (+ ledger when configured).
 8. End with a morning brief in your final message: done, blocked, PR links, human next steps.
+9. Do not require grill / to-tickets before starting — Sources below are enough.
 
 /after-hours bootstrap:
   - github-issues: label ready-for-agent limit 5
@@ -25,3 +26,6 @@ priority: github-first
 # - todo-md: section "Now"
 # - feature-spec: docs/plans/YOUR-PLAN.md phase 1
 # Keep wayfinder-afk / github-tickets opt-in only when those peers exist and you know the map is AFK-safe.
+#
+# Do NOT add megaPr / CONFIRM_MEGA_PR here by default. Bundled mega-PR requires both tokens
+# pasted into THIS fire's Instructions every time (references/mega-pr.md). Cron must not remember mega.

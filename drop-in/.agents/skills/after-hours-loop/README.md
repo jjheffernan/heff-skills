@@ -2,7 +2,7 @@
 
 **Status: alpha (`0.1.0-alpha`)** — dogfood before release.
 
-AFK overnight loop for Cursor: pluggable **work sources** + **executors** → outcomes (draft PRs for code). Works from `/after-hours`, `/loop`, or **Cursor Automation** when office hours close.
+AFK overnight loop for Cursor: pluggable **work sources** + **executors** → **outcome adapters** (`draft-pr` default for code). Trackers are inputs; **Sources** are the only night-time binding. Works from `/after-hours`, `/loop`, or **Cursor Automation** when office hours close.
 
 Part of [heff-skills](https://github.com/jjheffernan/heff-skills).
 
@@ -14,9 +14,9 @@ Part of [heff-skills](https://github.com/jjheffernan/heff-skills).
 | `/after-hours 30m` | Same with custom interval |
 | `/loop …` + this skill | Equivalent when pointed here |
 | Cursor Automation | Unattended cron (office-hours close) — [docs/automation.md](https://github.com/jjheffernan/heff-skills/blob/main/docs/automation.md) · [instructions template](./templates/automation-instructions.office-hours.close.txt) |
+| Mega-PR (unsafe) | Dual-token only — [mega-pr.md](./references/mega-pr.md); never config-sticky |
 
-Stop: `stop after-hours` / `stop loop`.
-## Install
+Stop: `stop after-hours` / `stop loop`.## Install
 
 Primary (when published / registry-available):
 
@@ -72,9 +72,9 @@ Keep `alwaysApply: false` — the rule is a thin pointer at `.agents/skills/afte
 | Path | Use |
 |------|-----|
 | `SKILL.md` | Thin orchestrator |
-| `references/` | Bootstrap, readiness, compatibility, guardrails, state, morning brief |
+| `references/` | Bootstrap, readiness, compatibility, guardrails, state, outcomes, morning brief |
 | `sources/` | Work source modules (incl. opt-in `wayfinder-afk`, `github-tickets`) |
-| `executors/` | `pr-slice`, `feature-build`, `research-only` |
+| `executors/` | `pr-slice`, `feature-build`, `research-only`, `docs-digest` (completion → outcome adapter) |
 | `templates/` | Config, Sources, night presets, Automation Instructions, morning-brief, drop-in pointer, optional Cursor rule, gitignore snippet |
 | `fixtures/` | Sample state JSON for `validate-state.py` |
 
@@ -83,7 +83,7 @@ Generated install tree: repo-root `drop-in/` (`./scripts/sync-drop-in.sh`).
 ## Optional peers
 
 - [ponytail](https://github.com/DietrichGebert/ponytail) — minimal-diff discipline (soft)
-- [mattpocock/skills](https://github.com/mattpocock/skills) — optional peer producers of agent-ready work (wayfinder / tickets / briefs); never required to start AFK
+- [mattpocock/skills](https://github.com/mattpocock/skills) — optional peer **inputs** (wayfinder / tickets / briefs); soft-compat only; never required to start AFK
 
 Not bundled. Loop degrades cleanly without them.
 

@@ -8,28 +8,32 @@ Four severity levels. Use the lightest that still keeps overnight safe.
 |----------|------|--------|
 | **Skip item** | `skipped` | Leave item; pick next. No PR. Note in morning brief. |
 | **Block item** | `blocked` | Same as skip for queue progress, but `blockReason` required (`needs-info`, `needs-grill`, `tests`, `hitl`, `ci-red`, …). Deferred ledger — must not vanish. |
-| **Stop loop** | stop | Kill sentinel / do not re-arm; write morning brief; persist `stopReason`. |
+| **Stop loop** | stop | Kill sentinel / do not re-arm; write morning brief; persist coarse `stopReason` + optional `stopDetail` ([state-schema.md](./state-schema.md)). |
 | **Escalate** | stop + alert | Stop loop **and** surface hard safety (auth/secrets/denylist) first in Summary — human must act before next AFK. |
 
 ## Condition → severity map
 
-| Condition | Severity | Notes |
-|-----------|----------|-------|
-| Vague acceptance; inventable scope | **Block item** | `needs-info` or `needs-grill`; never invent |
+On **Stop loop**, set coarse `stopReason` (`done` / `blocked` / `noop` / `budget`) and `stopDetail` as noted.
+
+| Condition | Severity | `stopReason` / `stopDetail` |
+|-----------|----------|------------------------------|
+| Vague acceptance; inventable scope | **Block item** | (item) `needs-info` or `needs-grill`; never invent |
 | HITL / product decision / design-only | **Block item** or **Skip item** | Prefer `blocked` + `hitl` |
 | Wayfinder grilling / prototype HITL ticket | **Skip item** | Do not resolve overnight |
 | Tests fail after one fix attempt | **Block item** | `tests` |
-| Empty queue (no agent-ready work) | **Stop loop** | Unless dry-run noop |
-| `prs.length >= maxPrs` | **Stop loop** | Budget hit |
-| User: stop after-hours / stop loop | **Stop loop** | Kill sentinel PID |
-| Dirty working tree at tick start and `safety.stopOnDirtyTree` | **Stop loop** | Fail-closed; do not start coding |
-| Staged/changed path matches `safety.pathDenylist` | **Escalate** | Before commit/push; never open PR |
-| Auth / webhook / guard **weakening** and `safety.stopOnAuthWeakening` | **Escalate** | Hard safety |
-| `consecutiveBlocked >= maxConsecutiveBlocked` | **Stop loop** | Default threshold `3`; `stopReason: consecutive-blocked` |
+| Empty queue (no agent-ready work) | **Stop loop** | `noop` / `empty-queue` (dry-run stays noop) |
+| `prs.length >= maxPrs` | **Stop loop** | `budget` / `maxPrs` |
+| User: stop after-hours / stop loop | **Stop loop** | `done` / `user-stop` — kill sentinel PID |
+| Dirty working tree at tick start and `safety.stopOnDirtyTree` | **Stop loop** | `blocked` / `preflight` (or `guardrail`) — fail-closed; do not start coding |
+| Staged/changed path matches `safety.pathDenylist` | **Escalate** | `blocked` / `guardrail` — before commit/push; never open PR |
+| Auth / webhook / guard **weakening** and `safety.stopOnAuthWeakening` | **Escalate** | `blocked` / `guardrail` |
+| `consecutiveBlocked >= maxConsecutiveBlocked` | **Stop loop** | `blocked` / `consecutive-blocked` (default threshold `3`) |
 | PR checks red after open and `babysitCi: true` | **Block item** | `ci-red`; note in item + brief |
-| PR checks red and `stopOnCiRed: true` | **Stop loop** | After block note; `stopReason: ci-red` |
-| `gh` auth missing when Sources need GitHub | **Stop loop** | Preflight fail-closed |
-| Preflight fail (base branch, state unwritable, empty Sources without allow) | **Stop loop** | `stopReason: preflight` |
+| PR checks red and `stopOnCiRed: true` | **Stop loop** | `blocked` / `ci-red` |
+| Preflight fail (base branch, state unwritable, empty Sources without allow) | **Stop loop** | `blocked` / `preflight` |
+| Mega-PR: only one of `megaPr` / `CONFIRM_MEGA_PR` present | **Stop loop** | `blocked` / `preflight` — require both or neither ([mega-pr.md](./mega-pr.md)) |
+| `gh` auth missing when Sources need GitHub | **Stop loop** | `blocked` / `preflight` |
+| Dry-run finished | **Stop loop** | `noop` / `dry-run` |
 
 ## Dirty tree (fail-closed)
 
@@ -52,7 +56,7 @@ No exceptions overnight. Fail closed.
 Respect `safety.pathDenylist` (globs). Enforcement is **before** `git commit`, `git push`, or `gh pr create`:
 
 1. Collect staged and unstaged changed paths (`git diff --name-only`, `git diff --cached --name-only`, plus untracked if about to add).
-2. If **any** path matches a denylist glob → **Escalate**: revert/unstage those paths if safe; **do not commit, push, or open a PR**; stop loop; `stopReason: guardrail` (denylist). Lead morning Summary with the matched paths.
+2. If **any** path matches a denylist glob → **Escalate**: revert/unstage those paths if safe; **do not commit, push, or open a PR**; stop loop; `stopReason: blocked`, `stopDetail: guardrail` (denylist). Lead morning Summary with the matched paths.
 3. Planned edit that would touch denylist → same escalate; do not start that edit path.
 
 Never open a PR that includes denylisted files.
@@ -70,7 +74,7 @@ Track `consecutiveBlocked` in state ([state-schema.md](./state-schema.md)).
 When `consecutiveBlocked >= maxConsecutiveBlocked` (config; **default 3**):
 
 1. **Stop loop** — kill sentinel; do not pick another item.
-2. Persist `stopReason: consecutive-blocked`.
+2. Persist `stopReason: blocked`, `stopDetail: consecutive-blocked`.
 3. Write morning brief (Blocked/Skipped sections must list the streak).
 
 Do not silently re-try the same blocked id forever in one night without new agent-ready evidence.
@@ -84,7 +88,7 @@ When `babysitCi: true` and a PR was just opened this tick:
 1. Poll once: `gh pr checks <pr-number-or-url>` (short wait only; do not sit all night).
 2. If checks are **red** / failed:
    - Mark the work item **blocked** (`blockReason: ci-red`); set `notes` with failing check names if known.
-   - If `stopOnCiRed: true` → **also Stop loop** (`stopReason: ci-red`) + morning brief.
+   - If `stopOnCiRed: true` → **also Stop loop** (`stopReason: blocked`, `stopDetail: ci-red`) + morning brief.
    - If `stopOnCiRed: false` → continue queue (blocked item stays in deferred ledger).
 3. Pending/yellow after one poll → leave item `done` (PR opened); note “checks not green yet” in brief if useful. Do not stop solely for pending.
 

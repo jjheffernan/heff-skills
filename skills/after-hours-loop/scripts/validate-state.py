@@ -17,7 +17,8 @@ REQUIRED = (
     "baseBranch",
 )
 STATUSES = frozenset({"open", "in-progress", "done", "blocked", "skipped"})
-STOP_REASONS = frozenset(
+STOP_REASONS = frozenset({"done", "blocked", "noop", "budget"})
+STOP_DETAILS = frozenset(
     {
         "empty-queue",
         "maxPrs",
@@ -83,6 +84,17 @@ def main() -> None:
     if "stopReason" in data and data["stopReason"] is not None:
         if data["stopReason"] not in STOP_REASONS:
             fail(f"stopReason invalid: {data['stopReason']!r}")
+
+    if "stopDetail" in data and data["stopDetail"] is not None:
+        detail = data["stopDetail"]
+        if not isinstance(detail, str) or not detail:
+            fail("stopDetail must be a non-empty string when set")
+        if detail not in STOP_DETAILS:
+            fail(f"stopDetail invalid: {detail!r}")
+
+    if "megaPr" in data and data["megaPr"] is not None:
+        if not isinstance(data["megaPr"], bool):
+            fail("megaPr must be a boolean when set")
 
     print("ok")
 

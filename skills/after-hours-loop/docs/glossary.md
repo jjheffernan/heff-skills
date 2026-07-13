@@ -8,21 +8,25 @@ Modular overnight / late-session agent work. Orchestrator: `.agents/skills/after
 |------|---------|
 | **Loop run** | One armed session from bootstrap until stop |
 | **Tick** | One orchestrator iteration: pick item → execute → record outcome |
-| **Work item** | Normalized unit the loop consumes |
-| **Work source** | Adapter that materializes or refreshes work items |
-| **Executor** | Strategy that completes one work item (or one slice) |
-| **Outcome** | `done`, `blocked`, or `skipped` on an item |
-| **Slice** | Smallest shippable unit for an executor (usually one PR) |
+| **Work item** | Normalized unit the loop consumes (portable contract: `id`, `title`, `acceptance`, `blockerPolicy`, `executorHint`, `outcomeKind` — see state-schema) |
+| **Work source** | Adapter that materializes or refreshes work items from a tracker **input** |
+| **Executor** | Strategy that completes one work item (or one slice) and emits a completion signal |
+| **A→Z** | Executor-defined completion for an item (acceptance satisfied) plus a successful outcome adapter — **not** solely “opened a PR” |
+| **Outcome adapter** | How completion is published (`draft-pr`, `doc-artifact`, later `branch-only`, …) — separate from executors |
+| **Outcome** | Item `status` after tick: `done`, `blocked`, or `skipped` |
+| **Slice** | Smallest shippable unit for an executor (often one draft PR or one doc artifact) |
 | **Agent-ready** | Work with clear acceptance (e.g. `ready-for-agent` + brief); AFK must not invent scope |
+| **Sources** | Night-time binding to which trackers / inboxes feed this run — only binding; do not fork orchestration |
 
 ## Layers
 
 | Layer | Modules (v1) |
 |-------|----------------|
-| Work source | `github-issues`, `todo-md`, `feature-spec`, `wayfinder-afk` (opt-in) |
-| Executor | `pr-slice`, `feature-build`, `research-only` |
+| Work source | `github-issues`, `todo-md`, `feature-spec`, `wayfinder-afk` (opt-in), `github-tickets` (opt-in) |
+| Executor | `pr-slice`, `feature-build`, `research-only`, `docs-digest` |
+| Outcome adapter | `draft-pr`, `doc-artifact` (live); stubs in [outcomes.md](../references/outcomes.md) |
 | Orchestrator | `after-hours` skill + `/after-hours`, `/loop`, or Cursor Automation |
-| References | readiness, compatibility, bootstrap, guardrails, state, morning-brief |
+| References | readiness, compatibility, bootstrap, guardrails, state, outcomes, morning-brief, cloud-ledger |
 
 ## Resolved defaults
 
@@ -41,16 +45,20 @@ Modular overnight / late-session agent work. Orchestrator: `.agents/skills/after
 {
   "id": "github:52",
   "title": "Example issue title",
+  "acceptance": "optional but preferred",
+  "blockerPolicy": "block",
+  "executorHint": "pr-slice",
+  "outcomeKind": "draft-pr",
   "source": "github-issues",
   "executor": "pr-slice",
   "ref": "https://github.com/owner/name/issues/52",
-  "acceptance": "optional",
   "granularity": "single-pr",
   "status": "open"
 }
 ```
 
-**ID convention:** `{source}:{stable-key}` — e.g. `github:52`, `todo:3b-pause-audit`, `feature:example-phase1`.
+**ID convention:** `{source}:{stable-key}` — e.g. `github:52`, `todo:3b-pause-audit`, `feature:example-phase1`.  
+Portable contract + aliases: [state-schema.md](../references/state-schema.md).
 
 ## Bootstrap (in-session)
 
@@ -86,13 +94,14 @@ Checkout configured **`baseBranch`**.
 |----------|----------------|-----------|
 | State | `.cursor/after-hours-loop.state.json` | Yes |
 | Morning brief | `.cursor/after-hours-morning-brief.md` | Yes |
+| Cloud ledger | config `cloudLedgerPath` (default off / `null`; e.g. `.cursor/after-hours-ledger.json`) | No — must be committed when enabled |
 | Config | `.cursor/after-hours-loop.config.json` | Optional (often commit) |
 
 ## Stop
 
-- Empty queue
-- `maxPrs` reached
-- Guardrail trip (auth/secrets / dirty tree per config)
-- User: **stop after-hours** / **stop loop** (kill sentinel PID)
+- Empty queue → `stopReason: noop` (`stopDetail: empty-queue`)
+- `maxPrs` reached → `budget` / `maxPrs`
+- Guardrail / preflight / blocked streak / CI stop → `blocked` + matching `stopDetail`
+- User: **stop after-hours** / **stop loop** → `done` / `user-stop` (kill sentinel PID)
 
-On stop, write the morning brief (pointers to PRs and blocked items).
+On stop, write the morning brief (pointers to PRs, doc artifacts, and blocked items). Coarse stop enum: [state-schema.md](../references/state-schema.md).

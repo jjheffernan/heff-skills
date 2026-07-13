@@ -5,11 +5,14 @@ Load these when the orchestrator needs depth. Orchestrator stays thin: [SKILL.md
 | Doc | Status |
 |-----|--------|
 | [readiness.md](./readiness.md) | Live — agent-ready gates, claim, HITL skip |
-| [compatibility.md](./compatibility.md) | Live — soft/hard deps, Matt detect order, fallbacks |
+| [compatibility.md](./compatibility.md) | Live — soft/hard deps, peer soft-detect, fallbacks |
 | [morning-brief.md](./morning-brief.md) | Live — template + write rules (every stop) |
-| [state-schema.md](./state-schema.md) | Live — v1 fields, claim/resume, dry-run no-write |
-| [guardrails.md](./guardrails.md) | Live — skip / block / stop / escalate (+ consecutive-blocked vocab) |
+| [state-schema.md](./state-schema.md) | Live — v1 fields, portable queue contract, claim/resume, dry-run |
+| [outcomes.md](./outcomes.md) | Live — outcome adapters (`draft-pr`, `doc-artifact`; stubs); separate from executors |
+| [guardrails.md](./guardrails.md) | Live — skip / block / stop / escalate (+ coarse stopReason) |
 | [bootstrap.md](./bootstrap.md) | Live — preflight, Sources, dry-run |
 | [tick-and-runners.md](./tick-and-runners.md) | Live — sentinel, tick loop, Automation |
+| [cloud-ledger.md](./cloud-ledger.md) | Live — optional durable Automation ledger (`cloudLedgerPath`) |
+| [mega-pr.md](./mega-pr.md) | Live — bundled mega-PR; dual-token enable every arm |
 
 Copyable morning brief body: [templates/morning-brief.md](../templates/morning-brief.md).
