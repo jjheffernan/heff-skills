@@ -17,13 +17,19 @@ Stop: `stop after-hours` / `stop loop`.
 
 ## Install
 
-From the heff-skills repo:
+Primary (when published / registry-available):
+
+```bash
+npx skills add jjheffernan/heff-skills -a cursor
+```
+
+Alternative from a heff-skills clone:
 
 ```bash
 ./scripts/install.sh /path/to/your/project --with-gitignore
 ```
 
-Or see [INSTALL.md](https://github.com/jjheffernan/heff-skills/blob/main/INSTALL.md) in the heff-skills repo. Then copy and edit:
+Or see [INSTALL.md](https://github.com/jjheffernan/heff-skills/blob/main/INSTALL.md). Then copy and edit:
 
 ```bash
 cp skills/after-hours-loop/templates/config.example.json \
@@ -49,23 +55,34 @@ Sources:
   - github-issues: label ready-for-agent limit 5
 ```
 
+## Optional Cursor rule
+
+Not always-on overnight. To help the agent find the skill when you type `/after-hours`, optionally copy:
+
+```bash
+cp skills/after-hours-loop/templates/cursor-rule.after-hours-loop.mdc.example \
+  /path/to/your/project/.cursor/rules/after-hours-loop.mdc
+```
+
+Keep `alwaysApply: false` — the rule is a thin pointer at `.agents/skills/after-hours-loop/SKILL.md`, not an armed overnight loop.
+
 ## Layout (source of truth)
 
 | Path | Use |
 |------|-----|
 | `SKILL.md` | Thin orchestrator |
 | `references/` | Bootstrap, readiness, compatibility, guardrails, state, morning brief |
-| `sources/` | Work source modules (incl. opt-in `wayfinder-afk`) |
+| `sources/` | Work source modules (incl. opt-in `wayfinder-afk`, `github-tickets`) |
 | `executors/` | `pr-slice`, `feature-build`, `research-only` |
-| `templates/` | Config, Sources, morning-brief, drop-in pointer |
+| `templates/` | Config, Sources (canonical + night presets), morning-brief, drop-in pointer, optional Cursor rule |
+| `fixtures/` | Sample state JSON for `validate-state.py` |
 
 Generated install tree: repo-root `drop-in/` (`./scripts/sync-drop-in.sh`).
-
 
 ## Optional peers
 
 - [ponytail](https://github.com/DietrichGebert/ponytail) — minimal-diff discipline (soft)
-- [mattpocock/skills](https://github.com/mattpocock/skills) — grill / wayfinder / triage for **agent-ready** work before AFK (soft)
+- [mattpocock/skills](https://github.com/mattpocock/skills) — optional peer producers of agent-ready work (wayfinder / tickets / briefs); never required to start AFK
 
 Not bundled. Loop degrades cleanly without them.
 
@@ -73,6 +90,8 @@ Not bundled. Loop degrades cleanly without them.
 
 - Target-repo `TODO.md` / domain subagents
 - Live session state (gitignored under `.cursor/`)
+
+Parse / priority / write-back harnesses beyond the state fixtures in [`fixtures/`](./fixtures/) (see that README for `validate-state.py`).
 
 ## Uninstall / residual state
 
