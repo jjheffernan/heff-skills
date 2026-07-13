@@ -1,0 +1,82 @@
+---
+name: after-hours
+description: >
+  AFK overnight / late-session coding loop: pluggable work sources (GitHub
+  issues, TODO.md, feature specs, opt-in wayfinder-afk) and executors → draft
+  PRs. Trigger when the user runs /after-hours, /after-hours-loop, /loop with
+  after-hours instructions, Cursor Automation overnight, or asks to drain
+  ready-for-agent / AFK / overnight work into PRs while unattended.
+disable-model-invocation: true
+license: MIT
+---
+
+# after-hours (orchestrator)
+
+Bootstrap **sources** → **work items** → **executors** → **draft PRs** on `baseBranch`.
+
+## Load map
+
+| Doc | When |
+|-----|------|
+| [references/bootstrap.md](./references/bootstrap.md) | Preflight, dry-run, Sources |
+| [references/readiness.md](./references/readiness.md) | Before execute / claim |
+| [references/compatibility.md](./references/compatibility.md) | Peer / Matt detect order |
+| [references/guardrails.md](./references/guardrails.md) | Skip / block / stop / escalate |
+| [references/state-schema.md](./references/state-schema.md) | state.json, resume |
+| [references/morning-brief.md](./references/morning-brief.md) | Every stop |
+| [references/tick-and-runners.md](./references/tick-and-runners.md) | Sentinel, tick loop, Automation |
+| [docs/glossary.md](./docs/glossary.md) | Terms |
+| [docs/composition.md](./docs/composition.md) | Build-chain position |
+
+Config: `.cursor/after-hours-loop.config.json` ← [templates/config.example.json](./templates/config.example.json).
+
+## Invocation
+
+| Trigger | Behavior |
+|---------|----------|
+| **`/after-hours`** | Primary. `/after-hours 45m`, `/after-hours --dry-run`. |
+| **`/loop`** + this skill | Equivalent when pointed here. |
+| **Cursor Automation** | Cron; same Sources in Instructions. |
+
+Flow: load skill → **preflight** → bootstrap → tick 0 (unless dry-run) → arm sentinel ([tick-and-runners](./references/tick-and-runners.md)).
+
+Stop: `stop loop`, `stop after-hours`, `/after-hours stop`.
+
+## Modules
+
+| Layer | Path |
+|-------|------|
+| Sources | `sources/github-issues.md`, `todo-md.md`, `feature-spec.md`, `wayfinder-afk.md` (opt-in) |
+| Executors | `executors/pr-slice.md`, `feature-build.md`, `research-only.md` |
+
+Load only the active module. Do not paste their logic here.
+
+## Defaults
+
+| Key | Default |
+|-----|---------|
+| `repo` | `gh` cwd default |
+| `baseBranch` | `main` |
+| `draftPrs` | `true` |
+| `maxPrs` | bootstrap or `3` |
+| `maxConsecutiveBlocked` | `3` |
+| `babysitCi` | `false` |
+| `stopOnCiRed` | `false` |
+| `allowEmptyQueue` | `false` |
+| `statePath` | `.cursor/after-hours-loop.state.json` |
+| `morningBriefPath` | `.cursor/after-hours-morning-brief.md` |
+
+## Bootstrap → tick
+
+1. Follow [bootstrap.md](./references/bootstrap.md) (preflight fail-closed).
+2. Materialize Sources ([templates/Sources.example.txt](./templates/Sources.example.txt)); priority `github-first` default.
+3. Apply [readiness](./references/readiness.md).
+4. **Dry-run:** print queue; no state write; no code; stop.
+5. Else write state ([state-schema](./references/state-schema.md)); run tick 0; continue per [tick-and-runners](./references/tick-and-runners.md).
+
+**Hard dep:** agent-ready work or stop with morning note to grill/ticket while human is present.  
+**Soft deps:** CONTEXT / ADRs / issue-tracker / peer skills **if present** — [compatibility](./references/compatibility.md). Never rewrite CONTEXT/ADRs; never `/grill-me` or HITL wayfinder overnight.
+
+## Stop output
+
+Every stop → [morning brief](./references/morning-brief.md) at `morningBriefPath` ([templates/morning-brief.md](./templates/morning-brief.md)).

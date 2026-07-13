@@ -1,13 +1,13 @@
 # Work source: `feature-spec`
 
-Feature build-out from plan docs (PRD, wayfinder output, `docs/**/*-plan.md`).
+Feature build-out from plan docs (PRD, wayfinder handoff, `docs/**/*-plan.md`, etc.).
 
 ## Bootstrap config
 
 ```text
-feature-spec: docs/commerce/currency-support-plan.md
-feature-spec: docs/commerce/currency-support-plan.md phase 1
-feature-spec: path/to/plan.md slice "formatMoney helper"
+feature-spec: docs/plans/example-plan.md
+feature-spec: docs/plans/example-plan.md phase 1
+feature-spec: path/to/plan.md slice "helper module"
 ```
 
 | Field | Meaning |
@@ -25,15 +25,15 @@ If plan lists named slices, phases with checklists, or vertical-slice sections �
 
 ```json
 {
-  "id": "feature:currency-formatMoney",
-  "title": "formatMoney helper",
+  "id": "feature:example-helper",
+  "title": "helper module",
   "source": "feature-spec",
   "executor": "feature-build",
-  "ref": "docs/commerce/currency-support-plan.md",
+  "ref": "docs/plans/example-plan.md",
   "acceptance": "slice acceptance from plan",
   "granularity": "single-pr",
   "status": "open",
-  "sliceHint": "formatMoney"
+  "sliceHint": "helper module"
 }
 ```
 
@@ -43,18 +43,18 @@ If plan says "Phase 1" without slice breakdown → one **umbrella** item:
 
 ```json
 {
-  "id": "feature:currency-phase1",
-  "title": "Currency support Phase 1",
+  "id": "feature:example-phase1",
+  "title": "Example Phase 1",
   "source": "feature-spec",
   "executor": "feature-build",
-  "ref": "docs/commerce/currency-support-plan.md",
+  "ref": "docs/plans/example-plan.md",
   "granularity": "multi-slice",
   "status": "open",
   "children": []
 }
 ```
 
-`feature-build` executor decomposes on first tick and appends child items to state queue. Children use IDs like `feature:currency-phase1:1-formatMoney`.
+`feature-build` decomposes on first tick and appends child items to state queue. Children use IDs like `feature:example-phase1:1-helper`.
 
 Parent → `done` only when all children `done` or `blocked`.
 
@@ -66,9 +66,11 @@ Always `feature-build` unless bootstrap override.
 
 Mark `blocked` when plan requires:
 
-- B3 CDN decision
-- Design phase entry criteria not met ([TODO.md](../../../TODO.md))
-- 6-locale sweep without EN-only scope in bootstrap
+- An unresolved human product decision
+- Acceptance criteria that are missing or contradictory (see [readiness.md](../references/readiness.md))
+- Scope explicitly out of the bootstrap filter
+
+Do not invent slices beyond what the plan supports.
 
 ## Refresh
 
