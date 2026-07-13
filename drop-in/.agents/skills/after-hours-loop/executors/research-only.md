@@ -69,3 +69,5 @@ No product test suite required. If docs tooling / link check exists and is cheap
 | User skip | `skipped` |
 
 Append `{ "url", "itemId", "branch", "draft": true }` to state `prs` when a PR was opened.
+
+**After open:** if `draftPrs: true`, confirm `gh pr view <url> --json isDraft -q .isDraft` is `true`; else convert to draft or **stop loop**.
