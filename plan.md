@@ -2,8 +2,8 @@
 
 Living plan for **after-hours-loop**: a drop-in, **workflow-agnostic AFK orchestrator** — install once, point at any agent-ready tracker, walk away. Shape **heff-skills** like mature public skill repos (structure/UX only; do not copy their skill text).
 
-**Status:** **Alpha** (`0.1.0-alpha.2`) — Phase 5 done; Phase 6 companions + packaging hygiene; remaining: outcome depth / harness / audit
-**Last updated:** 2026-07-13
+**Status:** **Alpha** (`0.1.0-alpha.2`) — Phase 6 sealed; dogfood before `v0.1.0`  
+**Last updated:** 2026-07-13  
 **Target:** https://github.com/jjheffernan/heff-skills
 
 **Research swarms:** [caveman](3b485d0f-3fee-4e40-9cdc-f90cafb9b5a3) · [ponytail](9228fb73-db99-4e86-b15b-4992c3191231) · [mattpocock](d66efc9e-b3cd-4ee6-a36d-bc59d3e6ade1) · [local audit](a95719c0-80a1-43a1-b667-d6ffa0014977)  
@@ -13,7 +13,7 @@ Living plan for **after-hours-loop**: a drop-in, **workflow-agnostic AFK orchest
 **Cumulative P1–P3 audit:** [cumulative](4cb22da8-a496-4894-a193-6a750b1bcc22)  
 **Phase 4 structure audit:** [post-phase-4](bda1c157-e503-4961-8d80-f4222491c659)  
 **Phase 5 structure audit:** [post-phase-5](bfb355b7-1919-494a-81cd-8cac70ba1b96) (PASS_WITH_FIXES → softs fixed; mega-PR followed)  
-**Phase 6 structure audit:** pending
+**Phase 6 structure audit:** [post-phase-6](6cdf3904-7594-4c14-b79d-ebfbcf4c4491) (PASS_WITH_FIXES → janitor)
 
 ---
 
