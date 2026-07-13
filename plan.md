@@ -2,14 +2,15 @@
 
 Living plan for making **after-hours-loop** a production-ready, drop-in AFK coding skill, while shaping **heff-skills** like mature public skill repos — structure and UX only; we do not copy their skill text.
 
-**Status:** Phases 1–3 complete; Phase 4 (polish/distribute) next  
+**Status:** Phase 3 sealed (validate-state committed); Phase 4 in progress  
 **Last updated:** 2026-07-13  
 **Target:** https://github.com/jjheffernan/heff-skills
 
 **Research swarms:** [caveman](3b485d0f-3fee-4e40-9cdc-f90cafb9b5a3) · [ponytail](9228fb73-db99-4e86-b15b-4992c3191231) · [mattpocock](d66efc9e-b3cd-4ee6-a36d-bc59d3e6ade1) · [local audit](a95719c0-80a1-43a1-b667-d6ffa0014977)  
 **Phase 1 structure audit:** [post-phase-1](5925cc8b-83e3-4ada-aed7-bf0c4f5d3273)  
 **Phase 2 structure audit:** [post-phase-2](ae706577-6cae-4366-8e66-3c111daee94c)  
-**Phase 3 structure audit:** [post-phase-3](73b45955-2172-4434-b4f2-b72d3d04242c)
+**Phase 3 structure audit:** [post-phase-3](73b45955-2172-4434-b4f2-b72d3d04242c)  
+**Cumulative P1–P3 audit:** [cumulative](4cb22da8-a496-4894-a193-6a750b1bcc22)
 
 ---
 
@@ -176,11 +177,11 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 - [x] Portable `config.example.json` (repo, baseBranch, testCommand, packageManager, safety paths)
 - [x] Cursor install path(s) documented; skills-registry-ready `skills/*/SKILL.md`
 - [x] Single SoT + generated drop-in
-- [x] Validated state schema + resume + dry-run *(prompt contracts + schema docs; executable `validate-state.py` still Phase 3/4)*
+- [x] Validated state schema + resume + dry-run *(schema docs + `scripts/validate-state.py`)*
 - [x] Preflight fail-closed *(prompt contract)*
-- [x] Stop severity: skip / block / stop loop / escalate *(vocab live; consecutive-blocked / CI-red cascades → Phase 3)*
+- [x] Stop severity: skip / block / stop loop / escalate *(vocab + consecutive-blocked / CI-red cascades)*
 - [x] Morning brief always written on stop *(prompt contract)*
-- [x] Draft PRs by default overnight; path denylist; secrets/auth hard stops *(v1; Phase 3 hardens)*
+- [x] Draft PRs by default overnight; path denylist; secrets/auth hard stops *(create-time + post-open isDraft verify)*
 - [x] Works without ponytail and without Matt skills *(soft deps)*
 - [x] Compatible *with* Matt when installed (same `ready-for-agent` language)
 - [x] LICENSE + uninstall / residual-state docs

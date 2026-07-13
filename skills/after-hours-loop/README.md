@@ -73,3 +73,12 @@ Not bundled. Loop degrades cleanly without them.
 
 - Target-repo `TODO.md` / domain subagents
 - Live session state (gitignored under `.cursor/`)
+
+## Uninstall / residual state
+
+1. Stop any armed sentinel (`stop after-hours` / kill matching loop PID).
+2. Remove the skill: `rm -rf .agents/skills/after-hours-loop`
+3. Optionally delete session artifacts: `.cursor/after-hours-loop.state.json`, `.cursor/after-hours-morning-brief.md`, and config if unused.
+4. Drop gitignore lines added solely for those files.
+
+Full matrix: [INSTALL.md](https://github.com/jjheffernan/heff-skills/blob/main/INSTALL.md).

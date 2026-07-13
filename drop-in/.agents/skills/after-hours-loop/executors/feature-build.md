@@ -99,3 +99,5 @@ If item or parent linked `todo-md`, run check-off per [todo-md.md](../sources/to
 | Tests fail after one fix | slice `blocked` |
 
 Append `{ "url", "itemId", "branch", "draft" }` to state `prs` when a PR was opened.
+
+**After open:** if `draftPrs: true`, confirm `gh pr view <url> --json isDraft -q .isDraft` is `true`; else convert to draft or **stop loop**.

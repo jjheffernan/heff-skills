@@ -85,3 +85,5 @@ If item `source` is `todo-md`, follow [todo-md.md](../sources/todo-md.md) auto c
 | User skip | `skipped` |
 
 Append `{ "url": "...", "itemId": "...", "branch": "after-hours/...", "draft": true }` to state `prs`.
+
+**After open:** if `draftPrs: true`, confirm draft with `gh pr view <url> --json isDraft -q .isDraft` (must be `true`). If not draft → convert to draft or **stop loop** (`stopReason: guardrail`) — never leave an overnight PR merge-ready by mistake.

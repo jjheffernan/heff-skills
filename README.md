@@ -47,6 +47,7 @@ Also supported:
 | [SECURITY.md](./SECURITY.md) | Trust surface: local files only, no telemetry |
 | [plan.md](./plan.md) | Living improvement plan and phased roadmap |
 | [docs/composition.md](./docs/composition.md) | Where AHL sits vs Matt main flow (AFK phase) |
+| [docs/architecture.md](./docs/architecture.md) | SoT layout, runners, sync rule |
 | [docs/portability.md](./docs/portability.md) | Host support for v1 |
 
 ## License
