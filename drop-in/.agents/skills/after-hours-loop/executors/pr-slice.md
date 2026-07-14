@@ -32,12 +32,14 @@ Slug from work item title (kebab-case, max ~40 chars).
 3. Soft-read `CONTEXT.md` / ADRs if present; do not rewrite them.
 4. Domain Task subagents: use only if the **project** documents them; otherwise stay in-process.
 
-## Tests
+## Tests / verification
 
-1. If `testCommand` set → run it.
-2. Else try package manager test script (`pnpm test` / `npm test` / `yarn test` / `bun test`) or project README’s documented command.
-3. One fix attempt on failure; then mark item `blocked`.
-4. If no test command exists: set residual risk; mark `blocked` unless `allowSkipTests: true`.
+1. If item `verification` is a non-empty list → run **each** command in order; record exits (see [run-artifacts.md](../references/run-artifacts.md) when `runsPath` set).
+2. Else if `testCommand` set → run it.
+3. Else try package manager test script (`pnpm test` / `npm test` / `yarn test` / `bun test`) or project README’s documented command.
+4. One fix attempt on failure; then mark item `blocked` (`verification-failed` or `tests`). **Never** drop or weaken verification to force `done`.
+5. If no verification and no test command: set residual risk; mark `blocked` unless `allowSkipTests: true` **and** item had no `verification[]`.
+6. Respect item `risk` ([readiness.md](../references/readiness.md)): high without `allowHighRisk: true` → skip, do not implement.
 
 ## PR
 

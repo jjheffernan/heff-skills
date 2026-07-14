@@ -36,6 +36,8 @@ Every work item is a **tracker-agnostic** unit. Portable fields (use these names
 | `blockerPolicy` | string | no | How to treat incomplete work: `block` (default) \| `skip` \| `defer`. Maps onto overnight skip/block choices in [guardrails.md](./guardrails.md). |
 | `executorHint` | string | no | Preferred executor id (`pr-slice`, `feature-build`, `research-only`, `docs-digest`, `ops-checklist`, …). If omitted, derive from `executor` or Sources defaults. |
 | `outcomeKind` | string | no | Outcome adapter after completion — [outcomes.md](./outcomes.md). Defaults: code executors → `draft-pr`; `docs-digest` → `doc-artifact`; `ops-checklist` → `report-only`. Overrides: `branch-only`, `report-only`, `external-ticket-update`, … |
+| `verification` | string[] | no | Commands that must succeed before `done` (from Agent Brief / spec / Sources). Empty → fall back to config `testCommand` when the executor requires tests. See [readiness.md](./readiness.md). |
+| `risk` | string | no | `low` \| `medium` \| `high`. Default `medium` when omitted. High-risk items: tighter overnight behavior ([guardrails.md](./guardrails.md)). |
 
 These fields are **independent of GitHub/PR**. Sources may fill them from issues, TODOs, specs, maps, or future non-code queues.
 
@@ -57,6 +59,8 @@ These fields are **independent of GitHub/PR**. Sources may fill them from issues
 | `blockReason` | string | optional: `needs-info`, `needs-grill`, `tests`, `hitl`, … — detail when `status` is `blocked`/`skipped` |
 | `parentId` | string | optional: umbrella parent for child slices |
 | `notes` | string | optional: short residual note **and** non-PR outcome records (`doc-artifact: <path>`, `branch-only: after-hours/…`, `report-only: …`, `external-ticket-update: <comment url|id>`) |
+| `verification` | string[] | optional: see portable contract |
+| `risk` | string | optional: `low` \| `medium` \| `high` |
 
 ### Field name map (old ↔ portable)
 
@@ -66,6 +70,8 @@ These fields are **independent of GitHub/PR**. Sources may fill them from issues
 | `executorHint` | `executor` | Sources may set either; runtime binds `executor` for the tick |
 | `outcomeKind` | (new) | Default `draft-pr` for code executors; omit → inherit executor default |
 | `blockerPolicy` | `blockReason` + guardrail choice | Policy = how to treat unreadiness; `blockReason` = why after the fact |
+| `verification` | (new) | Prefer Brief / spec `verification:` lists; else config `testCommand` |
+| `risk` | (new) | Default `medium`; omit → treat as medium |
 | `source`, `ref`, `status`, `granularity`, `parentId`, `notes` | same | Keep; tracker-specific, not PR-specific |
 
 Backward-compatible: existing state JSON without `outcomeKind` / `blockerPolicy` / `executorHint` remains valid. Infer `outcomeKind: draft-pr` for `pr-slice` / `feature-build` / `research-only`; `docs-digest` → `doc-artifact`; `ops-checklist` → `report-only`.

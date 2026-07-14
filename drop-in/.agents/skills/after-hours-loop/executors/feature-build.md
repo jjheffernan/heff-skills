@@ -52,7 +52,7 @@ If item `granularity` is `multi-slice` and queue has no children yet:
 
 ## Tests
 
-Same rules as [pr-slice.md](./pr-slice.md). Feature slices should add/adjust tests at plan seams.
+Same rules as [pr-slice.md](./pr-slice.md) **Tests / verification** (item `verification[]` first; never green-wash; honor `risk`).
 
 ## PR
 

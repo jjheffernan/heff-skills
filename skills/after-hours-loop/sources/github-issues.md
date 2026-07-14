@@ -53,6 +53,10 @@ Find acceptance in this order:
 
 **If an Agent Brief is present** → set work item `acceptance` to that brief’s content (full brief, or the acceptance/criteria portion if clearly subsectioned). Treat it as the AFK contract.
 
+**Verification list:** if the Brief (or body) includes a `verification:` / “Verify with” / checklist of shell commands, materialize them as item `verification: string[]`. Prefer Brief commands over inventing new ones.
+
+**Risk:** if Brief/labels say `risk: high|medium|low` (or equivalent), set item `risk`. Default omit → treat as `medium` at execute time.
+
 **If labeled `ready-for-agent` (or tracker equivalent) but no Agent Brief and body is vague** → still **materialize** the work item (`status: open`) with best-effort `acceptance` excerpt. Do **not** invent scope. The [readiness gate](../references/readiness.md) marks the item **`blocked`** on tick rather than executing. Prefer unblocking in daytime (triage / brief / human alignment) over overnight guessing.
 
 ### Work item shape

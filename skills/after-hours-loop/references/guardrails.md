@@ -20,7 +20,9 @@ On **Stop loop**, set coarse `stopReason` (`done` / `blocked` / `noop` / `budget
 | Vague acceptance; inventable scope | **Block item** | (item) `needs-info` or `needs-grill`; never invent |
 | HITL / product decision / design-only | **Block item** or **Skip item** | Prefer `blocked` + `hitl` |
 | Wayfinder grilling / prototype HITL ticket | **Skip item** | Do not resolve overnight |
-| Tests fail after one fix attempt | **Block item** | `tests` |
+| Tests / verification fail after one fix attempt | **Block item** | `tests` or `verification-failed` |
+| Item `verification[]` present but skipped/weakened to force pass | **Block item** + note | Never green-wash — [readiness.md](./readiness.md) |
+| `risk: high` without kickoff `allowHighRisk: true` | **Skip item** | Leave for daytime; do not invent low risk |
 | Empty queue (no agent-ready work) | **Stop loop** | `noop` / `empty-queue` (dry-run stays noop) |
 | `prs.length >= maxPrs` | **Stop loop** | `budget` / `maxPrs` |
 | User: stop after-hours / stop loop | **Stop loop** | `done` / `user-stop` — kill sentinel PID |
@@ -94,6 +96,12 @@ When `babysitCi: true` and a PR was just opened this tick:
 
 When `babysitCi: false` (default): do not poll; PR stays as opened; morning human reviews CI.
 
-## Deferred ledger
+## Anti–green-wash
 
-All `blocked` / `skipped` items must appear in the morning brief Blocked/Skipped sections.
+Overnight must **not**:
+
+- Delete, comment-out, or rewrite acceptance / verification to make a failing suite “pass”
+- Mark `done` when listed `verification[]` commands were skipped
+- Lower recorded `risk` without human kickoff authority
+
+On any pressure to do so: **block** the item and explain in the morning brief.

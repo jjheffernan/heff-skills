@@ -45,3 +45,22 @@ Treat as not AFK-safe (mark `blocked` or `skipped`; do not start product work / 
 4. On stop mid-item: leave `in-progress` (resume next tick) or demote to `open` if you cannot safely continue — note residual risk in the morning brief.
 
 See [state-schema.md](./state-schema.md).
+
+## Verification contract
+
+Before marking an item `done`:
+
+1. Prefer item `verification: string[]` when present (from Agent Brief / feature-spec / Sources).
+2. Else, if the executor requires tests, run config `testCommand` (or project-inferred suite).
+3. If a verification command fails after one honest fix attempt → **`blocked`** with `blockReason: verification-failed` (or `tests`). Do **not** delete criteria, skip commands, or soften acceptance to force `done`.
+4. `allowSkipTests: true` only skips when **no** item `verification[]` was listed **and** config allows skipping the shared `testCommand` — never skip an explicit per-item verification list.
+
+## Risk
+
+| `risk` | Overnight behavior |
+|--------|-------------------|
+| `low` | Normal execute |
+| `medium` (default) | Normal execute |
+| `high` | Prefer **skip** or **block** unless Sources/bootstrap explicitly allow high-risk AFK (`allowHighRisk: true` in kickoff). When allowed: still full verification; prefer smaller slice / lower budget for that item |
+
+Never invent `risk: low` to dodge caution.

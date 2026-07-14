@@ -31,11 +31,15 @@ If plan lists named slices, phases with checklists, or vertical-slice sections â
   "executor": "feature-build",
   "ref": "docs/plans/example-plan.md",
   "acceptance": "slice acceptance from plan",
+  "verification": ["<optional commands from plan verification block>"],
+  "risk": "medium",
   "granularity": "single-pr",
   "status": "open",
   "sliceHint": "helper module"
 }
 ```
+
+If the plan names a **verification** / **test plan** command list for the slice, populate `verification`. Parse `risk:` when the plan states it.
 
 ### B. Phase-level only
 
