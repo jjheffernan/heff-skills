@@ -13,7 +13,7 @@ Use this after **one** solo overnight (or a short armed AFK window) on a fresh t
 
 ## Rubric (pass / partial / fail)
 
-Score each row: **2** pass · **1** partial · **0** fail. Total **/24**. Recurring soft fails become plan tickets.
+Score each row: **2** pass · **1** partial · **0** fail. Total **/26**. Recurring soft fails become plan tickets.
 
 | # | Criterion | What “pass” looks like | Score | Notes / evidence |
 |---|-----------|------------------------|-------|------------------|
@@ -29,14 +29,15 @@ Score each row: **2** pass · **1** partial · **0** fail. Total **/24**. Recurr
 | 10 | **Morning brief** | Brief exists on stop; lists done / blocked / PRs / next human actions | | |
 | 11 | **Resume / re-arm** | Second start does not duplicate `done` work; state readable | | |
 | 12 | **Workflow agnostic** | Worked from *your* Sources (issues/TODO/spec) **without** requiring Matt grill→tickets | | |
+| 13 | **Interrupt recovery** | Mid-tick abort parks `interrupted`, keeps sentinel when tree recovers; does not drop to idle chat | | |
 
 **Banding**
 
 | Total | Verdict |
 |------:|---------|
-| 20–24 | Ship-worthy for personal AFK; file only polish notes |
-| 14–19 | Usable with babysitting; every 0/1 → plan ticket |
-| 0–13 | Not ready for unattended nights; fix blockers first |
+| 22–26 | Ship-worthy for personal AFK; file only polish notes |
+| 15–21 | Usable with babysitting; every 0/1 → plan ticket |
+| 0–14 | Not ready for unattended nights; fix blockers first |
 
 ---
 

@@ -29,6 +29,7 @@ STOP_DETAILS = frozenset(
         "ci-red",
         "preflight",
         "dry-run",
+        "dirty-interrupt",
     }
 )
 

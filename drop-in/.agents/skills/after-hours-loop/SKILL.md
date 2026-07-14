@@ -34,7 +34,7 @@ Bootstrap **sources** → **work items** → **executors** → **outcome adapter
 | [references/state-schema.md](./references/state-schema.md) | state.json, queue contract, resume |
 | [references/outcomes.md](./references/outcomes.md) | Outcome adapters (`draft-pr`, `doc-artifact`, `branch-only`, `report-only`, `external-ticket-update`) |
 | [references/morning-brief.md](./references/morning-brief.md) | Every stop |
-| [references/tick-and-runners.md](./references/tick-and-runners.md) | Sentinel, tick loop, Automation |
+| [references/tick-and-runners.md](./references/tick-and-runners.md) | FOR/WHILE iterator, sentinel, wake/interrupt, Automation |
 | [references/cloud-ledger.md](./references/cloud-ledger.md) | Optional durable Automation ledger (`cloudLedgerPath`) |
 | [references/run-artifacts.md](./references/run-artifacts.md) | Optional per-tick verification evidence (`runsPath`) |
 | [references/mega-pr.md](./references/mega-pr.md) | Bundled mega-PR — **explicit every run** (unsafe) |
@@ -53,7 +53,7 @@ Config: `.cursor/after-hours-loop.config.json` ← [templates/config.example.jso
 
 Flow: load skill → **preflight** → bootstrap → tick 0 (unless dry-run) → arm sentinel ([tick-and-runners](./references/tick-and-runners.md)).
 
-Stop: `stop loop`, `stop after-hours`, `/after-hours stop`.
+**Wakes / interrupts:** every sentinel (or Automation) fire follows the wake protocol — recover orphan claims, split dirty-tree, continue the WHILE body. Interrupt parks the item (`blocked` / `interrupted`); it is **not** a stop. Stop phrases only: `stop loop`, `stop after-hours`, `/after-hours stop`.
 
 ## Modules
 

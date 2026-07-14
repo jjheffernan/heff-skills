@@ -7,7 +7,7 @@ Four severity levels. Use the lightest that still keeps overnight safe.
 | Severity | Verb | Effect |
 |----------|------|--------|
 | **Skip item** | `skipped` | Leave item; pick next. No PR. Note in morning brief. |
-| **Block item** | `blocked` | Same as skip for queue progress, but `blockReason` required (`needs-info`, `needs-grill`, `tests`, `hitl`, `ci-red`, …). Deferred ledger — must not vanish. |
+| **Block item** | `blocked` | Same as skip for queue progress, but `blockReason` required (`needs-info`, `needs-grill`, `tests`, `hitl`, `ci-red`, `interrupted`, …). Deferred ledger — must not vanish. |
 | **Stop loop** | stop | Kill sentinel / do not re-arm; write morning brief; persist coarse `stopReason` + optional `stopDetail` ([state-schema.md](./state-schema.md)). |
 | **Escalate** | stop + alert | Stop loop **and** surface hard safety (auth/secrets/denylist) first in Summary — human must act before next AFK. |
 
@@ -26,7 +26,9 @@ On **Stop loop**, set coarse `stopReason` (`done` / `blocked` / `noop` / `budget
 | Empty queue (no agent-ready work) | **Stop loop** | `noop` / `empty-queue` (dry-run stays noop) |
 | `prs.length >= maxPrs` | **Stop loop** | `budget` / `maxPrs` |
 | User: stop after-hours / stop loop | **Stop loop** | `done` / `user-stop` — kill sentinel PID |
-| Dirty working tree at tick start and `safety.stopOnDirtyTree` | **Stop loop** | `blocked` / `preflight` (or `guardrail`) — fail-closed; do not start coding |
+| IDE / tool **interrupt** mid-item | **Block item** | (item) `interrupted` — **keep** sentinel; see [tick-and-runners](./tick-and-runners.md) |
+| Dirty tree from interrupted claim; recovered (safe checkout / discarded half-work) | continue | Park item `interrupted`; do **not** Stop loop solely for this |
+| Dirty tree unrecovered at tick start and `safety.stopOnDirtyTree` | **Stop loop** | `blocked` / `dirty-interrupt` (known interrupt residue) or `preflight` (unknown dirty) |
 | Staged/changed path matches `safety.pathDenylist` | **Escalate** | `blocked` / `guardrail` — before commit/push; never open PR |
 | Auth / webhook / guard **weakening** and `safety.stopOnAuthWeakening` | **Escalate** | `blocked` / `guardrail` |
 | `consecutiveBlocked >= maxConsecutiveBlocked` | **Stop loop** | `blocked` / `consecutive-blocked` (default threshold `3`) |
@@ -37,15 +39,19 @@ On **Stop loop**, set coarse `stopReason` (`done` / `blocked` / `noop` / `budget
 | `gh` auth missing when Sources need GitHub | **Stop loop** | `blocked` / `preflight` |
 | Dry-run finished | **Stop loop** | `noop` / `dry-run` |
 
-## Dirty tree (fail-closed)
+## Dirty tree (split: interrupted vs unknown)
 
-If `safety.stopOnDirtyTree` is true (default in example config):
+If `safety.stopOnDirtyTree` is true (default in example config), at **tick start** before a new claim:
 
-1. At **tick start**, before claim/coding: `git status --porcelain`.
-2. Non-empty → **Stop loop** immediately; do not stash, commit residual, or pick work.
-3. Morning brief: residual risk = unclean tree; human must clean before next AFK.
+1. `git status --porcelain`. Clean → continue.
+2. **Interrupted residue** — state has (or just recovered) a claim with `blockReason: interrupted` / orphan `in-progress` matching this dirty tree:
+   - **Do not** auto-commit half work.
+   - Prefer safe undo: discard uncommitted changes on the item branch **only when** they clearly belong to that parked claim and denylist is clean; then checkout `baseBranch` (or next item branch).
+   - If the tree becomes clean → park item as `blocked`/`interrupted` if not already; **continue** the night (WHILE may take the next `open` item).
+   - If still dirty after a safe attempt → **Stop loop** (`stopReason: blocked`, `stopDetail: dirty-interrupt`); morning brief lists residual paths. Never invent scope to “finish” the interrupted slice.
+3. **Unknown dirty** (no interrupt/orphan claim explaining the tree) → **Stop loop** immediately (`blocked` / `preflight` or `guardrail`); do not stash, commit residual, or pick work. Morning brief: residual risk = unclean tree; human must clean before next AFK.
 
-No exceptions overnight. Fail closed.
+Interrupt alone must not end the night when recovery succeeds. Unknown dirt still fail-closes.
 
 ## Auth
 

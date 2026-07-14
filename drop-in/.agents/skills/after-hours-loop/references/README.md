@@ -11,7 +11,7 @@ Load these when the orchestrator needs depth. Orchestrator stays thin: [SKILL.md
 | [outcomes.md](./outcomes.md) | Live — outcome adapters (`draft-pr`, `doc-artifact`, `branch-only`, `report-only`, `external-ticket-update`); separate from executors |
 | [guardrails.md](./guardrails.md) | Live — skip / block / stop / escalate (+ coarse stopReason) |
 | [bootstrap.md](./bootstrap.md) | Live — preflight, Sources, dry-run |
-| [tick-and-runners.md](./tick-and-runners.md) | Live — sentinel, tick loop, Automation |
+| [tick-and-runners.md](./tick-and-runners.md) | Live — FOR/WHILE iterator, sentinel, wake/interrupt, Automation |
 | [cloud-ledger.md](./cloud-ledger.md) | Live — optional durable Automation ledger (`cloudLedgerPath`) |
 | [run-artifacts.md](./run-artifacts.md) | Live — optional per-tick verification evidence (`runsPath`) |
 | [mega-pr.md](./mega-pr.md) | Live — bundled mega-PR; dual-token enable every arm |

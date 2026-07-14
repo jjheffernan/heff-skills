@@ -2,7 +2,7 @@
 
 **Run:** <startedAt ISO> → <stoppedAt ISO>
 **Repo:** <owner/name> · **Base:** <baseBranch>
-**Stop reason:** <done | blocked | noop | budget> · **Detail:** <empty-queue | maxPrs | guardrail | user-stop | consecutive-blocked | ci-red | preflight | dry-run | …>
+**Stop reason:** <done | blocked | noop | budget> · **Detail:** <empty-queue | maxPrs | guardrail | user-stop | consecutive-blocked | ci-red | preflight | dry-run | dirty-interrupt | …>
 
 ## Summary
 

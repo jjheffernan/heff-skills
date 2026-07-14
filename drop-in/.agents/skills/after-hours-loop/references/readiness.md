@@ -42,7 +42,7 @@ Treat as not AFK-safe (mark `blocked` or `skipped`; do not start product work / 
 1. Before coding (or other execute work), set the item `status` to **`in-progress`** in state JSON (`statePath`).
 2. Persist claim before branch creation, file edits, or other side effects.
 3. One claimed item at a time per loop run (unless umbrella parent with children — parent stays `open`; only the active child is `in-progress`).
-4. On stop mid-item: leave `in-progress` (resume next tick) or demote to `open` if you cannot safely continue — note residual risk in the morning brief.
+4. On intentional pause mid-item with a **clean** tree: leave `in-progress` (resume next tick) or demote to `open` if you cannot safely continue. On IDE/tool **interrupt**: park as `blocked` + `blockReason: interrupted` ([tick-and-runners.md](./tick-and-runners.md)) — not a user-stop; note residual risk in the morning brief.
 
 See [state-schema.md](./state-schema.md).
 

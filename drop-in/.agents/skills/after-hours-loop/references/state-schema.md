@@ -12,7 +12,7 @@ Optional check: `scripts/validate-state.py <statePath>` (exit 0 = ok).
 | `startedAt` | ISO-8601 | yes | Loop run start |
 | `stoppedAt` | ISO-8601 | no | Set on stop |
 | `stopReason` | string | no | Coarse domain-agnostic enum: `done` \| `blocked` \| `noop` \| `budget` |
-| `stopDetail` | string | no | Optional specifics (legacy detail strings): `empty-queue`, `maxPrs`, `guardrail`, `user-stop`, `consecutive-blocked`, `ci-red`, `preflight`, `dry-run`, … |
+| `stopDetail` | string | no | Optional specifics (legacy detail strings): `empty-queue`, `maxPrs`, `guardrail`, `user-stop`, `consecutive-blocked`, `ci-red`, `preflight`, `dry-run`, `dirty-interrupt`, … |
 | `sources` | array | yes | Parsed Sources entries `{ type, config }` |
 | `queue` | array | yes | Work items (see below) |
 | `prs` | object[] | yes | Outcomes that produced PRs this run: `{ "url", "itemId", "branch", "draft" }` (`url` required; others when known). `maxPrs` counts `prs.length`. Empty when no `draft-pr` outcomes. |
@@ -56,7 +56,7 @@ These fields are **independent of GitHub/PR**. Sources may fill them from issues
 | `ref` | string | URL, path, or other locator in the origin tracker |
 | `granularity` | string | `single-pr` \| `multi-slice` (legacy names; means single vs multi outcome unit) |
 | `status` | string | `open` \| `in-progress` \| `done` \| `blocked` \| `skipped` |
-| `blockReason` | string | optional: `needs-info`, `needs-grill`, `tests`, `hitl`, … — detail when `status` is `blocked`/`skipped` |
+| `blockReason` | string | optional: `needs-info`, `needs-grill`, `tests`, `hitl`, `interrupted`, `ci-red`, … — detail when `status` is `blocked`/`skipped` |
 | `parentId` | string | optional: umbrella parent for child slices |
 | `notes` | string | optional: short residual note **and** non-PR outcome records (`doc-artifact: <path>`, `branch-only: after-hours/…`, `report-only: …`, `external-ticket-update: <comment url|id>`) |
 | `verification` | string[] | optional: see portable contract |
@@ -83,7 +83,7 @@ On stop, persist **`stopReason`** (coarse) and optionally **`stopDetail`** (spec
 | `stopReason` | Meaning | Typical `stopDetail` |
 |--------------|---------|----------------------|
 | `done` | Run ended after intentional completion / human stop | `user-stop` |
-| `blocked` | Stopped because work/safety cannot continue | `consecutive-blocked`, `guardrail`, `preflight`, `ci-red` |
+| `blocked` | Stopped because work/safety cannot continue | `consecutive-blocked`, `guardrail`, `preflight`, `ci-red`, `dirty-interrupt` |
 | `noop` | Nothing executable / dry inspection only | `empty-queue`, `dry-run` |
 | `budget` | Hit a run budget | `maxPrs` |
 
@@ -107,12 +107,24 @@ Umbrella parents finishing as terminal without a child `done` this streak still 
 3. On success: `done`; run [outcome adapter](./outcomes.md) for `outcomeKind`; append to `prs` when adapter is `draft-pr`; for non-PR adapters record path / branch / comment / findings in item `notes` (and [cloud ledger](./cloud-ledger.md) when enabled); clear claim; **reset `consecutiveBlocked` to `0`**.
 4. On fail soft: `blocked` or `skipped` with `blockReason`; clear claim; **increment `consecutiveBlocked`** (then check stop threshold).
 5. Never leave the working tree dirty *and* forget to persist status.
+6. On **interrupt** (IDE/tool abort): park as `blocked` + `blockReason: interrupted` (see orphan recovery). Do **not** treat as `user-stop`.
+
+## Orphan-claim recovery (every wake)
+
+Before picking new work ([tick-and-runners.md](./tick-and-runners.md)):
+
+1. If exactly one non-child `in-progress` exists and the prior turn looks aborted (dirty tree, no outcome written this claim, or wake after interrupt):
+   - Set `status: blocked`, `blockReason: interrupted`; append a short `notes` residual (paths/branch if known).
+   - Increment `consecutiveBlocked`; write state.
+   - Apply dirty-tree split ([guardrails.md](./guardrails.md)) — continue night if tree recovers; else OUTER stop with `stopDetail: dirty-interrupt`.
+2. If multiple `in-progress` (corrupt state): park all as `blocked`/`interrupted`, stop loop (`blocked` / `guardrail`) — do not guess which to keep.
+3. Do **not** re-open `interrupted` items the same night unless Sources prove the human re-queued agent-ready work with a clear tree.
 
 ## Resume mid-queue
 
 1. On tick start, load state if present and `startedAt` matches this armed run (or same-night Automation continuation with same Sources intent).
-2. Prefer resume: finish `in-progress` item first, then next `open` by priority.
-3. Do not re-queue IDs already `done` / `blocked` / `skipped` this run unless Sources refresh proves the human re-opened agent-ready work **and** id was cleared — default: preserve outcomes.
+2. Run orphan-claim recovery first. Prefer resume of a clean `in-progress` only when the tree is clean **and** the claim is still intentional (not interrupt residue). Otherwise next `open` by priority.
+3. Do not re-queue IDs already `done` / `blocked` / `skipped` this run unless Sources refresh proves the human re-opened agent-ready work **and** id was cleared — default: preserve outcomes. `interrupted` counts as terminal for the night.
 4. Umbrella `multi-slice` parent stays `open` until all children are terminal (`done` / `blocked` / `skipped`).
 5. **Cloud Automation:** if `statePath` is missing (typical when gitignored), treat as a **new bootstrap**. Skip items already covered by an open draft PR / prior adapter artifact (title/body/branch references the item id). When `cloudLedgerPath` is set, also apply [cloud-ledger.md](./cloud-ledger.md). Do not invent prior queue status.
 

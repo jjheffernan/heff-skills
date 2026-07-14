@@ -340,7 +340,7 @@ When opening parallel work: name the **level**, list **non-overlapping paths**, 
 |-------|--------|-------------------|
 | **L0 Dogfood** | Real runs | First-night scorecard ingest; Automation office-close trial; defer `v0.1.0` until bands look good |
 | **L1 Operator UX** | Clarity without coding | `/after-hours doctor`; morning **Built / Needs daylight / Verify-failed** triad — **shipped** |
-| **L2 Loop quality** | Prove-done overnight | Per-item `verification[]`; run evidence (`runsPath`); `risk` + anti–green-wash — **shipped** |
+| **L2 Loop quality** | Prove-done overnight | Per-item `verification[]`; run evidence (`runsPath`); `risk` + anti–green-wash — **shipped**; interrupt / orphan-claim / dirty-split recovery — **shipped** |
 | **L3 Abstraction** | Re-open Phase 5 seal | More Sources/outcomes; durable ledger hardening; beyond-code domains |
 | **L4 Ecosystem** | Optional peers | Slack Automation notify (deferred); Matt smoke matrix expansions; companion polish |
 | **L5 Release** | Ship | Tag `v0.1.0` after dogfood; changelog cut |

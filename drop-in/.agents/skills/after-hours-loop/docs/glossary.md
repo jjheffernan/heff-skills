@@ -7,6 +7,9 @@ Modular overnight / late-session agent work. Orchestrator: `.agents/skills/after
 | Term | Meaning |
 |------|---------|
 | **Loop run** | One armed session from bootstrap until stop |
+| **FOR (sentinel)** | Cadence wakes only — sleep/echo or Automation cron |
+| **WHILE (per wake)** | Guarded queue work; default one claim; interrupt = inner break |
+| **Interrupt** | IDE/tool abort mid-item — park `blocked`/`interrupted`; keep sentinel |
 | **Tick** | One orchestrator iteration: pick item → execute → record outcome |
 | **Work item** | Normalized unit the loop consumes (portable contract: `id`, `title`, `acceptance`, `blockerPolicy`, `executorHint`, `outcomeKind` — see state-schema) |
 | **Work source** | Adapter that materializes or refreshes work items from a tracker **input** |
@@ -101,7 +104,8 @@ Checkout configured **`baseBranch`**.
 
 - Empty queue → `stopReason: noop` (`stopDetail: empty-queue`)
 - `maxPrs` reached → `budget` / `maxPrs`
-- Guardrail / preflight / blocked streak / CI stop → `blocked` + matching `stopDetail`
+- Guardrail / preflight / blocked streak / CI stop / unrecovered dirty-interrupt → `blocked` + matching `stopDetail`
 - User: **stop after-hours** / **stop loop** → `done` / `user-stop` (kill sentinel PID)
+- IDE **interrupt** mid-item → **not** a stop — park item `interrupted`; sentinel stays armed ([tick-and-runners](../references/tick-and-runners.md))
 
 On stop, write the morning brief (pointers to PRs, non-PR outcomes, and blocked items). Coarse stop enum: [state-schema.md](../references/state-schema.md).
