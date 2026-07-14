@@ -18,13 +18,29 @@ Part of [heff-skills](https://github.com/jjheffernan/heff-skills).
 | Cursor Automation | Unattended cron (office-hours close) — [docs/automation.md](https://github.com/jjheffernan/heff-skills/blob/main/docs/automation.md) · [instructions template](./templates/automation-instructions.office-hours.close.txt) |
 | Mega-PR (unsafe) | Dual-token only — [mega-pr.md](./references/mega-pr.md); never config-sticky |
 
-Stop: `stop after-hours` / `stop loop`.## Install
+Stop: `stop after-hours` / `stop loop`. Interrupt mid-tick parks the item (`interrupted`) and keeps the sentinel — see [tick-and-runners.md](./references/tick-and-runners.md).
+
+## Install
 
 Primary (when published / registry-available):
 
 ```bash
 npx skills add jjheffernan/heff-skills -a cursor
 ```
+
+## Update
+
+Refresh the installed skill without wiping project config/state:
+
+```bash
+# from the target project (skills CLI)
+npx skills update after-hours -y
+
+# from a heff-skills clone
+./scripts/update.sh /path/to/your/project
+```
+
+Companions (if installed): `npx skills update after-hours-stop after-hours-handoff -y` — or `./scripts/update.sh` auto-refreshes them when present. Full matrix: [INSTALL.md](https://github.com/jjheffernan/heff-skills/blob/main/INSTALL.md).
 
 Alternative from a heff-skills clone:
 

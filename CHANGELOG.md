@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [`scripts/update.sh`](./scripts/update.sh) — refresh installed skill tree(s); preserves `.cursor` config/state/brief; auto-updates companions when present
+- Install stamps pack `VERSION` into `.agents/skills/after-hours-loop/VERSION`
+- INSTALL / README update paths: `npx skills update after-hours -y` and `./scripts/update.sh`
+
+### Added
+
+- Interrupt fault-resistance: FOR/WHILE tick model, wake protocol, orphan-claim recovery, `blockReason: interrupted`, `stopDetail: dirty-interrupt`, dirty-tree split (interrupted vs unknown) — [tick-and-runners.md](./skills/after-hours-loop/references/tick-and-runners.md), [guardrails.md](./skills/after-hours-loop/references/guardrails.md)
+- Scorecard row 13: interrupt recovery (total /26)
+
+### Changed
+
+- Dirty tree no longer always ends the night: recovered interrupt residue parks the item and continues; unrecovered → `dirty-interrupt` stop
+- `validate-state.py` accepts `stopDetail: dirty-interrupt`
+- `install.sh` is re-run safe (explicit Update mode when skill already present)
+
+### Added
+
 - Per-item `verification[]` + `risk`; `/after-hours doctor`; morning Built / Needs daylight / Verify-failed triad; optional `runsPath` evidence ([run-artifacts.md](./skills/after-hours-loop/references/run-artifacts.md))
 - Expanded validate-state fixtures (valid-stopped / valid-todo-first; invalid priority / version / missing baseBranch); CI loops all `valid*` / `invalid*`
 - `validate-state.py` enforces `priority` enum (`github-first` \| `fifo` \| `todo-first`)

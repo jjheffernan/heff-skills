@@ -14,6 +14,19 @@ Installs into the current project’s Cursor agent skills location. After instal
 
 Use this once the package is available via the skills registry / GitHub (`jjheffernan/heff-skills`). Alpha builds install the same way; expect change until `v0.1.0`.
 
+### Update (skills CLI)
+
+From the **target project** (where the skill is already installed):
+
+```bash
+npx skills update after-hours -y
+# If companions were installed:
+npx skills update after-hours-stop after-hours-handoff -y
+```
+
+Or refresh everything the CLI manages: `npx skills update -y`.
+
+CLI skill names match frontmatter `name:` (`after-hours`, `after-hours-stop`, `after-hours-handoff`). Project config under `.cursor/` is **not** owned by the CLI — your `after-hours-loop.config.json` / state / morning brief stay put.
 ## Path B — clone + install script (alternative)
 
 From a clone of this repo:
@@ -27,6 +40,7 @@ From a clone of this repo:
 - `--with-gitignore` appends ignore entries for loop state and morning brief
 - `--with-companions` also copies opt-in siblings `after-hours-stop` + `after-hours-handoff` into `.agents/skills/` (not always-on; **not** in drop-in sync)
 - `--dry-run` prints what would change without writing
+- Stamps pack [`VERSION`](./VERSION) into the installed skill tree
 
 Example:
 
@@ -35,6 +49,18 @@ Example:
 ./scripts/install.sh --with-gitignore ~/code/my-app
 ./scripts/install.sh --with-companions --with-gitignore ~/code/my-app
 ```
+
+### Update (clone + script)
+
+Safe to re-run anytime. Replaces skill directories only — **never** overwrites config, state, or morning brief:
+
+```bash
+./scripts/update.sh TARGET_REPO
+# same as re-running install.sh; update.sh errors if loop is not installed yet
+./scripts/update.sh --with-companions TARGET_REPO   # also install companions if missing
+```
+
+If companions are already present, `update.sh` refreshes them automatically. Check installed pack version: `cat TARGET_REPO/.agents/skills/after-hours-loop/VERSION`.
 
 ### Companion micro-skills (opt-in)
 
@@ -93,6 +119,8 @@ Do this once per target project:
 4. Confirm `gh` auth and a clean tree before arming an overnight run.
 
 5. **Optional Cursor rule** (not always-on) — copy `skills/after-hours-loop/templates/cursor-rule.after-hours-loop.mdc.example` to `TARGET_REPO/.cursor/rules/after-hours-loop.mdc` so `/after-hours` can point at `.agents/skills/after-hours-loop/SKILL.md`; leave `alwaysApply: false`.
+
+6. **Stay current** — after pulling heff-skills changes, run [Update](#update-skills-cli) (`npx skills update after-hours -y` or `./scripts/update.sh TARGET_REPO`) before the next overnight arm.
 
 ---
 

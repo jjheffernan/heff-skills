@@ -16,6 +16,16 @@ Alternative from a clone:
 ./scripts/install.sh /path/to/your/project
 ```
 
+**Update an existing install** (keeps project config/state):
+
+```bash
+# from the target project
+npx skills update after-hours -y
+
+# or from a heff-skills clone
+./scripts/update.sh /path/to/your/project
+```
+
 Details: **[INSTALL.md](./INSTALL.md)** · [`CHANGELOG.md`](./CHANGELOG.md).
 
 ## Skills
