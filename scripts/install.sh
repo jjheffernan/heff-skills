@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Install after-hours-loop into a target Cursor / Agent Skills repo.
+# Install or refresh after-hours-loop into a target Cursor / Agent Skills repo.
 # Optionally install companion micro-skills with --with-companions.
+# Safe to re-run: replaces skill directories only; never overwrites existing
+# .cursor/after-hours-loop.config.json, state, or morning brief.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -8,6 +10,7 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 SOT="${ROOT_DIR}/skills/after-hours-loop"
 CONFIG_EXAMPLE="${SOT}/templates/config.example.json"
+PACK_VERSION_FILE="${ROOT_DIR}/VERSION"
 COMPANIONS=(after-hours-stop after-hours-handoff)
 
 DRY_RUN=0
@@ -24,6 +27,9 @@ Usage: ./scripts/install.sh [--dry-run] [--with-gitignore] [--with-companions] [
   --with-gitignore    Append ignore entries for loop state + morning brief if missing
   --with-companions   Also copy after-hours-stop + after-hours-handoff into .agents/skills/
                       (opt-in; not part of drop-in sync)
+
+  Re-run is an update: skill trees are replaced; project config/state/brief stay.
+  Explicit updater: ./scripts/update.sh [same flags] TARGET_REPO
 EOF
 }
 
@@ -46,6 +52,19 @@ install_skill_dir() {
     rm -rf "${dest}"
     cp -R "${src}" "${dest}"
     echo "Copied skill → ${dest}"
+  fi
+}
+
+stamp_version() {
+  local dest_skill="$1"
+  if [[ ! -f "${PACK_VERSION_FILE}" ]]; then
+    return
+  fi
+  if [[ "${DRY_RUN}" -eq 1 ]]; then
+    echo "dry-run: cp ${PACK_VERSION_FILE} ${dest_skill}/VERSION"
+  else
+    cp "${PACK_VERSION_FILE}" "${dest_skill}/VERSION"
+    echo "Stamped VERSION → ${dest_skill}/VERSION ($(tr -d '[:space:]' <"${PACK_VERSION_FILE}"))"
   fi
 }
 
@@ -97,8 +116,19 @@ GITIGNORE="${TARGET_REPO}/.gitignore"
 IGNORE_STATE=".cursor/after-hours-loop.state.json"
 IGNORE_BRIEF=".cursor/after-hours-morning-brief.md"
 
-echo "Install target: ${TARGET_REPO}"
+MODE="Install"
+if [[ -d "${DEST_SKILL}" ]]; then
+  MODE="Update"
+fi
+
+echo "${MODE} target: ${TARGET_REPO}"
 echo "SoT: ${SOT}"
+if [[ -f "${PACK_VERSION_FILE}" ]]; then
+  echo "Pack VERSION: $(tr -d '[:space:]' <"${PACK_VERSION_FILE}")"
+fi
+if [[ -d "${DEST_SKILL}" ]]; then
+  echo "Refreshing skill tree (config/state/brief preserved)."
+fi
 
 if [[ "${DRY_RUN}" -eq 1 ]]; then
   echo "dry-run: mkdir -p $(dirname "${DEST_SKILL}")"
@@ -110,6 +140,8 @@ else
   cp -R "${SOT}" "${DEST_SKILL}"
   echo "Copied skill → ${DEST_SKILL}"
 fi
+
+stamp_version "${DEST_SKILL}"
 
 if [[ "${WITH_COMPANIONS}" -eq 1 ]]; then
   for companion in "${COMPANIONS[@]}"; do
@@ -161,14 +193,16 @@ fi
 cat <<EOF
 
 Next steps:
-  1. Configure ${DEST_CONFIG} (repo, baseBranch, testCommand, packageManager).
+  1. Configure ${DEST_CONFIG} (repo, baseBranch, testCommand, packageManager) if new.
   2. Run /after-hours with a Sources block.
      See ${DEST_SKILL}/templates/Sources.example.txt
+  3. Later refresh: ./scripts/update.sh ${TARGET_REPO}
+     or from the target project: npx skills update after-hours -y
 EOF
 
 if [[ "${WITH_COMPANIONS}" -eq 1 ]]; then
   cat <<EOF
-  3. Companions installed: after-hours-stop, after-hours-handoff
+  Companions: after-hours-stop, after-hours-handoff
      (opt-in stop / morning-brief handoff — not always-on).
 EOF
 fi
