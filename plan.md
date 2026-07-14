@@ -2,18 +2,13 @@
 
 Living plan for **after-hours-loop**: a drop-in, **workflow-agnostic AFK orchestrator** — install once, point at any agent-ready tracker, walk away. Shape **heff-skills** like mature public skill repos (structure/UX only; do not copy their skill text).
 
-**Status:** **Alpha** (`0.1.0-alpha.2`) — Phase 6 sealed; dogfood before `v0.1.0`  
+**Status:** **MVP / alpha** (`0.1.0-alpha.2`) — phased rollout **complete**. Dry-run ready. Improve via multi-level backlog (not new numbered phases).  
 **Last updated:** 2026-07-13  
 **Target:** https://github.com/jjheffernan/heff-skills
 
 **Research swarms:** [caveman](3b485d0f-3fee-4e40-9cdc-f90cafb9b5a3) · [ponytail](9228fb73-db99-4e86-b15b-4992c3191231) · [mattpocock](d66efc9e-b3cd-4ee6-a36d-bc59d3e6ade1) · [local audit](a95719c0-80a1-43a1-b667-d6ffa0014977)  
-**Phase 1 structure audit:** [post-phase-1](5925cc8b-83e3-4ada-aed7-bf0c4f5d3273)  
-**Phase 2 structure audit:** [post-phase-2](ae706577-6cae-4366-8e66-3c111daee94c)  
-**Phase 3 structure audit:** [post-phase-3](73b45955-2172-4434-b4f2-b72d3d04242c)  
-**Cumulative P1–P3 audit:** [cumulative](4cb22da8-a496-4894-a193-6a750b1bcc22)  
-**Phase 4 structure audit:** [post-phase-4](bda1c157-e503-4961-8d80-f4222491c659)  
-**Phase 5 structure audit:** [post-phase-5](bfb355b7-1919-494a-81cd-8cac70ba1b96) (PASS_WITH_FIXES → softs fixed; mega-PR followed)  
-**Phase 6 structure audit:** [post-phase-6](6cdf3904-7594-4c14-b79d-ebfbcf4c4491) (PASS_WITH_FIXES → janitor)
+**Phase audits (historical):** [P1](5925cc8b-83e3-4ada-aed7-bf0c4f5d3273) · [P2](ae706577-6cae-4366-8e66-3c111daee94c) · [P3](73b45955-2172-4434-b4f2-b72d3d04242c) · [P1–P3](4cb22da8-a496-4894-a193-6a750b1bcc22) · [P4](bda1c157-e503-4961-8d80-f4222491c659) · [P5](bfb355b7-1919-494a-81cd-8cac70ba1b96) · [P6](6cdf3904-7594-4c14-b79d-ebfbcf4c4491)  
+**Loop-factory audit:** [docs/loop-factory-audit.md](./docs/loop-factory-audit.md) ([compare agent](94d2054d-1cd7-4ade-b5ce-c57ba60c154c))
 
 ---
 
@@ -44,7 +39,7 @@ Ship a skill pack where someone can:
 | Progressive disclosure | Thin `SKILL.md` + `references/` |
 | Sibling loop-factory | Ready gate, batch limits, empty-queue noop, run artifacts, autonomy contract |
 
-Also note Julius ships a separate [`loop-factory`](https://github.com/JuliusBrussee/skills/tree/main/skills/loop-factory) (inbox → active → archive). Study that shape for queue maturity; do not copy content.
+Also note Julius ships a separate [`loop-factory`](https://github.com/JuliusBrussee/skills/tree/main/skills/loop-factory) (inbox → active → archive). **Audited post-MVP:** [docs/loop-factory-audit.md](./docs/loop-factory-audit.md). Steal verification / evidence / doctor / risk shapes — not CLI factory dirs or mid-loop archive gates.
 
 **Don't:** 30-agent installer on day one; hand-maintained duplicate trees; metrics theater without harness.
 
@@ -276,6 +271,8 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 | 2026-07-13 | Ship as **alpha** (`0.1.0-alpha.1`); defer `v0.1.0` tag | Multiple real runs before release |
 | 2026-07-13 | Treat Cursor Automation as first-class (cron after office hours) | AFK when IDE is closed; document cloud state gap |
 | 2026-07-13 | Mega-PR is dual-token per arm only; never config-sticky | Throughput option without accidental PR bundling |
+| 2026-07-13 | End phased rollout at MVP; multi-level backlog thereafter | Dry-run ready; avoid endless Phase N |
+| 2026-07-13 | Phase 5 abstraction seal is temporary | Re-open when dogfood needs deeper adapters |
 
 ### Still open (non-blocking)
 
@@ -307,78 +304,40 @@ Keep sources × executors × state × dual runners. Fix: portable config, self-c
 
 ---
 
-## 7. Immediate next actions → Phase 5
+## 7. Post-MVP operating mode
 
-Phases 1–4 shipped the portable AFK coding loop. Next:
+**Phased rollout is done** (Phases 0–6). Do not open Phase 7+. Work as a **living multi-level backlog**: dogfood → scorecard → pick tickets across levels → small audits as needed.
 
-### 7.1 Abstraction (workflow-agnostic core)
+**MVP bar (met):** install → Sources → dry-run queue → A→Z executor + outcome → morning brief → stop safely; Automation + dual-token mega-PR documented; alpha packaging.
 
-- [x] Rewrite readiness / composition language everywhere so trackers are **inputs**, not a mandated upstream chain (Matt remains soft-compat docs + opt-in sources).
-- [x] Normalize the queue item contract: `id`, `title`, `acceptance`, `blockerPolicy`, `executorHint`, `outcomeKind` — independent of GitHub/PR.
-- [x] Separate **outcome adapters** from executors: `draft-pr` (code default) + live `doc-artifact` (`docs-digest`); stubs later: `branch-only`, `report-only`, `external-ticket-update`.
+**Dry-run ready now:** follow [docs/first-night.md](./docs/first-night.md) §3 (`/after-hours --dry-run`) before any overnight arm.
 
-- [x] Keep Sources as the only night-time binding to a workflow; add adapters, don’t fork orchestration.
+### Abstraction (re-open later)
 
-### 7.2 Beyond code
+Phase 5 **temporarily sealed** the portable queue + outcome-adapter surface so MVP could ship. **Re-open when dogfood demands it** — deeper tracker adapters, more `outcomeKind`s, non-code domains, finer `blockerPolicy` / claim semantics. Do not treat the seal as permanent architecture lock.
 
-- [x] Ship one non-code executor MVP (candidate: research/docs digest writing into a repo artifact + morning brief, no PR required).
-- [x] Domain-agnostic stop reasons (`done` / `blocked` / `noop` / `budget`) with outcome-specific details in state.
-- [x] Document “A→Z” as executor-defined completion, not “opened a PR”.
+### Levels (pick work from any)
 
-### 7.3 Matt compatibility (without subordination)
+| Level | Focus | Near-term tickets |
+|-------|--------|-------------------|
+| **L0 Dogfood** | Real runs | First-night scorecard ingest; Automation office-close trial; defer `v0.1.0` until bands look good |
+| **L1 Operator UX** | Clarity without coding | `/after-hours doctor`; morning **Built / Needs daylight / Verify-failed** triad ([loop-factory-audit](./docs/loop-factory-audit.md)) |
+| **L2 Loop quality** | Prove-done overnight | Per-item `verification[]`; run evidence (`runsPath`); `risk` + anti–green-wash |
+| **L3 Abstraction** | Re-open Phase 5 seal | More Sources/outcomes; durable ledger hardening; beyond-code domains |
+| **L4 Ecosystem** | Optional peers | Slack Automation notify (deferred); Matt smoke matrix expansions; companion polish |
+| **L5 Release** | Ship | Tag `v0.1.0` after dogfood; changelog cut |
 
-- [x] Keep `wayfinder-afk` + `github-tickets` opt-in; never default them.
-- [x] Smoke matrix: Matt artifacts present vs absent vs mixed Sources — same orchestrator path ([docs/smoke-matrix.md](./docs/smoke-matrix.md)).
-- [x] Refuse any design that requires grill/to-tickets before `/after-hours` can start.
+Historical phase checklists remain below in §4 / old §7–8 for archaeology — **do not extend them**.
 
-### 7.4 Hardening / release
+### Still open (carried)
 
-- [ ] Tag `v0.1.0` only after multiple alpha dogfood nights (IDE + Automation) score well.
-- [ ] Expand fixtures (parse / priority / write-back). *(schema fixtures expanded; parse harness still open)*
-- [x] Optional companion micro-skills for stop/handoff if references stay too long. → Phase 6 §8.3 (`after-hours-stop` / `after-hours-handoff`)
-- [ ] Ingest first solo night via [docs/first-night-scorecard.md](./docs/first-night-scorecard.md); promote every 0/1 into Phase 5 tickets.
-- [x] Cursor Automation office-hours guide + Instructions template ([docs/automation.md](./docs/automation.md))
-- [x] Durable cloud ledger (tracked file) so Automation fires share memory without relying on gitignored state — [references/cloud-ledger.md](./skills/after-hours-loop/references/cloud-ledger.md), config `cloudLedgerPath` (default `null`)
-- [ ] Optional Slack “fire started / morning summary” action on the Automation *(deferred)*
-- [x] Mega-PR mode ([references/mega-pr.md](./skills/after-hours-loop/references/mega-pr.md)) — dual-token every arm; never config-sticky
+1. Morning brief path sticky vs `.cursor/` — config `morningBriefPath`
+2. Runnable parse/priority/write-back harness (schema fixtures expanded; priority now validated)
+3. Dogfood scorecard ingest; Slack Automation; tag `v0.1.0`
 
----
+### Archive note
 
-## 8. Phase 6 — Outcomes depth + harness + companions
-
-Phase 5 sealed abstraction. Phase 6 hardens the adapter surface and operator UX without waiting on dogfood or `v0.1.0`.
-
-### 8.1 Live remaining outcome adapters
-
-- [x] Promote `branch-only` from stub → live in `outcomes.md` + executor notes (push `after-hours/…`, no PR; record branch in `notes` / ledger)
-- [x] Promote `report-only` → live (morning-brief + chat findings only; no git publish unless human asks)
-- [x] Promote `external-ticket-update` → live MVP (`gh issue comment` / tracker comment; no PR required)
-- [x] Wire Sources / bootstrap examples for `outcomeKind:` overrides; keep defaults safe (`draft-pr` / `doc-artifact`)
-
-### 8.2 Fixture & parse harness
-
-- [x] Add fixtures (and CI) for: invalid `stopReason`, `megaPr` non-bool, priority enum if validated
-- [x] Document parse / priority / write-back expectations in `fixtures/README.md` (harness stubs OK if not runnable yet)
-- [x] Keep root ↔ skill ↔ drop-in `validate-state.py` identical
-
-### 8.3 Companion micro-skills (thin)
-
-- [x] Add opt-in companion skills under `skills/`: `after-hours-stop` (kill sentinel / stop phrases / write brief) and `after-hours-handoff` (morning-brief focused) — thin SKILL.md pointing at existing references; **not** always-on
-- [x] Document in INSTALL / AGENTS.md / plan; sync drop-in only for `after-hours-loop` (companions install as siblings)
-- [x] Update `scripts/sync-drop-in.sh` / install notes if companions should install together (prefer document copy paths; keep sync loop-skill-only unless install.sh already copies all of `skills/`) — companions via `install.sh --with-companions`; **out of drop-in**
-
-### 8.4 Ops / triage beyond-code MVP
-
-- [x] Add `executors/ops-checklist.md` (or `triage-digest.md`): process a checklist / open issues digest → `report-only` or `doc-artifact`; no code PR by default
-- [x] Glossary + SKILL modules table + architecture diagram
-
-### 8.5 Packaging hygiene
-
-- [x] Bump `VERSION` → `0.1.0-alpha.2` + CHANGELOG section
-- [x] Fix Phase 0 historical checkbox (“downstream AFK of Matt”) → workflow-agnostic wording
-- [x] Post-phase-6 structure audit ([audit](6cdf3904-7594-4c14-b79d-ebfbcf4c4491)); janitor soft-fixes; commit + push (no `v0.1.0` tag)
-
-**Deferred (not Phase 6):** dogfood scorecard ingest, Slack Automation action, git tag `v0.1.0`.
+Historical **Phase 5–6 checklist text** (completed) lived here; see git history around `0.1.0-alpha.2` / §4 above for archaeology. Do not revive numbered phases.
 
 ---
 
@@ -387,4 +346,4 @@ Phase 5 sealed abstraction. Phase 6 hardens the adapter surface and operator UX 
 - [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)
 - [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail)
 - [mattpocock/skills](https://github.com/mattpocock/skills) — optional peers: wayfinder, grill-me, grill-with-docs, grilling, handoff, setup, triage, to-spec, to-tickets
-- Optional peer pattern: [loop-factory](https://github.com/JuliusBrussee/skills/tree/main/skills/loop-factory)
+- [JuliusBrussee/skills loop-factory](https://github.com/JuliusBrussee/skills/tree/main/skills/loop-factory) — audited in [docs/loop-factory-audit.md](./docs/loop-factory-audit.md)

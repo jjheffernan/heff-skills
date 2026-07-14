@@ -16,6 +16,7 @@ REQUIRED = (
     "priority",
     "baseBranch",
 )
+PRIORITIES = frozenset({"github-first", "fifo", "todo-first"})
 STATUSES = frozenset({"open", "in-progress", "done", "blocked", "skipped"})
 STOP_REASONS = frozenset({"done", "blocked", "noop", "budget"})
 STOP_DETAILS = frozenset(
@@ -54,6 +55,10 @@ def main() -> None:
     for key in REQUIRED:
         if key not in data:
             fail(f"missing required key: {key}")
+
+    priority = data["priority"]
+    if not isinstance(priority, str) or priority not in PRIORITIES:
+        fail(f"priority invalid: {priority!r}")
 
     prs = data["prs"]
     if not isinstance(prs, list):

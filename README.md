@@ -2,7 +2,7 @@
 
 Portable Cursor agent skills. Headline skill: **after-hours-loop** (**alpha**) — a **workflow-agnostic AFK loop**. Point it at any agent-ready tracker, walk away (IDE slash or **Cursor Automation** after office hours); it runs A→Z work, stops safely, and leaves a morning brief.
 
-**Version:** [`VERSION`](./VERSION) = `0.1.0-alpha.2`. No release tag yet — dogfood several runs first.
+**Version:** [`VERSION`](./VERSION) = `0.1.0-alpha.2` (**MVP / alpha**). Phased buildout complete — next is dogfood + multi-level backlog in [`plan.md`](./plan.md). No release tag yet.
 
 ## 30-second install
 
@@ -50,18 +50,19 @@ Night Sources presets: [`night-Sources.github.txt`](./skills/after-hours-loop/te
 
 ## Next improvements
 
-See **[plan.md](./plan.md)** (Phase 6). Short list: outcome adapter depth · fixture harness · companion stop/handoff · release `v0.1.0` after alpha dogfood.
+See **[plan.md](./plan.md)** post-MVP levels (not numbered phases). Near-term: dogfood dry-run → scorecard; loop-factory tickets (verification / doctor / pass-report); reopen abstraction when needed.
 
 ## Docs
 
 | Doc | Purpose |
 |-----|---------|
 | [INSTALL.md](./INSTALL.md) | Cursor-first install paths, project adapter, uninstall |
-| [docs/first-night.md](./docs/first-night.md) | First overnight checklist |
+| [docs/first-night.md](./docs/first-night.md) | First overnight checklist (dry-run first) |
 | [docs/first-night-scorecard.md](./docs/first-night-scorecard.md) | Solo AFK rubric + continuous-improvement log |
 | [docs/automation.md](./docs/automation.md) | Cursor Automations + office-hours-close setup |
+| [docs/loop-factory-audit.md](./docs/loop-factory-audit.md) | Julius loop-factory → after-hours improvement tickets |
 | [SECURITY.md](./SECURITY.md) | Trust surface: local files only, no telemetry |
-| [plan.md](./plan.md) | Living improvement plan and phased roadmap |
+| [plan.md](./plan.md) | Living multi-level backlog (MVP sealed) |
 | [docs/composition.md](./docs/composition.md) | AFK loop vs optional peer workflows (incl. Matt) |
 | [docs/architecture.md](./docs/architecture.md) | SoT layout, runners, sync rule |
 | [docs/portability.md](./docs/portability.md) | Host support for v1 |

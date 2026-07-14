@@ -7,7 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0-alpha.2] — 2026-07-13
+### Added
+
+- [docs/loop-factory-audit.md](./docs/loop-factory-audit.md) — Julius loop-factory structure audit vs after-hours
+- Expanded validate-state fixtures (valid-stopped / valid-todo-first; invalid priority / version / missing baseBranch); CI loops all `valid*` / `invalid*`
+- `validate-state.py` enforces `priority` enum (`github-first` \| `fifo` \| `todo-first`)
+
+### Changed
+
+- Post-MVP operating mode in [plan.md](./plan.md): stop numbered phases; multi-level backlog; Phase 5 abstraction seal noted as temporary
+- [docs/first-night.md](./docs/first-night.md) — dry-run called out as MVP checkpoint
 
 Phase 5 abstraction + Phase 6 outcomes depth / harness / companions.
 

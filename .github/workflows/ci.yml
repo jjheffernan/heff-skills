@@ -16,29 +16,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Valid fixture must pass
-        run: python3 scripts/validate-state.py skills/after-hours-loop/fixtures/sample-state.valid.json
-      - name: Invalid prs fixture must fail
+      - name: All valid fixtures must pass
         run: |
-          if python3 scripts/validate-state.py skills/after-hours-loop/fixtures/sample-state.invalid-prs.json; then
-            echo "expected non-zero exit" >&2
-            exit 1
-          fi
-      - name: Invalid status fixture must fail
+          set -euo pipefail
+          for f in skills/after-hours-loop/fixtures/sample-state.valid.json \
+                   skills/after-hours-loop/fixtures/sample-state.valid-*.json; do
+            [[ -e "$f" ]] || continue
+            echo "expect ok: $f"
+            python3 scripts/validate-state.py "$f"
+          done
+      - name: All invalid fixtures must fail
         run: |
-          if python3 scripts/validate-state.py skills/after-hours-loop/fixtures/sample-state.invalid-status.json; then
-            echo "expected non-zero exit" >&2
-            exit 1
-          fi
-      - name: Invalid stopReason fixture must fail
-        run: |
-          if python3 scripts/validate-state.py skills/after-hours-loop/fixtures/sample-state.invalid-stopReason.json; then
-            echo "expected non-zero exit" >&2
-            exit 1
-          fi
-      - name: Invalid megaPr fixture must fail
-        run: |
-          if python3 scripts/validate-state.py skills/after-hours-loop/fixtures/sample-state.invalid-megaPr.json; then
-            echo "expected non-zero exit" >&2
-            exit 1
-          fi
+          set -euo pipefail
+          for f in skills/after-hours-loop/fixtures/sample-state.invalid-*.json; do
+            echo "expect fail: $f"
+            if python3 scripts/validate-state.py "$f"; then
+              echo "expected non-zero exit for $f" >&2
+              exit 1
+            fi
+          done

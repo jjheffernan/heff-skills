@@ -4,9 +4,9 @@ Ship one unattended run with agent-ready work already queued. Daytime alignment 
 
 **Refuse:** you do **not** need Matt grill / to-tickets (or any peer chain) before `/after-hours` can start. Opt-in Sources `wayfinder-afk` / `github-tickets` stay off unless you uncomment them — see [smoke-matrix.md](./smoke-matrix.md).
 
-**Alpha:** expect rough edges; score every run.
+**MVP / alpha:** packaging and loop surface are dry-run ready. Score every run; phased rollout is over — feed gaps into [plan.md](../plan.md) post-MVP levels.
 
-After the run, score it with **[first-night-scorecard.md](./first-night-scorecard.md)** and feed every partial/fail into [plan.md](../plan.md).
+After the run, score it with **[first-night-scorecard.md](./first-night-scorecard.md)** and promote every partial/fail into the multi-level backlog in [plan.md](../plan.md).
 
 For unattended **office-hours-close** scheduling (no IDE open), use **[automation.md](./automation.md)** instead of (or in addition to) arming `/after-hours` manually.
 
@@ -30,7 +30,9 @@ cp skills/after-hours-loop/templates/config.example.json \
 
 Confirm `gh` auth. Prefer a clean working tree before arming.
 
-## 3. Dry-run
+## 3. Dry-run (do this first)
+
+**MVP checkpoint:** treat a successful dry-run as the gate before overnight or Automation.
 
 Queue only — no state write, no coding:
 
@@ -39,6 +41,8 @@ Queue only — no state write, no coding:
 Sources:
   - github-issues: label ready-for-agent limit 5
 ```
+
+Confirm the printed queue matches intent (ready vs blocked reasons). If empty or wrong Sources, fix labels / acceptance before arming.
 
 Night presets (paste-ready):
 
