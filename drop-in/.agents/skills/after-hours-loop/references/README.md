@@ -13,6 +13,7 @@ Load these when the orchestrator needs depth. Orchestrator stays thin: [SKILL.md
 | [bootstrap.md](./bootstrap.md) | Live — preflight, Sources, dry-run |
 | [tick-and-runners.md](./tick-and-runners.md) | Live — sentinel, tick loop, Automation |
 | [cloud-ledger.md](./cloud-ledger.md) | Live — optional durable Automation ledger (`cloudLedgerPath`) |
+| [run-artifacts.md](./run-artifacts.md) | Live — optional per-tick verification evidence (`runsPath`) |
 | [mega-pr.md](./mega-pr.md) | Live — bundled mega-PR; dual-token enable every arm |
 
 Copyable morning brief body: [templates/morning-brief.md](../templates/morning-brief.md).

@@ -53,4 +53,5 @@ build/
 # If this repo itself is used as an AFK target (dogfood)
 .cursor/after-hours-loop.state.json
 .cursor/after-hours-morning-brief.md
+.cursor/after-hours-runs/
 .cursor/after-hours-loop.config.json

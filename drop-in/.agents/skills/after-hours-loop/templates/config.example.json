@@ -7,6 +7,7 @@
   "statePath": ".cursor/after-hours-loop.state.json",
   "morningBriefPath": ".cursor/after-hours-morning-brief.md",
   "cloudLedgerPath": null,
+  "runsPath": null,
   "draftPrs": true,
   "maxPrs": 3,
   "allowSkipTests": false,

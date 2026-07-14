@@ -6,9 +6,26 @@
 
 ## Summary
 
+**Built (verified):** <n> · **Needs daylight:** <n> · **Verify-failed:** <n>
+
 <!-- If megaPr: lead with MEGA-PR MODE banner — see references/mega-pr.md -->
 
-<2–4 sentences: what ran, what shipped (drafts and/or doc artifacts), what needs a human>
+<2–4 sentences: what ran, what shipped, what needs a human>
+
+## Built (verified)
+
+- `<id>` — <outcome pointer>
+- … or _None_
+
+## Needs daylight
+
+- `<id>` — **why:** <needs-info | needs-grill | hitl | high-risk | …> · **human must:** <concrete next step>
+- … or _None_
+
+## Verify-failed
+
+- `<id>` — **why:** <verification-failed | tests | ci-red> · **human must:** <concrete next step>
+- … or _None_
 
 ## PRs opened
 
@@ -18,9 +35,6 @@
 ## Doc / non-PR outcomes
 
 - `<id>` — `doc-artifact:` <path>
-- `<id>` — `branch-only:` `after-hours/…`
-- `<id>` — `report-only:` <one-line findings>
-- `<id>` — `external-ticket-update:` <comment url or id>
 - … or _None_
 
 ## Done
@@ -30,7 +44,7 @@
 
 ## Blocked
 
-- `<id>` — **why:** <needs-info | needs-grill | tests | …> · **human must:** <concrete next step>
+- `<id>` — **why:** <…> · **human must:** <…>
 - … or _None_
 
 ## Skipped
@@ -40,16 +54,17 @@
 
 ## Residual risk
 
-- <manual checks, flaky tests, partial migrations, review focus>
+- <…>
 - … or _None known_
 
 ## Suggested next
 
-- Grill / wayfinder: <what alignment to do tomorrow, if any>
-- Ready queue: <what to label / brief before next AFK>
-- Review: <which PR or digest to look at first>
+- Daytime alignment: <…>
+- Ready queue: <…>
+- Review: <…>
 
 ## Artifacts
 
 - State: `.cursor/after-hours-loop.state.json` (or configured `statePath`)
 - Config: `.cursor/after-hours-loop.config.json` (if used)
+- Runs: `<runsPath>/` (if configured)

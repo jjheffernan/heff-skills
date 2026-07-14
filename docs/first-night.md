@@ -34,6 +34,8 @@ Confirm `gh` auth. Prefer a clean working tree before arming.
 
 **MVP checkpoint:** treat a successful dry-run as the gate before overnight or Automation.
 
+Optional health scan (no Sources required): `/after-hours doctor`
+
 Queue only — no state write, no coding:
 
 ```text

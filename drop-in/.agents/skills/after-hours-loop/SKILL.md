@@ -36,6 +36,7 @@ Bootstrap **sources** → **work items** → **executors** → **outcome adapter
 | [references/morning-brief.md](./references/morning-brief.md) | Every stop |
 | [references/tick-and-runners.md](./references/tick-and-runners.md) | Sentinel, tick loop, Automation |
 | [references/cloud-ledger.md](./references/cloud-ledger.md) | Optional durable Automation ledger (`cloudLedgerPath`) |
+| [references/run-artifacts.md](./references/run-artifacts.md) | Optional per-tick verification evidence (`runsPath`) |
 | [references/mega-pr.md](./references/mega-pr.md) | Bundled mega-PR — **explicit every run** (unsafe) |
 | [docs/glossary.md](./docs/glossary.md) | Terms |
 | [docs/composition.md](./docs/composition.md) | Orchestrator position; trackers as inputs |
@@ -46,7 +47,7 @@ Config: `.cursor/after-hours-loop.config.json` ← [templates/config.example.jso
 
 | Trigger | Behavior |
 |---------|----------|
-| **`/after-hours`** | Primary. `/after-hours 45m`, `/after-hours --dry-run`. Mega-PR only with `--mega-pr` **and** confirm line — [mega-pr](./references/mega-pr.md). |
+| **`/after-hours`** | Primary. `/after-hours 45m`, `/after-hours --dry-run`, `/after-hours doctor`. Mega-PR only with `--mega-pr` **and** confirm line — [mega-pr](./references/mega-pr.md). |
 | **`/loop`** + this skill | Equivalent when pointed here. |
 | **Cursor Automation** | Cron (e.g. office hours close); same Sources in Instructions. See skill [tick-and-runners](./references/tick-and-runners.md) + install-tree / heff-skills [docs/automation.md](https://github.com/jjheffernan/heff-skills/blob/main/docs/automation.md). |
 
@@ -79,15 +80,15 @@ Load only the active module. Do not paste their logic here.
 | `statePath` | `.cursor/after-hours-loop.state.json` |
 | `morningBriefPath` | `.cursor/after-hours-morning-brief.md` |
 | `cloudLedgerPath` | `null` (off — PR idempotency only; see [cloud-ledger](./references/cloud-ledger.md)) |
+| `runsPath` | `null` (off — see [run-artifacts](./references/run-artifacts.md)) |
 
 ## Bootstrap → tick
 
 1. Follow [bootstrap.md](./references/bootstrap.md) (preflight fail-closed).
 2. Materialize Sources ([templates/Sources.example.txt](./templates/Sources.example.txt)); priority `github-first` default.
 3. Apply [readiness](./references/readiness.md).
-4. **Dry-run:** print queue; no state write; no code; stop.
+4. **Dry-run:** print queue; no state write; no code; stop. **Doctor:** env + readiness scan only ([bootstrap](./references/bootstrap.md)).
 5. Else write state ([state-schema](./references/state-schema.md)); run tick 0; continue per [tick-and-runners](./references/tick-and-runners.md).
-
 **Hard dep:** agent-ready work for the chosen Sources/executors, or stop with a morning note for daytime alignment.  
 **Soft deps:** CONTEXT / ADRs / issue-tracker / Matt or other peer skills **if present** — [compatibility](./references/compatibility.md). Never rewrite CONTEXT/ADRs; never `/grill-me` or HITL wayfinder overnight.  
 **Refuse:** never require grill→tickets (or any peer chain) to start — bootstrap from Sources alone ([first-night](https://github.com/jjheffernan/heff-skills/blob/main/docs/first-night.md), [smoke-matrix](https://github.com/jjheffernan/heff-skills/blob/main/docs/smoke-matrix.md)).

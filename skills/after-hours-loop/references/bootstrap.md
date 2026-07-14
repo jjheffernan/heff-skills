@@ -71,9 +71,27 @@ Triggers (any):
 Behavior:
 
 1. Run preflight + Sources parse + readiness classify.
-2. **Print** the would-be queue (ids, titles, executor, ready vs blocked reasons).
+2. **Print** the would-be queue (ids, titles, executor, ready vs blocked reasons, `risk`, whether `verification[]` present).
 3. **Stop** — no tick 0 coding, no PRs, **do not write** `statePath`, do not arm coding sentinel (optional: say what interval would have been).
 4. Optional one-shot dry-run note to stdout / chat; morning brief optional (prefer chat print only unless user asked to write a dry-run brief).
+
+## Doctor mode (no arm)
+
+Triggers (any):
+
+- `/after-hours doctor`
+- Message is clearly doctor / health-check only
+
+**Doctor ≠ dry-run.** Doctor is a setup + readiness **scan**; dry-run also materializes a would-be coding queue from explicit Sources.
+
+Behavior:
+
+1. Check: config present/readable; `gh auth` when GitHub Sources likely; `baseBranch` resolvable; denylist / safety keys present; `statePath` parent writable; optional `runsPath` / `cloudLedgerPath` notes.
+2. If Sources provided (or last known night template referenced): classify **ready** vs **not ready** / needs daylight — print counts. Do **not** require coding Sources if the operator only wants env health.
+3. **No** state write, **no** coding, **no** PRs, **no** sentinel arm.
+4. Print a short report: pass/fail per check; ready vs needs-daylight item ids when Sources were supplied.
+
+Empty ready queue → report cleanly (noop), not an error.
 
 ## After successful bootstrap (non–dry-run)
 

@@ -11,6 +11,8 @@ Part of [heff-skills](https://github.com/jjheffernan/heff-skills).
 | Command | Role |
 |---------|------|
 | `/after-hours` | Primary — bootstrap, tick 0, arm sentinel |
+| `/after-hours --dry-run` | Queue only; no state / coding |
+| `/after-hours doctor` | Env + readiness scan; no arm |
 | `/after-hours 30m` | Same with custom interval |
 | `/loop …` + this skill | Equivalent when pointed here |
 | Cursor Automation | Unattended cron (office-hours close) — [docs/automation.md](https://github.com/jjheffernan/heff-skills/blob/main/docs/automation.md) · [instructions template](./templates/automation-instructions.office-hours.close.txt) |
