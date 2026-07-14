@@ -8,7 +8,7 @@ Living plan for **after-hours-loop**: a drop-in, **workflow-agnostic AFK orchest
 
 **Research swarms:** [caveman](3b485d0f-3fee-4e40-9cdc-f90cafb9b5a3) · [ponytail](9228fb73-db99-4e86-b15b-4992c3191231) · [mattpocock](d66efc9e-b3cd-4ee6-a36d-bc59d3e6ade1) · [local audit](a95719c0-80a1-43a1-b667-d6ffa0014977)  
 **Phase audits (historical):** [P1](5925cc8b-83e3-4ada-aed7-bf0c4f5d3273) · [P2](ae706577-6cae-4366-8e66-3c111daee94c) · [P3](73b45955-2172-4434-b4f2-b72d3d04242c) · [P1–P3](4cb22da8-a496-4894-a193-6a750b1bcc22) · [P4](bda1c157-e503-4961-8d80-f4222491c659) · [P5](bfb355b7-1919-494a-81cd-8cac70ba1b96) · [P6](6cdf3904-7594-4c14-b79d-ebfbcf4c4491)  
-**Loop-factory audit:** [docs/loop-factory-audit.md](./docs/loop-factory-audit.md) ([compare agent](94d2054d-1cd7-4ade-b5ce-c57ba60c154c))
+**Loop-factory learnings:** incorporated into skill refs (verification, doctor, pass-report, risk, run evidence) — see plan §7 levels L1/L2.
 
 ---
 
@@ -39,7 +39,7 @@ Ship a skill pack where someone can:
 | Progressive disclosure | Thin `SKILL.md` + `references/` |
 | Sibling loop-factory | Ready gate, batch limits, empty-queue noop, run artifacts, autonomy contract |
 
-Also note Julius ships a separate [`loop-factory`](https://github.com/JuliusBrussee/skills/tree/main/skills/loop-factory) (inbox → active → archive). **Audited post-MVP:** [docs/loop-factory-audit.md](./docs/loop-factory-audit.md). Steal verification / evidence / doctor / risk shapes — not CLI factory dirs or mid-loop archive gates.
+Also note Julius ships a separate [`loop-factory`](https://github.com/JuliusBrussee/skills/tree/main/skills/loop-factory) (inbox → active → archive). We studied its **structure** for queue maturity (verification · evidence · doctor · risk · pass-report) and adapted those patterns into after-hours — without copying skill text or its CLI factory filesystem / mid-loop archive gates.
 
 **Don't:** 30-agent installer on day one; hand-maintained duplicate trees; metrics theater without harness.
 
@@ -273,6 +273,7 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 | 2026-07-13 | Mega-PR is dual-token per arm only; never config-sticky | Throughput option without accidental PR bundling |
 | 2026-07-13 | End phased rollout at MVP; multi-level backlog thereafter | Dry-run ready; avoid endless Phase N |
 | 2026-07-13 | Phase 5 abstraction seal is temporary | Re-open when dogfood needs deeper adapters |
+| 2026-07-13 | Keep phase×slice parallelization after MVP | Whole-stack CI + audits; not feature-only sprawl |
 
 ### Still open (non-blocking)
 
@@ -316,13 +317,30 @@ Keep sources × executors × state × dual runners. Fix: portable config, self-c
 
 Phase 5 **temporarily sealed** the portable queue + outcome-adapter surface so MVP could ship. **Re-open when dogfood demands it** — deeper tracker adapters, more `outcomeKind`s, non-code domains, finer `blockerPolicy` / claim semantics. Do not treat the seal as permanent architecture lock.
 
+### How we ship in parallel (keep this)
+
+Numbered phases are **over**, but the **parallelization pattern is not**. We used horizontal phases + vertical slices so multiple agents could land work without turning the repo into untested feature sprawl.
+
+| Practice | Why |
+|----------|-----|
+| **Horizontal levels** (L0–L5) | Whole-stack concerns (dogfood, UX, prove-done, abstraction, peers, release) stay visible — not only “more executors.” |
+| **Vertical slices per ticket** | One agent owns a thin cut (e.g. verification contract *or* doctor *or* fixtures) that lands A→Z with docs + drop-in sync. |
+| **Swarm ⇒ audit ⇒ janitor** | Parallel implementers; one read-only audit; small honesty fixes before merge. |
+| **Fixtures / CI on the same train** | Schema or behavior changes ship with `validate-state` fixtures + CI — continuous proof, not a later “testing phase.” |
+| **Independent file boundaries** | Prefer disjoint paths (`references/*` vs `executors/*` vs `docs/*`) so parallel PRs/commits rarely collide. |
+| **Seal temporarily, reopen** | Like Phase 5 abstraction: ship a coherent MVP surface, then reopen depth when dogfood demands it — don’t endless-extend mid-flight. |
+
+**Anti-pattern:** long vertical feature buildouts with no schema fixtures, no morning/doctor UX updates, and no plan honesty. Every slice should touch the level it belongs to *and* leave a testable or operable trace.
+
+When opening parallel work: name the **level**, list **non-overlapping paths**, require **sync-drop-in + fixture/CI touch if schema moved**, then audit once.
+
 ### Levels (pick work from any)
 
 | Level | Focus | Near-term tickets |
 |-------|--------|-------------------|
 | **L0 Dogfood** | Real runs | First-night scorecard ingest; Automation office-close trial; defer `v0.1.0` until bands look good |
-| **L1 Operator UX** | Clarity without coding | `/after-hours doctor`; morning **Built / Needs daylight / Verify-failed** triad ([loop-factory-audit](./docs/loop-factory-audit.md)) |
-| **L2 Loop quality** | Prove-done overnight | Per-item `verification[]`; run evidence (`runsPath`); `risk` + anti–green-wash |
+| **L1 Operator UX** | Clarity without coding | `/after-hours doctor`; morning **Built / Needs daylight / Verify-failed** triad — **shipped** |
+| **L2 Loop quality** | Prove-done overnight | Per-item `verification[]`; run evidence (`runsPath`); `risk` + anti–green-wash — **shipped** |
 | **L3 Abstraction** | Re-open Phase 5 seal | More Sources/outcomes; durable ledger hardening; beyond-code domains |
 | **L4 Ecosystem** | Optional peers | Slack Automation notify (deferred); Matt smoke matrix expansions; companion polish |
 | **L5 Release** | Ship | Tag `v0.1.0` after dogfood; changelog cut |
@@ -346,4 +364,4 @@ Historical **Phase 5–6 checklist text** (completed) lived here; see git histor
 - [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)
 - [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail)
 - [mattpocock/skills](https://github.com/mattpocock/skills) — optional peers: wayfinder, grill-me, grill-with-docs, grilling, handoff, setup, triage, to-spec, to-tickets
-- [JuliusBrussee/skills loop-factory](https://github.com/JuliusBrussee/skills/tree/main/skills/loop-factory) — audited in [docs/loop-factory-audit.md](./docs/loop-factory-audit.md)
+- [JuliusBrussee/skills loop-factory](https://github.com/JuliusBrussee/skills/tree/main/skills/loop-factory) — peer pattern; after-hours adapted verification/doctor/evidence shapes (structure only)
