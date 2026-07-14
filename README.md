@@ -50,7 +50,7 @@ Night Sources presets: [`night-Sources.github.txt`](./skills/after-hours-loop/te
 
 ## Next improvements
 
-See **[plan.md](./plan.md)** post-MVP levels (not numbered phases). Near-term: dogfood dry-run → scorecard; loop-factory tickets (verification / doctor / pass-report); reopen abstraction when needed.
+See **[plan.md](./plan.md)** post-MVP levels (not numbered phases). Near-term: dogfood dry-run → scorecard; L3 reopen abstraction when needed.
 
 ## Docs
 
@@ -60,7 +60,6 @@ See **[plan.md](./plan.md)** post-MVP levels (not numbered phases). Near-term: d
 | [docs/first-night.md](./docs/first-night.md) | First overnight checklist (dry-run first) |
 | [docs/first-night-scorecard.md](./docs/first-night-scorecard.md) | Solo AFK rubric + continuous-improvement log |
 | [docs/automation.md](./docs/automation.md) | Cursor Automations + office-hours-close setup |
-| [docs/loop-factory-audit.md](./docs/loop-factory-audit.md) | Julius loop-factory → after-hours improvement tickets |
 | [SECURITY.md](./SECURITY.md) | Trust surface: local files only, no telemetry |
 | [plan.md](./plan.md) | Living multi-level backlog (MVP sealed) |
 | [docs/composition.md](./docs/composition.md) | AFK loop vs optional peer workflows (incl. Matt) |

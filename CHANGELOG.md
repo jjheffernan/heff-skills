@@ -9,14 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [docs/loop-factory-audit.md](./docs/loop-factory-audit.md) — Julius loop-factory structure audit vs after-hours
+- Per-item `verification[]` + `risk`; `/after-hours doctor`; morning Built / Needs daylight / Verify-failed triad; optional `runsPath` evidence ([run-artifacts.md](./skills/after-hours-loop/references/run-artifacts.md))
 - Expanded validate-state fixtures (valid-stopped / valid-todo-first; invalid priority / version / missing baseBranch); CI loops all `valid*` / `invalid*`
 - `validate-state.py` enforces `priority` enum (`github-first` \| `fifo` \| `todo-first`)
 
 ### Changed
 
 - Post-MVP operating mode in [plan.md](./plan.md): stop numbered phases; multi-level backlog; Phase 5 abstraction seal noted as temporary
+- Documented **parallel ship pattern** (levels × vertical slices × swarm/audit/janitor × fixtures) in plan §7 + AGENTS.md
 - [docs/first-night.md](./docs/first-night.md) — dry-run called out as MVP checkpoint
+- Adapted structural ideas from peer loop-factory (verification / doctor / evidence) into after-hours — no copied skill text
+- Removed interim loop-factory audit doc after patterns were incorporated
 
 Phase 5 abstraction + Phase 6 outcomes depth / harness / companions.
 
