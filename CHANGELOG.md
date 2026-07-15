@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Soft-park: mid-run empty queue / `maxPrs` keeps sentinel (`parkedReason`); fixture `sample-state.valid-parked.json`
+- Dogfood ingest: makemcmasterBOM 2026-07-14 scorecard **21/26** → plan L0 tickets
+
+### Changed
+
+- `/after-hours Nm` documented as **tick interval only** (not wall-clock night budget)
+- Install path docs: `.agents/skills/after-hours/` (CLI) and `after-hours-loop/` (install.sh) both valid
+- Stop companion: kill **all** matching sentinel PIDs; prefer orphan worktree prune
+- Scorecard rows 1/9/11 pass criteria aligned with interval + soft-park + dual install path
+
+### Added
+
 - [`scripts/update.sh`](./scripts/update.sh) — refresh installed skill tree(s); preserves `.cursor` config/state/brief; auto-updates companions when present
 - Install stamps pack `VERSION` into `.agents/skills/after-hours-loop/VERSION`
 - INSTALL / README update paths: `npx skills update after-hours -y` and `./scripts/update.sh`

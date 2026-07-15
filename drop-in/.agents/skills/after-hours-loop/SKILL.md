@@ -53,7 +53,11 @@ Config: `.cursor/after-hours-loop.config.json` ← [templates/config.example.jso
 
 Flow: load skill → **preflight** → bootstrap → tick 0 (unless dry-run) → arm sentinel ([tick-and-runners](./references/tick-and-runners.md)).
 
-**Wakes / interrupts:** every sentinel (or Automation) fire follows the wake protocol — recover orphan claims, split dirty-tree, continue the WHILE body. Interrupt parks the item (`blocked` / `interrupted`); it is **not** a stop. Stop phrases only: `stop loop`, `stop after-hours`, `/after-hours stop`.
+**Interval:** `/after-hours 20m` (or `45m`) sets **sentinel sleep only** — not a total night time box.
+
+**Wakes / interrupts / soft-park:** every sentinel fire follows the wake protocol. Interrupt parks the item (`blocked` / `interrupted`). Empty queue or `maxPrs` **soft-parks** (keeps sentinel). Stop phrases only: `stop loop`, `stop after-hours`, `/after-hours stop`.
+
+**Install path:** skill files live at `.agents/skills/after-hours-loop/` (`install.sh`) **or** `.agents/skills/after-hours/` (`npx skills add` — frontmatter `name: after-hours`). Both are valid; resolve whichever exists.
 
 ## Modules
 

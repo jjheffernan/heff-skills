@@ -102,6 +102,11 @@ def main() -> None:
         if not isinstance(data["megaPr"], bool):
             fail("megaPr must be a boolean when set")
 
+    if "parkedReason" in data and data["parkedReason"] is not None:
+        parked = data["parkedReason"]
+        if parked not in {"empty-queue", "maxPrs"}:
+            fail(f"parkedReason invalid: {parked!r}")
+
     print("ok")
 
 

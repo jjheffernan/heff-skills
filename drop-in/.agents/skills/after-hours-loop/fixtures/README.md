@@ -9,6 +9,8 @@ Sample `.cursor/after-hours-loop.state.json` shapes for `scripts/validate-state.
 | `sample-state.valid.json` | Schema v1, one `open` item, empty `prs`, `priority: github-first` |
 | `sample-state.valid-stopped.json` | After a run: `stopReason: budget`, one draft PR, `megaPr: false` |
 | `sample-state.valid-todo-first.json` | `priority: todo-first`, `docs-digest` / `doc-artifact` |
+| `sample-state.valid-dirty-interrupt.json` | `stopDetail: dirty-interrupt`, item `blockReason: interrupted` |
+| `sample-state.valid-parked.json` | Soft-park `parkedReason: maxPrs` (no `stoppedAt`) |
 
 ## Invalid (exit 1)
 

@@ -1,6 +1,6 @@
 # Guardrails & stop severity
 
-Four severity levels. Use the lightest that still keeps overnight safe.
+Five severity levels. Use the lightest that still keeps overnight safe.
 
 ## Severity table
 
@@ -8,24 +8,25 @@ Four severity levels. Use the lightest that still keeps overnight safe.
 |----------|------|--------|
 | **Skip item** | `skipped` | Leave item; pick next. No PR. Note in morning brief. |
 | **Block item** | `blocked` | Same as skip for queue progress, but `blockReason` required (`needs-info`, `needs-grill`, `tests`, `hitl`, `ci-red`, `interrupted`, …). Deferred ledger — must not vanish. |
-| **Stop loop** | stop | Kill sentinel / do not re-arm; write morning brief; persist coarse `stopReason` + optional `stopDetail` ([state-schema.md](./state-schema.md)). |
+| **Soft-park** | park | End this WHILE; **keep** sentinel (FOR). No `stoppedAt`. Set optional `parkedReason` on state. Next wake: refresh Sources / re-check budget; resume if work returns. Morning brief only on true stop (user-stop / escalate / hard stop). |
+| **Stop loop** | stop | Kill sentinel / do not re-arm; write morning brief; persist coarse `stopReason` + optional `stopDetail` ([state-schema.md](./state-schema.md)). Clear `parkedReason` if set. |
 | **Escalate** | stop + alert | Stop loop **and** surface hard safety (auth/secrets/denylist) first in Summary — human must act before next AFK. |
 
 ## Condition → severity map
 
 On **Stop loop**, set coarse `stopReason` (`done` / `blocked` / `noop` / `budget`) and `stopDetail` as noted.
 
-| Condition | Severity | `stopReason` / `stopDetail` |
-|-----------|----------|------------------------------|
+| Condition | Severity | `stopReason` / `stopDetail` or park |
+|-----------|----------|-------------------------------------|
 | Vague acceptance; inventable scope | **Block item** | (item) `needs-info` or `needs-grill`; never invent |
 | HITL / product decision / design-only | **Block item** or **Skip item** | Prefer `blocked` + `hitl` |
 | Wayfinder grilling / prototype HITL ticket | **Skip item** | Do not resolve overnight |
 | Tests / verification fail after one fix attempt | **Block item** | `tests` or `verification-failed` |
 | Item `verification[]` present but skipped/weakened to force pass | **Block item** + note | Never green-wash — [readiness.md](./readiness.md) |
 | `risk: high` without kickoff `allowHighRisk: true` | **Skip item** | Leave for daytime; do not invent low risk |
-| Empty queue (no agent-ready work) | **Stop loop** | `noop` / `empty-queue` (dry-run stays noop) |
-| `prs.length >= maxPrs` | **Stop loop** | `budget` / `maxPrs` |
-| User: stop after-hours / stop loop | **Stop loop** | `done` / `user-stop` — kill sentinel PID |
+| Empty queue (no agent-ready work) mid-run | **Soft-park** | `parkedReason: empty-queue` — **keep** sentinel; dry-run still **Stop loop** `noop` / `dry-run` |
+| `prs.length >= maxPrs` | **Soft-park** | `parkedReason: maxPrs` — **keep** sentinel until human stop or `maxPrs` raised / PRs closed |
+| User: stop after-hours / stop loop | **Stop loop** | `done` / `user-stop` — kill **all** matching sentinel PIDs |
 | IDE / tool **interrupt** mid-item | **Block item** | (item) `interrupted` — **keep** sentinel; see [tick-and-runners](./tick-and-runners.md) |
 | Dirty tree from interrupted claim; recovered (safe checkout / discarded half-work) | continue | Park item `interrupted`; do **not** Stop loop solely for this |
 | Dirty tree unrecovered at tick start and `safety.stopOnDirtyTree` | **Stop loop** | `blocked` / `dirty-interrupt` (known interrupt residue) or `preflight` (unknown dirty) |
@@ -38,6 +39,18 @@ On **Stop loop**, set coarse `stopReason` (`done` / `blocked` / `noop` / `budget
 | Mega-PR: only one of `megaPr` / `CONFIRM_MEGA_PR` present | **Stop loop** | `blocked` / `preflight` — require both or neither ([mega-pr.md](./mega-pr.md)) |
 | `gh` auth missing when Sources need GitHub | **Stop loop** | `blocked` / `preflight` |
 | Dry-run finished | **Stop loop** | `noop` / `dry-run` |
+
+## Soft-park (empty / maxPrs)
+
+`/after-hours Nm` is a **tick sleep interval**, not a wall-clock night budget. Empty queue and `maxPrs` must not kill cadence:
+
+1. Persist `parkedReason` (`empty-queue` or `maxPrs`); do **not** set `stoppedAt` / `stopReason`.
+2. Keep the in-session sentinel armed (or re-arm if dead and run not user-stopped).
+3. Chat one short line (parked why); do not write a full morning brief yet.
+4. On next wake: refresh Sources that support it; clear `parkedReason` when agent-ready work exists **and** `prs.length < maxPrs`; otherwise no-op and stay parked.
+5. Human **stop after-hours** still kills sentinels and writes the morning brief (include any prior park in residual risk).
+
+Dry-run / doctor remain hard stops (no sentinel).
 
 ## Dirty tree (split: interrupted vs unknown)
 

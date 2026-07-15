@@ -102,10 +102,11 @@ Checkout configured **`baseBranch`**.
 
 ## Stop
 
-- Empty queue → `stopReason: noop` (`stopDetail: empty-queue`)
-- `maxPrs` reached → `budget` / `maxPrs`
-- Guardrail / preflight / blocked streak / CI stop / unrecovered dirty-interrupt → `blocked` + matching `stopDetail`
-- User: **stop after-hours** / **stop loop** → `done` / `user-stop` (kill sentinel PID)
+- Empty queue mid-run → **soft-park** (`parkedReason: empty-queue`); keep sentinel
+- `maxPrs` reached mid-run → **soft-park** (`parkedReason: maxPrs`); keep sentinel
+- Guardrail / preflight / blocked streak / CI stop / unrecovered dirty-interrupt → `blocked` + matching `stopDetail` (**Stop loop**)
+- User: **stop after-hours** / **stop loop** → `done` / `user-stop` (kill **all** matching sentinel PIDs)
 - IDE **interrupt** mid-item → **not** a stop — park item `interrupted`; sentinel stays armed ([tick-and-runners](../references/tick-and-runners.md))
+- `/after-hours Nm` → tick **interval** only, never total wall-clock budget
 
-On stop, write the morning brief (pointers to PRs, non-PR outcomes, and blocked items). Coarse stop enum: [state-schema.md](../references/state-schema.md).
+On true stop, write the morning brief (pointers to PRs, non-PR outcomes, and blocked items). Coarse stop enum: [state-schema.md](../references/state-schema.md).

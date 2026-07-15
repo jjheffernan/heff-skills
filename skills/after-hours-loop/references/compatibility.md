@@ -13,7 +13,7 @@ Smoke rows (Matt present / absent / mixed Sources): [docs/smoke-matrix.md](https
 | Kind | Artifacts | Rule |
 |------|-----------|------|
 | **Soft** | `CONTEXT.md`, `docs/adr/*`, `docs/agents/issue-tracker.md`, ponytail / implement / tdd / code-review if installed | If present: soft-read or use. If absent: continue. Never rewrite CONTEXT/ADRs overnight. |
-| **Hard** | Agent-ready work items in the queue | No agent-ready work → **stop** after preflight / empty-queue path. Do not invent tickets. |
+| **Hard** | Agent-ready work items in the queue | No agent-ready work mid-run → **soft-park** (`parkedReason: empty-queue`); keep sentinel. Do not invent tickets. Dry-run / initial empty Sources without allow → still preflight/noop stop. |
 
 Soft deps are context and discipline. Hard dep is a non-empty executable queue (unless `allowEmptyQueue` for dry-run/noop — see [bootstrap.md](./bootstrap.md)).
 

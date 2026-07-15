@@ -12,6 +12,8 @@ npx skills add jjheffernan/heff-skills -a cursor
 
 Installs into the current project’s Cursor agent skills location. After install, complete the [adapter checklist](#project-adapter-checklist) below.
 
+**Path note:** skills CLI uses frontmatter `name: after-hours`, so the folder is often **`.agents/skills/after-hours/`**. Clone/`install.sh` copies to **`.agents/skills/after-hours-loop/`**. Both are supported — docs and the wake protocol resolve whichever exists. Scorecard “pass” = either path in ≤5 min.
+
 Use this once the package is available via the skills registry / GitHub (`jjheffernan/heff-skills`). Alpha builds install the same way; expect change until `v0.1.0`.
 
 ### Update (skills CLI)

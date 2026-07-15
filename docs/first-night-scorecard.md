@@ -17,7 +17,7 @@ Score each row: **2** pass · **1** partial · **0** fail. Total **/26**. Recurr
 
 | # | Criterion | What “pass” looks like | Score | Notes / evidence |
 |---|-----------|------------------------|-------|------------------|
-| 1 | **Install friction** | Skill lands under `.agents/skills/after-hours-loop/` (or equiv.) in ≤5 min; path matches docs | | |
+| 1 | **Install friction** | Skill lands under `.agents/skills/after-hours-loop/` **or** `.agents/skills/after-hours/` (CLI name) in ≤5 min; docs match reality | | |
 | 2 | **Config clarity** | Copied config; set `repo`, `baseBranch`, `testCommand`; no secret leakage into git | | |
 | 3 | **Gitignore hygiene** | State + morning brief ignored (or `--with-gitignore`); nothing sensitive committed | | |
 | 4 | **Preflight honesty** | Missing `gh` / dirty tree / bad config → clear stop or warning, not a half-run | | |
@@ -25,9 +25,9 @@ Score each row: **2** pass · **1** partial · **0** fail. Total **/26**. Recurr
 | 6 | **Queue quality** | Only agent-ready items; vague/HITL work skipped or `blocked` with reason | | |
 | 7 | **A→Z tick** | At least one item runs end-to-end for its executor (slice → verify → outcome) | | |
 | 8 | **Safe outcomes** | Draft PRs when `draftPrs: true` (or configured outcome); no surprise merges/force-push | | |
-| 9 | **Stop / budget** | Respects time/`maxPrs`/stop phrases; no runaway after noop/blocked streak | | |
+| 9 | **Stop / budget** | `/after-hours Nm` is tick **interval** only; empty/`maxPrs` soft-park (sentinel kept); stop phrases end the night | | |
 | 10 | **Morning brief** | Brief exists on stop; lists done / blocked / PRs / next human actions | | |
-| 11 | **Resume / re-arm** | Second start does not duplicate `done` work; state readable | | |
+| 11 | **Resume / re-arm** | Second start does not duplicate `done` work; prior sentinels killed; state readable | | |
 | 12 | **Workflow agnostic** | Worked from *your* Sources (issues/TODO/spec) **without** requiring Matt grill→tickets | | |
 | 13 | **Interrupt recovery** | Mid-tick abort parks `interrupted`, keeps sentinel when tree recovers; does not drop to idle chat | | |
 

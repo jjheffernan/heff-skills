@@ -31,10 +31,10 @@ Follow those paths for detail; do not duplicate policies here.
 
 ## Stop procedure
 
-1. **Kill sentinel** — Find the in-session `AGENT_LOOP_TICK_AFTERHOURS` / sleep loop; kill its PID; do **not** re-arm. Automation cron: do not schedule further ticks from this session (next fire is separate). See `references/tick-and-runners.md`.
-2. **Persist stop** — Set coarse `stopReason` + optional `stopDetail` on state (`done` / `user-stop` for human stop). See `references/state-schema.md`, `references/guardrails.md`. IDE **interrupt** is not this skill — loop parks `interrupted` and keeps the sentinel.
+1. **Kill sentinels** — Find **all** in-session `AGENT_LOOP_TICK_AFTERHOURS` / sleep loops (prior intervals included); kill every matching PID; do **not** re-arm. Prefer pruning leftover `/tmp` after-hours worktrees when safe (`git worktree list` → remove orphans from this run). Automation cron: do not schedule further ticks from this session (next fire is separate). See `references/tick-and-runners.md`.
+2. **Persist stop** — Set coarse `stopReason` + optional `stopDetail` on state (`done` / `user-stop` for human stop). Clear `parkedReason` if set. See `references/state-schema.md`, `references/guardrails.md`. IDE **interrupt** is not this skill — loop parks `interrupted` and keeps the sentinel.
 3. **Morning brief** — Write the brief on **every** stop path (including user-stop). See `references/morning-brief.md` and `templates/morning-brief.md`. Default path: config `morningBriefPath` or `.cursor/after-hours-morning-brief.md`.
-4. Confirm in chat: sentinel dead (or N/A for Automation), brief path, stop reason.
+4. Confirm in chat: sentinels dead (or N/A for Automation), brief path, stop reason.
 
 ## Out of scope
 

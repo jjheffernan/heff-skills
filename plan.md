@@ -275,13 +275,16 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 | 2026-07-13 | Phase 5 abstraction seal is temporary | Re-open when dogfood needs deeper adapters |
 | 2026-07-13 | Keep phase×slice parallelization after MVP | Whole-stack CI + audits; not feature-only sprawl |
 
+| 2026-07-14 | Empty / `maxPrs` are soft-park (keep sentinel); `/after-hours Nm` is interval-only | Dogfood 21/26: total-time-box + hard empty stop were babysitting magnets |
+| 2026-07-14 | Document both install dirs: `after-hours-loop/` and CLI `after-hours/` | Scorecard #1; npx skills uses frontmatter name |
+
 ### Still open (non-blocking)
 
 1. Exact morning brief path sticky issue vs `.cursor/` file — currently config `morningBriefPath`
 2. ~~Companion micro-skills~~ — **shipped** `after-hours-stop` / `after-hours-handoff` via `--with-companions`
 3. Parse/priority/write-back **runnable** fixture harness (docs stubs exist; priority enum deferred)
 4. First non-code executor + outcome shape — **shipped:** `docs-digest` + `ops-checklist` + live adapters
-5. Dogfood scorecard ingest → promote into next phase; Slack Automation; tag `v0.1.0`
+5. ~~Dogfood scorecard ingest~~ — **ingested 2026-07-14** (21/26); Slack Automation; tag `v0.1.0`
 
 ---
 
@@ -338,12 +341,12 @@ When opening parallel work: name the **level**, list **non-overlapping paths**, 
 
 | Level | Focus | Near-term tickets |
 |-------|--------|-------------------|
-| **L0 Dogfood** | Real runs | First-night scorecard ingest; Automation office-close trial; defer `v0.1.0` until bands look good |
-| **L1 Operator UX** | Clarity without coding | `/after-hours doctor`; morning **Built / Needs daylight / Verify-failed** triad — **shipped** |
-| **L2 Loop quality** | Prove-done overnight | Per-item `verification[]`; run evidence (`runsPath`); `risk` + anti–green-wash — **shipped**; interrupt / orphan-claim / dirty-split recovery — **shipped** |
-| **L3 Abstraction** | Re-open Phase 5 seal | More Sources/outcomes; durable ledger hardening; beyond-code domains |
+| **L0 Dogfood** | Real runs | **Ingested 2026-07-14** makemcmasterBOM **21/26**; next: Automation office-close trial; defer `v0.1.0` until bands look good |
+| **L1 Operator UX** | Clarity without coding | doctor + morning triad — **shipped**; install path `after-hours` vs `after-hours-loop` clarified; **open:** morning-consolidate / worktree GC |
+| **L2 Loop quality** | Prove-done overnight | verification / runsPath / interrupt — **shipped**; **`Nm`=interval + soft-park empty/maxPrs** — **shipped this ingest**; **open:** HITL-blocked → branch-only degrade; high-`maxPrs` conflict policy |
+| **L3 Abstraction** | Re-open Phase 5 seal | More Sources/outcomes; consolidate adapter; permission-profile / degraded outcome |
 | **L4 Ecosystem** | Optional peers | Slack Automation notify (deferred); Matt smoke matrix expansions; companion polish |
-| **L5 Release** | Ship | Tag `v0.1.0` after dogfood; changelog cut |
+| **L5 Release** | Ship | Tag `v0.1.0` after more dogfood; changelog cut |
 
 Historical phase checklists remain below in §4 / old §7–8 for archaeology — **do not extend them**.
 
@@ -351,7 +354,24 @@ Historical phase checklists remain below in §4 / old §7–8 for archaeology �
 
 1. Morning brief path sticky vs `.cursor/` — config `morningBriefPath`
 2. Runnable parse/priority/write-back harness (schema fixtures expanded; priority now validated)
-3. Dogfood scorecard ingest; Slack Automation; tag `v0.1.0`
+3. Slack Automation; tag `v0.1.0` after more dogfood bands
+4. **Morning consolidate** — mark drafts ready → squash order → orphan `/tmp` worktree GC (or consolidate adapter)
+5. **HITL-degraded outcome** — when push/`gh pr create` blocked, auto-fall back to `branch-only` + brief note
+6. **High-maxPrs conflict policy** — serial rebase on `baseBranch` or declare file ownership / merge order in TODO Sources
+7. Prefer Automation cron (1–2 PRs/fire) + `runsPath` as next dogfood experiment vs long in-session sentinel
+
+### Dogfood ingest — makemcmasterBOM 2026-07-14
+
+| | |
+|--|--|
+| **Score** | **21/26** (8 pass · 5 partial · 0 fail) — usable with babysitting |
+| **Runner** | `npx skills add` · `/after-hours 20m` · Sources `todo-md` Now · `baseBranch: dev` |
+| **Throughput** | 12 verified slices; 0 verify-failed; drafts stayed safe overnight |
+| **Keep** | Dry-run fail-closed, todo-md Now, draft-pr default, needs-grill deferrals, morning brief |
+| **Noise** | Manual Sources babysitting; mid-run skill edits; hung merge shells |
+| **Punchline** | ROI is interval/soft-park, HITL→branch-only, morning consolidate+GC, install-path docs — not more executors |
+
+Partials → tickets: install-path (**shipped this ingest**); `Nm` interval + soft-park (**shipped**); morning consolidate (**open**); HITL degrade (**open**); kill prior sentinels + worktree prune (**partially shipped** in stop/arm); high-maxPrs conflict policy (**open**).
 
 ### Archive note
 

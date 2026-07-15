@@ -23,6 +23,7 @@ Optional check: `scripts/validate-state.py <statePath>` (exit 0 = ok).
 | `dryRun` | boolean | no | If true, this run must not write state (see dry-run) |
 | `consecutiveBlocked` | number | no | Successive `blocked`/`skipped` without an intervening `done`; see counter rules below |
 | `megaPr` | boolean | no | **This run only.** `true` only after bootstrap validated both kickoff tokens ([mega-pr.md](./mega-pr.md)). Default absent/`false`. Never copy from config or prior nights. |
+| `parkedReason` | string | no | Soft-park while sentinel stays armed: `empty-queue` \| `maxPrs`. Cleared when work+budget allow. **Not** a stop — no `stoppedAt` while parked. |
 
 ## Queue item contract (portable)
 
@@ -84,8 +85,8 @@ On stop, persist **`stopReason`** (coarse) and optionally **`stopDetail`** (spec
 |--------------|---------|----------------------|
 | `done` | Run ended after intentional completion / human stop | `user-stop` |
 | `blocked` | Stopped because work/safety cannot continue | `consecutive-blocked`, `guardrail`, `preflight`, `ci-red`, `dirty-interrupt` |
-| `noop` | Nothing executable / dry inspection only | `empty-queue`, `dry-run` |
-| `budget` | Hit a run budget | `maxPrs` |
+| `noop` | Nothing executable / dry inspection only | `empty-queue` (legacy hard-stop / dry-run), `dry-run` |
+| `budget` | Hit a run budget on a **true stop** | `maxPrs` (legacy; prefer soft-park mid-run — [guardrails](./guardrails.md)) |
 
 Always set coarse `stopReason`. Prefer also setting `stopDetail` to the legacy-specific string. Readers that only understand old single-field values may treat unknown coarse enums via `stopDetail` when present.
 

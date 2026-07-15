@@ -8,8 +8,8 @@ Treat the run as two nested loops:
 
 | Loop | Role | Breaks |
 |------|------|--------|
-| **FOR** (sentinel / cron) | Cadence only — wake the agent. No coding policy. | Stop phrases, OUTER guardrails, empty/budget stops — [guardrails](./guardrails.md) |
-| **WHILE** (per wake) | Queue work under guardrails. Default: **one claim per wake**. | Item skip/block, tick budget, **interrupt** (park item; keep FOR) |
+| **FOR** (sentinel / cron) | Cadence only — wake the agent. No coding policy. | User stop / escalate / hard OUTER stops — [guardrails](./guardrails.md). **Not** empty/`maxPrs` (those soft-park). |
+| **WHILE** (per wake) | Queue work under guardrails. Default: **one claim per wake**. | Item skip/block, tick budget, interrupt, **soft-park** (empty / maxPrs) |
 
 ```text
 bootstrap(); arm_sentinel_once();     # FOR driver
@@ -18,14 +18,19 @@ bootstrap(); arm_sentinel_once();     # FOR driver
 load skill + state
 recover_orphan_claims()               # see state-schema
 if sentinel dead and not stopped: re-arm once
+if parkedReason set:
+  refresh; clear park if work+budget allow; else no-op return
 
 while guardrails_allow:
   item = next_claimable()
-  if none: stop OUTER (empty-queue); break
+  if none: soft_park(empty-queue); break      # keep FOR
+  if prs.length >= maxPrs: soft_park(maxPrs); break
   try: claim → execute → persist
   except Interrupted: park(item, interrupted); break   # INNER only
   if tick budget done (default 1): break               # back to FOR
 ```
+
+**`/after-hours Nm` = sentinel sleep interval only** (e.g. `20m` → `sleep 1200`). It is **not** a total wall-clock night budget and must not stop the loop when elapsed. Budget caps are `maxPrs` / consecutive-blocked / user stop.
 
 **Interrupt ≠ user-stop.** IDE abort mid-tick breaks the WHILE body (park item) and leaves the sentinel armed unless an OUTER stop already applies. Stop phrases still kill the PID — [after-hours-stop](../../after-hours-stop/SKILL.md).
 
@@ -33,18 +38,23 @@ while guardrails_allow:
 
 After bootstrap + tick 0 (not dry-run):
 
+Resolve skill dir (either clone path or skills-CLI name path):
+
+- `.agents/skills/after-hours-loop/` (install.sh / drop-in)
+- `.agents/skills/after-hours/` (`npx skills add` — frontmatter `name: after-hours`)
+
 ```bash
 while true; do
-  sleep 2700
-  echo 'AGENT_LOOP_TICK_AFTERHOURS {"prompt":"Continue after-hours tick per .agents/skills/after-hours-loop/SKILL.md"}'
+  sleep 2700   # replace with Nm seconds; NEVER treat as total night timeout
+  echo 'AGENT_LOOP_TICK_AFTERHOURS {"prompt":"Continue after-hours tick per installed after-hours skill (after-hours-loop or after-hours)/SKILL.md"}'
 done
 ```
 
-- Check terminals for an existing matching loop before starting another (**never** arm a duplicate).
+- Before arming: kill/stop any **stale** `AGENT_LOOP_TICK_AFTERHOURS` loops from prior intervals, then arm **one** new loop (**never** leave duplicates).
 - Start background shell with `notify_on_output` on `^AGENT_LOOP_TICK_AFTERHOURS`.
-- Track PID for stop (`stop after-hours` / `stop loop`).
-- Re-arm only if agent-ready `open` items remain, `maxPrs` not hit, and state is not stopped.
-- Default interval **45m** (`2700`). `/after-hours 30m` or `/loop 30m` adjusts sleep.
+- Track PID for stop (`stop after-hours` / `stop loop`) — stop must kill **all** matching PIDs.
+- Soft-park (`empty-queue` / `maxPrs`): keep this sentinel; do not refuse re-arm while parked.
+- Default interval **45m** (`2700`). `/after-hours 20m` / `30m` only changes sleep.
 - **Platform note:** long-idle monitored shells may die before the first tick. Prefer a shorter interval for reliability, smoke-check the PID on every wake, and re-arm once if dead while the run is still live — or use Automation cron ([docs/automation.md](https://github.com/jjheffernan/heff-skills/blob/main/docs/automation.md)).
 
 ## Wake protocol (mandatory)
