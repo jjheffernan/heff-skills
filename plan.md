@@ -271,6 +271,7 @@ Migrate from today's `after-hours-loop/skill` + `after-hours-loop/drop-in` into 
 | 2026-07-13 | Ship as **alpha** (`0.1.0-alpha.1`); defer `v0.1.0` tag | Multiple real runs before release |
 | 2026-07-13 | Treat Cursor Automation as first-class (cron after office hours) | AFK when IDE is closed; document cloud state gap |
 | 2026-07-13 | Mega-PR is dual-token per arm only; never config-sticky | Throughput option without accidental PR bundling |
+| 2026-08-08 | Mega-PR: `--mega-pr -accept`; prep companion; `minReadyItems`; dead-tick stop (5) / `--persist` | Dogfood thin-queue stall + token burn; clearer mega arm |
 | 2026-07-13 | End phased rollout at MVP; multi-level backlog thereafter | Dry-run ready; avoid endless Phase N |
 | 2026-07-13 | Phase 5 abstraction seal is temporary | Re-open when dogfood needs deeper adapters |
 | 2026-07-13 | Keep phase×slice parallelization after MVP | Whole-stack CI + audits; not feature-only sprawl |
@@ -312,7 +313,7 @@ Keep sources × executors × state × dual runners. Fix: portable config, self-c
 
 **Phased rollout is done** (Phases 0–6). Do not open Phase 7+. Work as a **living multi-level backlog**: dogfood → scorecard → pick tickets across levels → small audits as needed.
 
-**MVP bar (met):** install → Sources → dry-run queue → A→Z executor + outcome → morning brief → stop safely; Automation + dual-token mega-PR documented; alpha packaging.
+**MVP bar (met):** install → Sources → dry-run queue → A→Z executor + outcome → morning brief → stop safely; Automation + kickoff-flag mega-PR documented; alpha packaging.
 
 **Dry-run ready now:** follow [docs/first-night.md](./docs/first-night.md) §3 (`/after-hours --dry-run`) before any overnight arm.
 
@@ -342,8 +343,8 @@ When opening parallel work: name the **level**, list **non-overlapping paths**, 
 | Level | Focus | Near-term tickets |
 |-------|--------|-------------------|
 | **L0 Dogfood** | Real runs | **Ingested 2026-07-14** makemcmasterBOM **21/26**; next: Automation office-close trial; defer `v0.1.0` until bands look good |
-| **L1 Operator UX** | Clarity without coding | doctor + morning triad — **shipped**; install path `after-hours` vs `after-hours-loop` clarified; **open:** morning-consolidate / worktree GC |
-| **L2 Loop quality** | Prove-done overnight | verification / runsPath / interrupt — **shipped**; **`Nm`=interval + soft-park empty/maxPrs** — **shipped this ingest**; **open:** HITL-blocked → branch-only degrade; high-`maxPrs` conflict policy |
+| **L1 Operator UX** | Clarity without coding | doctor + morning triad — **shipped**; install path clarified; **`after-hours-prep`** companion — **shipped**; **open:** morning-consolidate / worktree GC |
+| **L2 Loop quality** | Prove-done overnight | verification / interrupt / soft-park — **shipped**; **`minReadyItems` + dead-tick stop (5) + `--persist`** — **shipped**; **open:** HITL-blocked → branch-only; high-`maxPrs` conflict policy |
 | **L3 Abstraction** | Re-open Phase 5 seal | More Sources/outcomes; consolidate adapter; permission-profile / degraded outcome |
 | **L4 Ecosystem** | Optional peers | Slack Automation notify (deferred); Matt smoke matrix expansions; companion polish |
 | **L5 Release** | Ship | Tag `v0.1.0` after more dogfood; changelog cut |

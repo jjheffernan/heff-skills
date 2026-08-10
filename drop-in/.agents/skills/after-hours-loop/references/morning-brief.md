@@ -30,7 +30,7 @@ Keep Done / Blocked / Skipped rows for ids; lead Summary with triad counts.
 
 **Run:** <startedAt ISO> → <stoppedAt ISO>
 **Repo:** <owner/name> · **Base:** <baseBranch>
-**Stop reason:** <done | blocked | noop | budget> · **Detail:** <empty-queue | maxPrs | guardrail | user-stop | consecutive-blocked | ci-red | preflight | dry-run | dirty-interrupt | …>
+**Stop reason:** <done | blocked | noop | budget> · **Detail:** <empty-queue | maxPrs | guardrail | user-stop | consecutive-blocked | ci-red | preflight | dry-run | dirty-interrupt | dead-ticks | …>
 
 ## Summary
 
@@ -38,7 +38,7 @@ Keep Done / Blocked / Skipped rows for ids; lead Summary with triad counts.
 
 <2–4 sentences: what ran, what shipped, what needs a human>
 
-<!-- If state.megaPr: lead with: **MEGA-PR MODE** — human opted in this run via CONFIRM_MEGA_PR. Bundled draft — review carefully. -->
+<!-- If state.megaPr: lead with: **MEGA-PR MODE** — human opted in this run via --mega-pr -accept. Bundled draft — review carefully. -->
 
 ## Built (verified)
 

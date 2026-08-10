@@ -27,5 +27,5 @@ priority: github-first
 # - feature-spec: docs/plans/YOUR-PLAN.md phase 1
 # Keep wayfinder-afk / github-tickets opt-in only when those peers exist and you know the map is AFK-safe.
 #
-# Do NOT add megaPr / CONFIRM_MEGA_PR here by default. Bundled mega-PR requires both tokens
-# pasted into THIS fire's Instructions every time (references/mega-pr.md). Cron must not remember mega.
+# Do NOT add --mega-pr -accept here by default. Bundled mega-PR requires both flags
+# in THIS fire's Instructions every time (references/mega-pr.md). Cron must not remember mega.

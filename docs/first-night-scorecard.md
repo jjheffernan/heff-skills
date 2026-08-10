@@ -20,12 +20,12 @@ Score each row: **2** pass · **1** partial · **0** fail. Total **/26**. Recurr
 | 1 | **Install friction** | Skill lands under `.agents/skills/after-hours-loop/` **or** `.agents/skills/after-hours/` (CLI name) in ≤5 min; docs match reality | | |
 | 2 | **Config clarity** | Copied config; set `repo`, `baseBranch`, `testCommand`; no secret leakage into git | | |
 | 3 | **Gitignore hygiene** | State + morning brief ignored (or `--with-gitignore`); nothing sensitive committed | | |
-| 4 | **Preflight honesty** | Missing `gh` / dirty tree / bad config → clear stop or warning, not a half-run | | |
+| 4 | **Preflight honesty** | Missing `gh` / dirty tree / bad config / thin ready queue (`minReadyItems`) → clear stop or warning, not a half-run | | |
 | 5 | **Dry-run fidelity** | `--dry-run` builds a sensible queue from Sources only; no code/PR/state writes | | |
-| 6 | **Queue quality** | Only agent-ready items; vague/HITL work skipped or `blocked` with reason | | |
+| 6 | **Queue quality** | Only agent-ready items; vague/HITL work skipped or `blocked` with reason; prep used when foggy | | |
 | 7 | **A→Z tick** | At least one item runs end-to-end for its executor (slice → verify → outcome) | | |
 | 8 | **Safe outcomes** | Draft PRs when `draftPrs: true` (or configured outcome); no surprise merges/force-push | | |
-| 9 | **Stop / budget** | `/after-hours Nm` is tick **interval** only; empty/`maxPrs` soft-park (sentinel kept); stop phrases end the night | | |
+| 9 | **Stop / budget** | `/after-hours Nm` is tick **interval** only; empty/`maxPrs` soft-park; **5 dead ticks** auto-stop unless `--persist`; stop phrases end the night | | |
 | 10 | **Morning brief** | Brief exists on stop; lists done / blocked / PRs / next human actions | | |
 | 11 | **Resume / re-arm** | Second start does not duplicate `done` work; prior sentinels killed; state readable | | |
 | 12 | **Workflow agnostic** | Worked from *your* Sources (issues/TODO/spec) **without** requiring Matt grill→tickets | | |

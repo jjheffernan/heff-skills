@@ -12,7 +12,7 @@ Optional check: `scripts/validate-state.py <statePath>` (exit 0 = ok).
 | `startedAt` | ISO-8601 | yes | Loop run start |
 | `stoppedAt` | ISO-8601 | no | Set on stop |
 | `stopReason` | string | no | Coarse domain-agnostic enum: `done` \| `blocked` \| `noop` \| `budget` |
-| `stopDetail` | string | no | Optional specifics (legacy detail strings): `empty-queue`, `maxPrs`, `guardrail`, `user-stop`, `consecutive-blocked`, `ci-red`, `preflight`, `dry-run`, `dirty-interrupt`, … |
+| `stopDetail` | string | no | Optional specifics (legacy detail strings): `empty-queue`, `maxPrs`, `guardrail`, `user-stop`, `consecutive-blocked`, `ci-red`, `preflight`, `dry-run`, `dirty-interrupt`, `dead-ticks`, … |
 | `sources` | array | yes | Parsed Sources entries `{ type, config }` |
 | `queue` | array | yes | Work items (see below) |
 | `prs` | object[] | yes | Outcomes that produced PRs this run: `{ "url", "itemId", "branch", "draft" }` (`url` required; others when known). `maxPrs` counts `prs.length`. Empty when no `draft-pr` outcomes. |
@@ -22,8 +22,11 @@ Optional check: `scripts/validate-state.py <statePath>` (exit 0 = ok).
 | `baseBranch` | string | yes | Default base for git/PR outcome adapters |
 | `dryRun` | boolean | no | If true, this run must not write state (see dry-run) |
 | `consecutiveBlocked` | number | no | Successive `blocked`/`skipped` without an intervening `done`; see counter rules below |
-| `megaPr` | boolean | no | **This run only.** `true` only after bootstrap validated both kickoff tokens ([mega-pr.md](./mega-pr.md)). Default absent/`false`. Never copy from config or prior nights. |
+| `megaPr` | boolean | no | **This run only.** `true` only after bootstrap validated kickoff `--mega-pr` **and** `-accept` ([mega-pr.md](./mega-pr.md)). Default absent/`false`. Never copy from config or prior nights. |
 | `parkedReason` | string | no | Soft-park while sentinel stays armed: `empty-queue` \| `maxPrs`. Cleared when work+budget allow. **Not** a stop — no `stoppedAt` while parked. |
+| `deadTicks` | number | no | Consecutive parked/no-op wakes; reset to `0` on claim/execute. Default `0`. |
+| `maxDeadTicks` | number | no | Cap from config (default **5**). Stop when `deadTicks >= maxDeadTicks` unless kickoff `--persist`. |
+| `persist` | boolean | no | **This run only.** `true` after kickoff `--persist` — disables dead-tick auto-stop. Never from config. |
 
 ## Queue item contract (portable)
 
@@ -85,7 +88,7 @@ On stop, persist **`stopReason`** (coarse) and optionally **`stopDetail`** (spec
 |--------------|---------|----------------------|
 | `done` | Run ended after intentional completion / human stop | `user-stop` |
 | `blocked` | Stopped because work/safety cannot continue | `consecutive-blocked`, `guardrail`, `preflight`, `ci-red`, `dirty-interrupt` |
-| `noop` | Nothing executable / dry inspection only | `empty-queue` (legacy hard-stop / dry-run), `dry-run` |
+| `noop` | Nothing executable / dry inspection only | `empty-queue` (legacy hard-stop / dry-run), `dry-run`, `dead-ticks` |
 | `budget` | Hit a run budget on a **true stop** | `maxPrs` (legacy; prefer soft-park mid-run — [guardrails](./guardrails.md)) |
 
 Always set coarse `stopReason`. Prefer also setting `stopDetail` to the legacy-specific string. Readers that only understand old single-field values may treat unknown coarse enums via `stopDetail` when present.

@@ -4,27 +4,30 @@ For operators who want **maximum throughput**: many queue items land on **one sh
 
 **Default is OFF.** Sliced `draft-pr` per item/slice remains the only safe default.
 
-## Activation (all required — every arm)
+## Activation (flag + accept — every arm)
 
-Mega-PR turns on **only** when the **current kickoff message / Automation Instructions** contains **both**:
+Mega-PR turns on when the **current kickoff** includes **both**:
 
-1. Flag: `megaPr: true` **or** slash `/after-hours --mega-pr`
-2. Exact confirmation line (whitespace-tolerant, case-sensitive token):
+1. `--mega-pr`
+2. Accept: `-accept`
+
+Example:
 
 ```text
-CONFIRM_MEGA_PR: I_ACCEPT_BUNDLED_PRS
+/after-hours --mega-pr -accept
+/after-hours 45m --mega-pr -accept
 ```
 
 | Source | Allowed to enable? |
 |--------|-------------------|
-| Current chat / Automation Instructions | **Yes** — only if both tokens present |
+| Current chat / Automation Instructions | **Yes** — `--mega-pr` **and** `-accept` |
 | `.cursor/after-hours-loop.config.json` | **Never** — ignore `megaPr` if set; warn in brief |
 | Prior `state.json` from an earlier run | **Never** — do not inherit sticky mega mode across arms |
 | Always-on Cursor rules | **Never** |
 
-Missing either token → stay in **sliced** mode. Present only one token → **Stop** preflight (`blocked` / `preflight`) with a message to add both or remove both.
+Missing either piece → stay **sliced**. Present only one → **Stop** preflight (`blocked` / `preflight`) with a message to add both or remove both.
 
-Dry-run may print “would enable mega-PR” only when both tokens are present; never write mega sticky flags into config.
+Dry-run may print “would enable mega-PR” only when both are present; never write mega sticky flags into config.
 
 ## What changes when enabled
 
@@ -48,16 +51,17 @@ Still required: readiness, denylist, draft-only (`draftPrs: true` unless human o
 
 Lead Summary with:
 
-> **MEGA-PR MODE** — human opted in this run via `CONFIRM_MEGA_PR`. Bundled draft PR — review carefully.
+> **MEGA-PR MODE** — human opted in this run via `--mega-pr -accept`. Bundled draft PR — review carefully.
 
 List every item folded into the mega PR.
 
 ## Automation
 
-Do **not** put mega tokens in the default office-hours Instructions template. If an unsafe operator wants it, they paste **both** tokens into that night’s Instructions **each scheduled fire** — cron must not “remember” mega from last night.
+Do **not** put `--mega-pr -accept` in the default office-hours Instructions template. If an unsafe operator wants it, they paste **both** flags into that night’s Instructions **each scheduled fire** — cron must not “remember” mega from last night.
 
 ## Refuse accidental enablement
 
 - Soft-detect never implies mega.
 - Peer skills never imply mega.
-- `maxPrs: 99` alone is **not** mega — still one-PR-per-item until both tokens appear.
+- `maxPrs: 99` alone is **not** mega — still one-PR-per-item until `--mega-pr` **and** `-accept` appear.
+- `megaPr: true` in a Sources block is **not** enough — use the slash flags.

@@ -2,7 +2,7 @@
 
 Ship one unattended run with agent-ready work already queued. Daytime alignment (whatever workflow you use) happens while you are present — not overnight.
 
-**Refuse:** you do **not** need Matt grill / to-tickets (or any peer chain) before `/after-hours` can start. Opt-in Sources `wayfinder-afk` / `github-tickets` stay off unless you uncomment them — see [smoke-matrix.md](./smoke-matrix.md).
+**Refuse:** you do **not** need Matt grill / to-tickets (or any peer chain) before `/after-hours` can start. Prefer heff **`/after-hours-prep`** (or your own daytime workflow) when the ready queue is thin — AFK preflight requires `minReadyItems` (default = `maxPrs`). Opt-in Sources `wayfinder-afk` / `github-tickets` stay off unless you uncomment them — see [smoke-matrix.md](./smoke-matrix.md).
 
 **MVP / alpha:** packaging and loop surface are dry-run ready. Score every run; phased rollout is over — feed gaps into [plan.md](../plan.md) post-MVP levels.
 
@@ -52,13 +52,25 @@ Night presets (paste-ready):
 - [night-Sources.mixed.txt](https://github.com/jjheffernan/heff-skills/blob/main/skills/after-hours-loop/templates/night-Sources.mixed.txt) — GitHub + TODO (+ optional wayfinder-afk)
 - Canonical day example: [Sources.example.txt](https://github.com/jjheffernan/heff-skills/blob/main/skills/after-hours-loop/templates/Sources.example.txt)
 
+## 3b. Prep (if queue is thin)
+
+If dry-run / doctor shows fewer agent-ready items than you want overnight:
+
+```text
+/after-hours-prep
+```
+
+(Install via `./scripts/install.sh --with-companions`.) Then re-run dry-run.
+
 ## 4. Arm
 
-When the dry-run queue looks right:
+When the dry-run queue looks right (ready count ≥ `minReadyItems`, default = `maxPrs`):
 
 ```text
 /after-hours 45m
 ```
+
+Optional: `/after-hours --persist` to disable dead-tick auto-stop; `/after-hours --mega-pr -accept` for bundled PR this arm only.
 
 (Or paste a full Sources block from a night template in the same message / Automation Instructions.)
 

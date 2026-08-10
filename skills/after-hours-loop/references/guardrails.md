@@ -24,8 +24,10 @@ On **Stop loop**, set coarse `stopReason` (`done` / `blocked` / `noop` / `budget
 | Tests / verification fail after one fix attempt | **Block item** | `tests` or `verification-failed` |
 | Item `verification[]` present but skipped/weakened to force pass | **Block item** + note | Never green-wash — [readiness.md](./readiness.md) |
 | `risk: high` without kickoff `allowHighRisk: true` | **Skip item** | Leave for daytime; do not invent low risk |
-| Empty queue (no agent-ready work) mid-run | **Soft-park** | `parkedReason: empty-queue` — **keep** sentinel; dry-run still **Stop loop** `noop` / `dry-run` |
-| `prs.length >= maxPrs` | **Soft-park** | `parkedReason: maxPrs` — **keep** sentinel until human stop or `maxPrs` raised / PRs closed |
+| Empty queue (no agent-ready work) mid-run | **Soft-park** then dead-tick | `parkedReason: empty-queue` — **keep** sentinel unless dead-tick stop; dry-run still **Stop loop** `noop` / `dry-run` |
+| `prs.length >= maxPrs` | **Soft-park** then dead-tick | `parkedReason: maxPrs` — **keep** sentinel unless dead-tick stop |
+| Consecutive parked/no-op wakes ≥ `maxDeadTicks` (default **5**) and kickoff lacks `--persist` | **Stop loop** | `noop` / `dead-ticks` — kill sentinel; morning brief |
+| Kickoff `--persist` | (modifier) | Disable dead-tick auto-stop for **this arm only**; soft-park still applies |
 | User: stop after-hours / stop loop | **Stop loop** | `done` / `user-stop` — kill **all** matching sentinel PIDs |
 | IDE / tool **interrupt** mid-item | **Block item** | (item) `interrupted` — **keep** sentinel; see [tick-and-runners](./tick-and-runners.md) |
 | Dirty tree from interrupted claim; recovered (safe checkout / discarded half-work) | continue | Park item `interrupted`; do **not** Stop loop solely for this |
@@ -36,19 +38,23 @@ On **Stop loop**, set coarse `stopReason` (`done` / `blocked` / `noop` / `budget
 | PR checks red after open and `babysitCi: true` | **Block item** | `ci-red`; note in item + brief |
 | PR checks red and `stopOnCiRed: true` | **Stop loop** | `blocked` / `ci-red` |
 | Preflight fail (base branch, state unwritable, empty Sources without allow) | **Stop loop** | `blocked` / `preflight` |
-| Mega-PR: only one of `megaPr` / `CONFIRM_MEGA_PR` present | **Stop loop** | `blocked` / `preflight` — require both or neither ([mega-pr.md](./mega-pr.md)) |
+| Mega-PR: only one of `--mega-pr` / `-accept` present | **Stop loop** | `blocked` / `preflight` — require both or neither ([mega-pr.md](./mega-pr.md)) |
+| Mega-PR requested via config / prior state / `megaPr:` key only | ignore | Stay sliced; warn in brief — [mega-pr.md](./mega-pr.md) |
 | `gh` auth missing when Sources need GitHub | **Stop loop** | `blocked` / `preflight` |
 | Dry-run finished | **Stop loop** | `noop` / `dry-run` |
 
 ## Soft-park (empty / maxPrs)
 
-`/after-hours Nm` is a **tick sleep interval**, not a wall-clock night budget. Empty queue and `maxPrs` must not kill cadence:
+`/after-hours Nm` is a **tick sleep interval**, not a wall-clock night budget. Empty queue and `maxPrs` soft-park first; **dead ticks** cap idle wakes:
 
-1. Persist `parkedReason` (`empty-queue` or `maxPrs`); do **not** set `stoppedAt` / `stopReason`.
-2. Keep the in-session sentinel armed (or re-arm if dead and run not user-stopped).
-3. Chat one short line (parked why); do not write a full morning brief yet.
-4. On next wake: refresh Sources that support it; clear `parkedReason` when agent-ready work exists **and** `prs.length < maxPrs`; otherwise no-op and stay parked.
-5. Human **stop after-hours** still kills sentinels and writes the morning brief (include any prior park in residual risk).
+1. Persist `parkedReason` (`empty-queue` or `maxPrs`); do **not** set `stoppedAt` / `stopReason` yet.
+2. Increment `deadTicks` by 1 (state). A wake that **claims** work (including item `blocked`/`skipped` after a real attempt) or completes `done` → reset `deadTicks` to `0`.
+3. Keep the in-session sentinel armed (or re-arm if dead and run not user-stopped) **unless** dead-tick stop fires.
+4. Chat one short line (parked why); do not write a full morning brief yet.
+5. On next wake: refresh Sources that support it; clear `parkedReason` when agent-ready work exists **and** `prs.length < maxPrs`; otherwise no-op and stay parked (another dead tick).
+6. **Dead-tick stop:** if `deadTicks >= maxDeadTicks` (config; default **5**) and kickoff did **not** include `--persist` → **Stop loop** (`noop` / `dead-ticks`); kill sentinel; write morning brief.
+7. **`--persist`** (this arm only): never stop for dead ticks; soft-park forever until user-stop / other OUTER stop. Never sticky via config.
+8. Human **stop after-hours** still kills sentinels and writes the morning brief (include any prior park / deadTicks in residual risk).
 
 Dry-run / doctor remain hard stops (no sentinel).
 

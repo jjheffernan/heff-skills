@@ -30,6 +30,7 @@ STOP_DETAILS = frozenset(
         "preflight",
         "dry-run",
         "dirty-interrupt",
+        "dead-ticks",
     }
 )
 
@@ -106,6 +107,20 @@ def main() -> None:
         parked = data["parkedReason"]
         if parked not in {"empty-queue", "maxPrs"}:
             fail(f"parkedReason invalid: {parked!r}")
+
+    if "deadTicks" in data:
+        dt = data["deadTicks"]
+        if not isinstance(dt, int) or isinstance(dt, bool) or dt < 0:
+            fail("deadTicks must be a non-negative int")
+
+    if "maxDeadTicks" in data and data["maxDeadTicks"] is not None:
+        mdt = data["maxDeadTicks"]
+        if not isinstance(mdt, int) or isinstance(mdt, bool) or mdt < 1:
+            fail("maxDeadTicks must be a positive int when set")
+
+    if "persist" in data and data["persist"] is not None:
+        if not isinstance(data["persist"], bool):
+            fail("persist must be a boolean when set")
 
     print("ok")
 

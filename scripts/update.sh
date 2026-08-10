@@ -23,12 +23,13 @@ Usage: ./scripts/update.sh [--dry-run] [--with-gitignore] [--with-companions] [T
     - .cursor/after-hours-loop.state.json
     - .cursor/after-hours-morning-brief.md
 
-  If after-hours-stop / after-hours-handoff are already installed, they are
-  updated automatically. Pass --with-companions to install them when missing.
+  If after-hours-stop / after-hours-handoff / after-hours-prep are already
+  installed, they are updated automatically. Pass --with-companions to install
+  them when missing.
 
   Skills CLI alternative (from the target project):
     npx skills update after-hours -y
-    npx skills update after-hours-stop after-hours-handoff -y   # if installed
+    npx skills update after-hours-stop after-hours-handoff after-hours-prep -y
 EOF
 }
 
@@ -80,7 +81,8 @@ fi
 # Refresh companions that are already present (unless user already asked).
 if [[ "${EXPLICIT_COMPANIONS}" -eq 0 ]]; then
   if [[ -d "${TARGET_REPO}/.agents/skills/after-hours-stop" ]] \
-    || [[ -d "${TARGET_REPO}/.agents/skills/after-hours-handoff" ]]; then
+    || [[ -d "${TARGET_REPO}/.agents/skills/after-hours-handoff" ]] \
+    || [[ -d "${TARGET_REPO}/.agents/skills/after-hours-prep" ]]; then
     WITH_COMPANIONS=1
   fi
 fi

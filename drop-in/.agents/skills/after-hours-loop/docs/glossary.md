@@ -10,6 +10,8 @@ Modular overnight / late-session agent work. Orchestrator: `.agents/skills/after
 | **FOR (sentinel)** | Cadence wakes only — sleep/echo or Automation cron |
 | **WHILE (per wake)** | Guarded queue work; default one claim; interrupt = inner break |
 | **Interrupt** | IDE/tool abort mid-item — park `blocked`/`interrupted`; keep sentinel |
+| **Dead tick** | Parked/no-op wake (empty or maxPrs); 5 in a row → stop unless `--persist` |
+| **after-hours-prep** | Daytime HITL companion — grill-style questions to thicken the night queue |
 | **Tick** | One orchestrator iteration: pick item → execute → record outcome |
 | **Work item** | Normalized unit the loop consumes (portable contract: `id`, `title`, `acceptance`, `blockerPolicy`, `executorHint`, `outcomeKind` — see state-schema) |
 | **Work source** | Adapter that materializes or refreshes work items from a tracker **input** |
@@ -102,11 +104,13 @@ Checkout configured **`baseBranch`**.
 
 ## Stop
 
-- Empty queue mid-run → **soft-park** (`parkedReason: empty-queue`); keep sentinel
-- `maxPrs` reached mid-run → **soft-park** (`parkedReason: maxPrs`); keep sentinel
+- Empty queue mid-run → **soft-park** (`parkedReason: empty-queue`); keep sentinel (counts as **dead tick**)
+- `maxPrs` reached mid-run → **soft-park** (`parkedReason: maxPrs`); keep sentinel (dead tick)
+- **5** consecutive dead ticks (default) → **Stop loop** `noop` / `dead-ticks` unless kickoff `--persist`
 - Guardrail / preflight / blocked streak / CI stop / unrecovered dirty-interrupt → `blocked` + matching `stopDetail` (**Stop loop**)
 - User: **stop after-hours** / **stop loop** → `done` / `user-stop` (kill **all** matching sentinel PIDs)
 - IDE **interrupt** mid-item → **not** a stop — park item `interrupted`; sentinel stays armed ([tick-and-runners](../references/tick-and-runners.md))
 - `/after-hours Nm` → tick **interval** only, never total wall-clock budget
+- Thin ready queue at arm → preflight fail — run **`/after-hours-prep`** daytime
 
 On true stop, write the morning brief (pointers to PRs, non-PR outcomes, and blocked items). Coarse stop enum: [state-schema.md](../references/state-schema.md).

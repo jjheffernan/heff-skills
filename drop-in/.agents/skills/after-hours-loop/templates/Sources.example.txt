@@ -18,7 +18,6 @@ priority: github-first
 # github:88 outcomeKind:report-only
 # github:91 outcomeKind:external-ticket-update
 
-# MEGA-PR (unsafe) — OFF by default. To enable THIS run only, uncomment BOTH lines:
-# megaPr: true
-# CONFIRM_MEGA_PR: I_ACCEPT_BUNDLED_PRS
+# MEGA-PR (unsafe) — OFF by default. To enable THIS run only:
+#   /after-hours --mega-pr -accept
 # config.json cannot enable mega-PR. See references/mega-pr.md

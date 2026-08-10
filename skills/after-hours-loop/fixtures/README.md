@@ -11,6 +11,7 @@ Sample `.cursor/after-hours-loop.state.json` shapes for `scripts/validate-state.
 | `sample-state.valid-todo-first.json` | `priority: todo-first`, `docs-digest` / `doc-artifact` |
 | `sample-state.valid-dirty-interrupt.json` | `stopDetail: dirty-interrupt`, item `blockReason: interrupted` |
 | `sample-state.valid-parked.json` | Soft-park `parkedReason: maxPrs` (no `stoppedAt`) |
+| `sample-state.valid-dead-ticks.json` | Stopped `noop` / `dead-ticks` after idle parked wakes |
 
 ## Invalid (exit 1)
 

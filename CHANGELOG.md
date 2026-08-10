@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [`after-hours-prep`](./skills/after-hours-prep/) — daytime HITL companion (grill-style frontier questions) to thicken overnight queues before arm
+- Preflight **ready depth**: agent-ready count ≥ `minReadyItems` (default `maxPrs`); fail closed with pointer to prep
+- Dead-tick auto-stop: consecutive parked/no-op wakes; default `maxDeadTicks: 5`; kickoff `--persist` disables for that arm
+- State fields `deadTicks` / `maxDeadTicks` / `persist`; fixture `sample-state.valid-dead-ticks.json`
+
+### Changed
+
+- Mega-PR confirm flag is `-accept` (`/after-hours --mega-pr -accept`) — drop `-c` / `-confirm`
+- `--with-companions` installs stop + handoff + **prep**
+
+### Changed
+
+- Mega-PR enablement: `/after-hours --mega-pr -accept`  — drop `CONFIRM_MEGA_PR` / `megaPr: true` forms; still never config-sticky ([mega-pr.md](./skills/after-hours-loop/references/mega-pr.md))
+
+### Added
+
 - Soft-park: mid-run empty queue / `maxPrs` keeps sentinel (`parkedReason`); fixture `sample-state.valid-parked.json`
 - Dogfood ingest: makemcmasterBOM 2026-07-14 scorecard **21/26** → plan L0 tickets
 

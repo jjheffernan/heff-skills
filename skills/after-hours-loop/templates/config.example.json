@@ -10,6 +10,8 @@
   "runsPath": null,
   "draftPrs": true,
   "maxPrs": 3,
+  "minReadyItems": null,
+  "maxDeadTicks": 5,
   "allowSkipTests": false,
   "allowEmptyQueue": false,
   "maxConsecutiveBlocked": 3,

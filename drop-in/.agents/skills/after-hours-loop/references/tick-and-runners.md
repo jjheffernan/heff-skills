@@ -8,29 +8,35 @@ Treat the run as two nested loops:
 
 | Loop | Role | Breaks |
 |------|------|--------|
-| **FOR** (sentinel / cron) | Cadence only — wake the agent. No coding policy. | User stop / escalate / hard OUTER stops — [guardrails](./guardrails.md). **Not** empty/`maxPrs` (those soft-park). |
+| **FOR** (sentinel / cron) | Cadence only — wake the agent. No coding policy. | User stop / escalate / hard OUTER stops / **dead-ticks** (unless `--persist`) — [guardrails](./guardrails.md). Empty/`maxPrs` soft-park first. |
 | **WHILE** (per wake) | Queue work under guardrails. Default: **one claim per wake**. | Item skip/block, tick budget, interrupt, **soft-park** (empty / maxPrs) |
 
 ```text
 bootstrap(); arm_sentinel_once();     # FOR driver
+# kickoff may include --persist (disable dead-tick stop) and/or --mega-pr -accept
 
 # each wake:
 load skill + state
 recover_orphan_claims()               # see state-schema
 if sentinel dead and not stopped: re-arm once
 if parkedReason set:
-  refresh; clear park if work+budget allow; else no-op return
+  refresh; clear park if work+budget allow; else no-op → dead_tick(); return
 
 while guardrails_allow:
   item = next_claimable()
-  if none: soft_park(empty-queue); break      # keep FOR
-  if prs.length >= maxPrs: soft_park(maxPrs); break
-  try: claim → execute → persist
+  if none: soft_park(empty-queue); dead_tick(); break
+  if prs.length >= maxPrs: soft_park(maxPrs); dead_tick(); break
+  try: claim → execute → persist; deadTicks = 0
   except Interrupted: park(item, interrupted); break   # INNER only
   if tick budget done (default 1): break               # back to FOR
+
+# dead_tick():
+#   deadTicks++; if deadTicks >= maxDeadTicks (5) and not persist → Stop OUTER noop/dead-ticks
 ```
 
-**`/after-hours Nm` = sentinel sleep interval only** (e.g. `20m` → `sleep 1200`). It is **not** a total wall-clock night budget and must not stop the loop when elapsed. Budget caps are `maxPrs` / consecutive-blocked / user stop.
+**`/after-hours Nm` = sentinel sleep interval only** (e.g. `20m` → `sleep 1200`). It is **not** a total wall-clock night budget. Budget caps are `maxPrs` / consecutive-blocked / **dead ticks** / user stop.
+
+**`--persist`** = this arm ignores dead-tick auto-stop (soft-park may continue). Not config-sticky.
 
 **Interrupt ≠ user-stop.** IDE abort mid-tick breaks the WHILE body (park item) and leaves the sentinel armed unless an OUTER stop already applies. Stop phrases still kill the PID — [after-hours-stop](../../after-hours-stop/SKILL.md).
 

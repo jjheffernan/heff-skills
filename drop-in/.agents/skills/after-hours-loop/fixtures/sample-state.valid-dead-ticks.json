@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "startedAt": "2026-08-08T01:00:00Z",
+  "stoppedAt": "2026-08-08T03:00:00Z",
+  "stopReason": "noop",
+  "stopDetail": "dead-ticks",
+  "sources": [
+    {
+      "type": "todo-md",
+      "config": "section Now"
+    }
+  ],
+  "queue": [
+    {
+      "id": "todo:done",
+      "title": "Done",
+      "source": "todo-md",
+      "executor": "pr-slice",
+      "status": "done",
+      "granularity": "single-pr",
+      "outcomeKind": "draft-pr"
+    }
+  ],
+  "prs": [
+    {
+      "url": "https://github.com/example/app/pull/1",
+      "itemId": "todo:done",
+      "branch": "after-hours/x",
+      "draft": true
+    }
+  ],
+  "maxPrs": 3,
+  "tick": 5,
+  "priority": "todo-first",
+  "baseBranch": "main",
+  "consecutiveBlocked": 0,
+  "deadTicks": 5,
+  "maxDeadTicks": 5,
+  "persist": false,
+  "megaPr": false
+}

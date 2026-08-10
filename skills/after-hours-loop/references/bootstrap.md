@@ -18,9 +18,12 @@ All must pass unless noted:
 | Base branch exists | Local or remote `baseBranch` resolvable | **Stop** — `preflight` |
 | Sources non-empty | Parsed Sources yield ≥1 candidate **or** `allowEmptyQueue: true` / explicit allow in message | **Stop** — empty without allow |
 | State dir writable | Parent of `statePath` exists and is writable | **Stop** — `preflight` |
-| Agent-ready filter | Candidates pass [readiness.md](./readiness.md) into queue or all blocked noted | Empty executable queue → **Stop** (after writing brief on stop path) |
+| Agent-ready filter | Candidates pass [readiness.md](./readiness.md) into queue or all blocked noted | See **Ready depth** |
+| **Ready depth** | Count of agent-ready `open` items ≥ `minReadyItems` (config; default **`maxPrs`**, at least **1**) | **Stop** — `preflight` — print “run `/after-hours-prep` or thicken Sources”; no arm. Soft-detect prep companion if installed. |
 
 Do not start tick 0 coding if preflight fails.
+
+**Ready depth exceptions:** `--dry-run`, `doctor`, and `allowEmptyQueue: true` skip the min-ready gate (dry-run/doctor still report the thin queue). Overnight arm always enforces ready depth unless `allowEmptyQueue: true`.
 
 ## Sources parse
 
@@ -39,18 +42,15 @@ Full copyable example: [templates/Sources.example.txt](../templates/Sources.exam
 
 ### Mega-PR gate (optional, unsafe)
 
-Default remains **sliced** PRs. To enable bundled mega-PR for **this arm only**, the kickoff must include **both** tokens per [mega-pr.md](./mega-pr.md):
+Default remains **sliced** PRs. To enable bundled mega-PR for **this arm only**, the kickoff needs **both** flags per [mega-pr.md](./mega-pr.md):
 
 ```text
-megaPr: true
-CONFIRM_MEGA_PR: I_ACCEPT_BUNDLED_PRS
+/after-hours --mega-pr -accept
 ```
 
-(or `/after-hours --mega-pr` plus the same `CONFIRM_MEGA_PR` line).
-
-- Exactly one of the two → **Stop** preflight (`blocked` / `preflight`); do not guess.
-- Config file / prior state / rules **cannot** enable mega-PR. If config contains `megaPr`, ignore it and note in the brief.
-- Persist `megaPr: true` on **this run’s** state only after both tokens validate; never copy into config; next arm must re-confirm.
+- Exactly one of `--mega-pr` / `-accept` → **Stop** preflight (`blocked` / `preflight`); do not guess.
+- Config file / prior state / `megaPr:` in Sources / rules **cannot** enable mega-PR. If config contains `megaPr`, ignore it and note in the brief.
+- Persist `megaPr: true` on **this run’s** state only after both flags validate; never copy into config; next arm must re-pass both.
 
 1. For each line, load matching `sources/*.md` and materialize items (portable queue fields: `id`, `title`, `acceptance`, `blockerPolicy`, `executorHint`, `outcomeKind` — [state-schema.md](./state-schema.md)).
 2. Merge; sort by `priority` (`github-first` default).

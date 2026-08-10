@@ -35,6 +35,7 @@ Details: **[INSTALL.md](./INSTALL.md)** · [`CHANGELOG.md`](./CHANGELOG.md).
 | **after-hours-loop** (alpha) | [`skills/after-hours-loop/`](./skills/after-hours-loop/) | AFK orchestrator: any Sources → queue → executors → outcomes + morning brief |
 | **after-hours-stop** (opt-in) | [`skills/after-hours-stop/`](./skills/after-hours-stop/) | Kill sentinel / stop phrases / ensure morning brief — install via `--with-companions` |
 | **after-hours-handoff** (opt-in) | [`skills/after-hours-handoff/`](./skills/after-hours-handoff/) | Morning-brief handoff after a stop — install via `--with-companions` |
+| **after-hours-prep** (opt-in) | [`skills/after-hours-prep/`](./skills/after-hours-prep/) | Daytime grill-style queue builder before arming — install via `--with-companions` |
 
 ## Kickoff
 

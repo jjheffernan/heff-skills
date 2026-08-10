@@ -47,15 +47,15 @@ Config: `.cursor/after-hours-loop.config.json` ← [templates/config.example.jso
 
 | Trigger | Behavior |
 |---------|----------|
-| **`/after-hours`** | Primary. `/after-hours 45m`, `/after-hours --dry-run`, `/after-hours doctor`. Mega-PR only with `--mega-pr` **and** confirm line — [mega-pr](./references/mega-pr.md). |
+| **`/after-hours`** | Primary. `/after-hours 45m`, `/after-hours --dry-run`, `/after-hours doctor`. Mega-PR: `/after-hours --mega-pr -accept`. Dead-tick stop off: `/after-hours --persist`. |
 | **`/loop`** + this skill | Equivalent when pointed here. |
 | **Cursor Automation** | Cron (e.g. office hours close); same Sources in Instructions. See skill [tick-and-runners](./references/tick-and-runners.md) + install-tree / heff-skills [docs/automation.md](https://github.com/jjheffernan/heff-skills/blob/main/docs/automation.md). |
 
-Flow: load skill → **preflight** → bootstrap → tick 0 (unless dry-run) → arm sentinel ([tick-and-runners](./references/tick-and-runners.md)).
+Flow: load skill → **preflight** (incl. ready depth) → bootstrap → tick 0 (unless dry-run) → arm sentinel ([tick-and-runners](./references/tick-and-runners.md)).
 
 **Interval:** `/after-hours 20m` (or `45m`) sets **sentinel sleep only** — not a total night time box.
 
-**Wakes / interrupts / soft-park:** every sentinel fire follows the wake protocol. Interrupt parks the item (`blocked` / `interrupted`). Empty queue or `maxPrs` **soft-parks** (keeps sentinel). Stop phrases only: `stop loop`, `stop after-hours`, `/after-hours stop`.
+**Wakes / interrupts / soft-park / dead ticks:** every sentinel fire follows the wake protocol. Interrupt parks the item (`blocked` / `interrupted`). Empty queue or `maxPrs` **soft-parks**; after **5** consecutive parked wakes (**dead ticks**) → auto-stop unless `--persist`. Stop phrases: `stop loop`, `stop after-hours`, `/after-hours stop`. Thin ready queue at arm → preflight fail; run `/after-hours-prep` daytime.
 
 **Install path:** skill files live at `.agents/skills/after-hours-loop/` (`install.sh`) **or** `.agents/skills/after-hours/` (`npx skills add` — frontmatter `name: after-hours`). Both are valid; resolve whichever exists.
 
@@ -77,6 +77,8 @@ Load only the active module. Do not paste their logic here.
 | `baseBranch` | `main` |
 | `draftPrs` | `true` |
 | `maxPrs` | bootstrap or `3` |
+| `minReadyItems` | `null` → use `maxPrs` (at least 1) |
+| `maxDeadTicks` | `5` |
 | `maxConsecutiveBlocked` | `3` |
 | `babysitCi` | `false` |
 | `stopOnCiRed` | `false` |

@@ -16,9 +16,11 @@ Part of [heff-skills](https://github.com/jjheffernan/heff-skills).
 | `/after-hours 30m` | Same with custom interval |
 | `/loop …` + this skill | Equivalent when pointed here |
 | Cursor Automation | Unattended cron (office-hours close) — [docs/automation.md](https://github.com/jjheffernan/heff-skills/blob/main/docs/automation.md) · [instructions template](./templates/automation-instructions.office-hours.close.txt) |
-| Mega-PR (unsafe) | Dual-token only — [mega-pr.md](./references/mega-pr.md); never config-sticky |
+| Mega-PR (unsafe) | `/after-hours --mega-pr -accept` this arm — [mega-pr.md](./references/mega-pr.md); never config-sticky |
+| `--persist` | Disable dead-tick auto-stop this arm |
+| `/after-hours-prep` | Daytime companion — thicken queue before arm (install `--with-companions`) |
 
-Stop: `stop after-hours` / `stop loop`. Interrupt mid-tick parks the item (`interrupted`) and keeps the sentinel — see [tick-and-runners.md](./references/tick-and-runners.md).
+Stop: `stop after-hours` / `stop loop`. Interrupt mid-tick parks the item (`interrupted`) and keeps the sentinel. Soft-park empty/`maxPrs`; **5 dead ticks** → auto-stop unless `--persist` — see [tick-and-runners.md](./references/tick-and-runners.md).
 
 ## Install
 

@@ -30,7 +30,7 @@ An item is **`done`** when the executor’s acceptance work is complete **and** 
 
 Default for `pr-slice` and `feature-build`. Typical for `research-only` when shipping research markdown via PR.
 
-**If state `megaPr: true`** (dual-token arm only — [mega-pr.md](./mega-pr.md)):
+**If state `megaPr: true`** (kickoff `--mega-pr -accept` this arm — [mega-pr.md](./mega-pr.md)):
 
 1. Use one shared branch `after-hours/mega-<date>` for the whole run.
 2. Open **at most one** draft PR for the run; fold later items via commits + PR body checklist.
@@ -68,7 +68,7 @@ Push commits on an `after-hours/…` branch; **do not** open a PR. Prefer when r
 3. Do **not** run `gh pr create`. Do **not** append to `prs`. Does **not** count toward `maxPrs`.
 4. Set item `notes` to include the branch (e.g. `branch-only: after-hours/fix-widget-slug`).
 5. When `cloudLedgerPath` is set, upsert the ledger entry with `status: done` and the branch in the entry (see [cloud-ledger.md](./cloud-ledger.md)); no `prUrl`.
-6. **Mega-PR:** `branch-only` stays branch-only — do **not** fold into the mega draft PR or invent a PR “because mega is on.” Mega dual-token rules still apply only to `draft-pr` bundling ([mega-pr.md](./mega-pr.md)).
+6. **Mega-PR:** `branch-only` stays branch-only — do **not** fold into the mega draft PR or invent a PR “because mega is on.” Mega `--mega-pr -accept` rules still apply only to `draft-pr` bundling ([mega-pr.md](./mega-pr.md)).
 
 Safety checklist: denylist / no secrets / no force-push ([guardrails.md](./guardrails.md)) before commit/push.
 

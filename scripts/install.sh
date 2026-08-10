@@ -11,7 +11,7 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 SOT="${ROOT_DIR}/skills/after-hours-loop"
 CONFIG_EXAMPLE="${SOT}/templates/config.example.json"
 PACK_VERSION_FILE="${ROOT_DIR}/VERSION"
-COMPANIONS=(after-hours-stop after-hours-handoff)
+COMPANIONS=(after-hours-stop after-hours-handoff after-hours-prep)
 
 DRY_RUN=0
 WITH_GITIGNORE=0
@@ -25,8 +25,8 @@ Usage: ./scripts/install.sh [--dry-run] [--with-gitignore] [--with-companions] [
   TARGET_REPO         Destination repo root (default: .)
   --dry-run           Print actions only; do not write files
   --with-gitignore    Append ignore entries for loop state + morning brief if missing
-  --with-companions   Also copy after-hours-stop + after-hours-handoff into .agents/skills/
-                      (opt-in; not part of drop-in sync)
+  --with-companions   Also copy after-hours-stop + after-hours-handoff + after-hours-prep
+                      into .agents/skills/ (opt-in; not part of drop-in sync)
 
   Re-run is an update: skill trees are replaced; project config/state/brief stay.
   Explicit updater: ./scripts/update.sh [same flags] TARGET_REPO
@@ -202,7 +202,7 @@ EOF
 
 if [[ "${WITH_COMPANIONS}" -eq 1 ]]; then
   cat <<EOF
-  Companions: after-hours-stop, after-hours-handoff
-     (opt-in stop / morning-brief handoff — not always-on).
+  Companions: after-hours-stop, after-hours-handoff, after-hours-prep
+     (opt-in stop / handoff / daytime prep — not always-on).
 EOF
 fi
