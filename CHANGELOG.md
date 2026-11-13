@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [`after-hours-buildout`](./skills/after-hours-buildout/) — companion to refill empty-queue soft-parks via claim-ladder, stall recovery, and rabbit-hole denylist (dogfood: BambuFarmer build-out)
 - [`after-hours-prep`](./skills/after-hours-prep/) — daytime HITL companion (grill-style frontier questions) to thicken overnight queues before arm
 - Preflight **ready depth**: agent-ready count ≥ `minReadyItems` (default `maxPrs`); fail closed with pointer to prep
 - Dead-tick auto-stop: consecutive parked/no-op wakes; default `maxDeadTicks: 5`; kickoff `--persist` disables for that arm
@@ -17,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Mega-PR confirm flag is `-accept` (`/after-hours --mega-pr -accept`) — drop `-c` / `-confirm`
-- `--with-companions` installs stop + handoff + **prep**
+- `--with-companions` installs stop + handoff + prep + **buildout**
 
 ### Changed
 

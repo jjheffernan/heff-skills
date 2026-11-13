@@ -36,6 +36,7 @@ Details: **[INSTALL.md](./INSTALL.md)** · [`CHANGELOG.md`](./CHANGELOG.md).
 | **after-hours-stop** (opt-in) | [`skills/after-hours-stop/`](./skills/after-hours-stop/) | Kill sentinel / stop phrases / ensure morning brief — install via `--with-companions` |
 | **after-hours-handoff** (opt-in) | [`skills/after-hours-handoff/`](./skills/after-hours-handoff/) | Morning-brief handoff after a stop — install via `--with-companions` |
 | **after-hours-prep** (opt-in) | [`skills/after-hours-prep/`](./skills/after-hours-prep/) | Daytime grill-style queue builder before arming — install via `--with-companions` |
+| **after-hours-buildout** (opt-in) | [`skills/after-hours-buildout/`](./skills/after-hours-buildout/) | Refill empty queue from roadmap claim-ladder; stall recovery + rabbit-hole denylist — `--with-companions` |
 
 ## Kickoff
 
