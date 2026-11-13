@@ -23,12 +23,12 @@ From the **target project** (where the skill is already installed):
 ```bash
 npx skills update after-hours -y
 # If companions were installed:
-npx skills update after-hours-stop after-hours-handoff after-hours-prep -y
+npx skills update after-hours-stop after-hours-handoff after-hours-prep after-hours-buildout -y
 ```
 
 Or refresh everything the CLI manages: `npx skills update -y`.
 
-CLI skill names match frontmatter `name:` (`after-hours`, `after-hours-stop`, `after-hours-handoff`, `after-hours-prep`). Project config under `.cursor/` is **not** owned by the CLI — your `after-hours-loop.config.json` / state / morning brief stay put.
+CLI skill names match frontmatter `name:` (`after-hours`, `after-hours-stop`, `after-hours-handoff`, `after-hours-prep`, `after-hours-buildout`). Project config under `.cursor/` is **not** owned by the CLI — your `after-hours-loop.config.json` / state / morning brief stay put.
 ## Path B — clone + install script (alternative)
 
 From a clone of this repo:
@@ -40,7 +40,7 @@ From a clone of this repo:
 - Copies the skill into `TARGET_REPO/.agents/skills/after-hours-loop/`
 - Seeds `.cursor/after-hours-loop.config.json` from the example if missing
 - `--with-gitignore` appends ignore entries for loop state and morning brief
-- `--with-companions` also copies opt-in siblings `after-hours-stop` + `after-hours-handoff` + `after-hours-prep` into `.agents/skills/` (not always-on; **not** in drop-in sync)
+- `--with-companions` also copies opt-in siblings `after-hours-stop` + `after-hours-handoff` + `after-hours-prep` + `after-hours-buildout` into `.agents/skills/` (not always-on; **not** in drop-in sync)
 - `--dry-run` prints what would change without writing
 - Stamps pack [`VERSION`](./VERSION) into the installed skill tree
 
@@ -71,6 +71,7 @@ If companions are already present, `update.sh` refreshes them automatically. Che
 | [`after-hours-stop`](./skills/after-hours-stop/) | Kill sentinel / stop phrases / ensure morning brief |
 | [`after-hours-handoff`](./skills/after-hours-handoff/) | Morning-brief focused handoff after a stop |
 | [`after-hours-prep`](./skills/after-hours-prep/) | Daytime HITL queue builder (grill-style) before arming |
+| [`after-hours-buildout`](./skills/after-hours-buildout/) | Empty-queue claim-ladder, stall recovery, rabbit-hole denylist |
 
 Default `install.sh` and `sync-drop-in.sh` stay **loop-only**. Companions ship under `skills/` and install only with `--with-companions` (or a manual `cp -R`). They use `disable-model-invocation: true` — never always-on overnight hooks.
 
@@ -137,6 +138,7 @@ Do this once per target project:
    rm -rf TARGET_REPO/.agents/skills/after-hours-stop
    rm -rf TARGET_REPO/.agents/skills/after-hours-handoff
    rm -rf TARGET_REPO/.agents/skills/after-hours-prep
+   rm -rf TARGET_REPO/.agents/skills/after-hours-buildout
 ```
 
 3. Optionally delete local state and config:

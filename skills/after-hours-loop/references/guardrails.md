@@ -24,7 +24,7 @@ On **Stop loop**, set coarse `stopReason` (`done` / `blocked` / `noop` / `budget
 | Tests / verification fail after one fix attempt | **Block item** | `tests` or `verification-failed` |
 | Item `verification[]` present but skipped/weakened to force pass | **Block item** + note | Never green-wash — [readiness.md](./readiness.md) |
 | `risk: high` without kickoff `allowHighRisk: true` | **Skip item** | Leave for daytime; do not invent low risk |
-| Empty queue (no agent-ready work) mid-run | **Soft-park** then dead-tick | `parkedReason: empty-queue` — **keep** sentinel unless dead-tick stop; dry-run still **Stop loop** `noop` / `dry-run` |
+| Empty queue (no agent-ready work) mid-run | **Soft-park** then dead-tick | `parkedReason: empty-queue` — **keep** sentinel unless dead-tick stop; dry-run still **Stop loop** `noop` / `dry-run`. If [after-hours-buildout](../../after-hours-buildout/SKILL.md) is installed, run its **claim-ladder** once before parking (roadmap / API→UI / UX rungs) |
 | `prs.length >= maxPrs` | **Soft-park** then dead-tick | `parkedReason: maxPrs` — **keep** sentinel unless dead-tick stop |
 | Consecutive parked/no-op wakes ≥ `maxDeadTicks` (default **5**) and kickoff lacks `--persist` | **Stop loop** | `noop` / `dead-ticks` — kill sentinel; morning brief |
 | Kickoff `--persist` | (modifier) | Disable dead-tick auto-stop for **this arm only**; soft-park still applies |
